@@ -1,0 +1,33 @@
+dist: xenial
+language: python
+sudo: false
+
+matrix:
+  include:
+    - python: 3.5
+      # install phmdoctest from the source
+      # install pytest
+      # run pytest
+      install:
+        &utest_install
+        - pip install "." pytest
+      script: &utest_run py.test --strict
+
+    - python: 3.6
+      install: pip install tox coverage coveralls
+      script: tox -e py36,cover,inspect,docs
+      after_success:
+        - coverage combine
+        - coveralls
+
+    - python: 3.7
+      install: *utest_install
+      script: *utest_run
+
+    - python: pypy3.5
+      install: *utest_install
+      script: *utest_run
+
+branches:
+  only:
+  - master
