@@ -35,8 +35,6 @@ class PytestFile:
         self.empty_line()
         # copy the helper function def
         self.lines.append(inspect.getsource(line_compare_exact))
-        self.has_module_code = False
-        self.has_teardown = False
 
     def __str__(self):
         return '\n'.join(self.lines)

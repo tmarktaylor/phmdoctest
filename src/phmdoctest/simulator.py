@@ -1,6 +1,7 @@
 from collections import namedtuple
 import itertools
 import os.path
+import re
 from tempfile import TemporaryDirectory
 
 from click.testing import CliRunner
@@ -86,7 +87,10 @@ def run_and_pytest(
     # simulate commands that don't write OUTFILE.
     wants_help = '--help' in command1
     wants_version = '--version' in command1
-    stream_outfile = command1.endswith('--outfile -')
+    stream_outfile = (
+            command1.endswith('--outfile -') or
+            command1.endswith('--outfile=-')
+    )
     no_outfile = '--outfile' not in command1
     runner = CliRunner()
     if wants_help or wants_version or stream_outfile or no_outfile:
@@ -115,10 +119,31 @@ def run_and_pytest(
         outfile_path = os.path.join(tmpdirname, test_file_name)
         markdown_path, command2 = command1.split(maxsplit=1)
         command3 = command2[:command2.find('--outfile')].strip()
-        pfm_args = [markdown_path]
-        pfm_args.extend(command3.split())
-        pfm_args.extend(['--outfile', outfile_path])
-        status = runner.invoke(cli=entry_point, args=pfm_args)
+        phm_args = [markdown_path]
+
+        # Split up the rest of the command into pieces to pass to
+        # runner.invoke().
+        #
+        # Developers:
+        # Since the --outfile part has already been removed from command3
+        # the only possible option remaining that takes TEXT is --skip.
+        # If a new option that takes TEXT is added, add code here
+        # to replace its '='.
+        #
+        # Special code to handle a --skip TEXT where TEXT is double quoted.
+        # For example
+        #    --skip="Python 3.7"
+        #         or
+        #    --skip "Python 3.7"
+        command4 = command3.replace('--skip=', '--skip ')
+        # get characters between double quotes including the quotes
+        # get runs of non-whitespace characters
+        args1 = re.findall(pattern=r'(".*"|\S+)', string=command4)
+        # If both leading and trailing double quotes, remove them.
+        args2 = [re.sub('^"(.*)"$', r'\1', arg) for arg in args1]
+        phm_args.extend(args2)
+        phm_args.extend(['--outfile', outfile_path])
+        status = runner.invoke(cli=entry_point, args=phm_args)
 
         # return now if the command failed
         if status.exit_code:

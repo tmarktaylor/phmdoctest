@@ -137,7 +137,7 @@ def entry_point(markdown_file, outfile, skip, report):
     # build test cases and write to the --outfile path
     if args.outfile:
         test_case_string = build_test_cases(args, blocks)
-        with click.open_file(args.outfile, 'w') as ofp:
+        with click.open_file(args.outfile, 'w', encoding='utf-8') as ofp:
             ofp.write(test_case_string)
 
 

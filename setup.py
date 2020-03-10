@@ -112,7 +112,7 @@ setup(
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
     ],
-    # todo- also a library
+    # todo- we are also a library
 
 
     # This field adds keywords for your project which will appear on the

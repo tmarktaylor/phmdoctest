@@ -4,7 +4,7 @@ terminal output there are no console prompts `>>>` and `...`
 in the source code and the print() statement is required
 to produce the expected output.  
 
-Example code adapted from the Python 3.8 Tutorial:
+Example code adapted from the Python Tutorial:
 ```py3
 squares = [1, 4, 9, 16, 25]
 print(squares)
@@ -15,9 +15,9 @@ expected output:
 ```
 
 #### Another fenced code block expected output block pair.
-Example code adapted from What's new in Python 3.7:
+Example code adapted from What's new in Python:
 ```py3
-# Formatted string literals require python 3.7
+# Formatted string literals require Python 3.7
 name = "Fred"
 print(f"He said his name is {name}.")
 ```
