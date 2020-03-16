@@ -1,3 +1,5 @@
+"""Logic used by pytest test cases."""
+
 import phmdoctest.print_capture
 import phmdoctest.simulator
 

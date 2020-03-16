@@ -1,3 +1,5 @@
+"""pytest test cases for phmdoctest."""
+
 import re
 
 import click
@@ -172,6 +174,18 @@ def test_skip_code_tha_has_no_output_block():
     assert result.pytest_exit_code == 0
     assert 'py3        37  skip-code  "while a < 1000:"' in result.status.stdout
     assert 'while a < 1000:  37' in result.status.stdout
+
+
+def test_multiple_skips_report():
+    """More than one skip applied to the same Python code block."""
+    command = 'phmdoctest tests/example2.md --report -sprint -slen'
+    result = phmdoctest.simulator.run_and_pytest(
+        well_formed_command=command,
+        pytest_options=None
+    )
+    assert result.status.exit_code == 0
+    assert '                            "len"' in result.status.stdout
+    assert 'len           44' in result.status.stdout
 
 
 def test_no_blocks_left_to_test_passing():

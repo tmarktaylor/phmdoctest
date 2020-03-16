@@ -1,3 +1,5 @@
+"""pytest test cases for examples in fenced code blocks in README.md."""
+
 import inspect
 import re
 import textwrap
@@ -138,7 +140,7 @@ def test_usage():
 
 
 def test_yaml():
-    """Show Markdown example and travis.yml have the same commands."""
+    """Show Markdown example and .travis.yml have the same commands."""
     example_text = next(readme_blocks)
     install = '- pip install "." pytest'
     mkdir = '- mkdir tests/tmp'

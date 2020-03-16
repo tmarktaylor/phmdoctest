@@ -1,3 +1,5 @@
+"""pytest test case file code generator."""
+
 import inspect
 import textwrap
 

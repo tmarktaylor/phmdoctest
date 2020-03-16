@@ -1,3 +1,12 @@
+"""Simulate running a phmdoctest command. Used for testing.
+
+Use during development to verify phmdoctest console commands
+will succeed when called by Continuous Integration scripts.
+If --outfile writes a file, the file is written in a
+temporary directory.
+Optionally run pytest on the temporary file.
+"""
+
 from collections import namedtuple
 import itertools
 import os.path
@@ -11,9 +20,10 @@ from .main import entry_point
 
 
 TestStatus = namedtuple('TestStatus',
-    ['status',
-     'outfile',
+    ['status',    # click.CliRunner().invoke() return value
+     'outfile',   # copy of the output file as a string
      'pytest_exit_code'])
+"""run_and_pytest() return value."""
 
 
 counter = itertools.count()
@@ -55,7 +65,7 @@ def run_and_pytest(
     To run pytest on an --outfile, pass a list of zero or
     more pytest_options.
     To run pytest the PYPI package pytest must be installed
-    since pytest is not required top install phmdoctest.
+    since pytest is not required to install phmdoctest.
     Use this command:
         pip install pytest
 

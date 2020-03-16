@@ -1,5 +1,6 @@
-from typing import IO, List
+"""General purpose tools get fenced code blocks from Markdown."""
 
+from typing import IO, List
 
 import commonmark    # type: ignore
 import commonmark.node    # type: ignore

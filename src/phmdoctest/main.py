@@ -17,10 +17,8 @@ class Role(Enum):
     UNKNOWN = '--'
     CODE = 'code'
     OUTPUT = 'output'
-    UNUSED = 'unused'
     SKIP_CODE = 'skip-code'
     SKIP_OUTPUT = 'skip-output'
-    NOT_RUN = 'not-run'
 
 
 class FencedBlock:
@@ -258,6 +256,7 @@ def print_report(args: Args, blocks: List[FencedBlock]) -> None:
 
 
 def fenced_block_report(blocks: List[FencedBlock], title: str='') -> str:
+    """Generate text report about the input file fenced code blocks."""
     table = monotable.MonoTable()
     table.max_cell_height = 7
     table.more_marker = '...'
@@ -279,6 +278,7 @@ def fenced_block_report(blocks: List[FencedBlock], title: str='') -> str:
 
 def skips_report(
         skips: List[str], blocks: List[FencedBlock], title: str='') -> str:
+    """Generate text report about the disposition of --skip options."""
     table = monotable.MonoTable()
     table.max_cell_height = 5
     table.more_marker = '...'
