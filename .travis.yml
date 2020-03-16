@@ -15,20 +15,21 @@ matrix:
     - python: 3.6
       install:
         &utest_install
-        - pip install "." pytest
+        - pip install "." pytest coverage codecov
       script:
         &utest_run
         # These steps show how to use phmdoctest to generate
         # pytest files and reports.
         - mkdir tests/tmp
         # Run phmdoctest to generate test file and print the report.
+        - phmdoctest project.md --report --outfile tests/tmp/test_project_readme.py
         - phmdoctest tests/example1.md --report --outfile tests/tmp/test_example1.py
         - phmdoctest tests/example2.md --skip "Python 3.7" --skip LAST --report --outfile tests/tmp/test_example2.py
         # run the project test suite including the generated tests
-        - pytest --strict -vv tests
+        - pytest --strict tests
 
         # These steps are specific to testing phmdoctest and are not
-        # useful to developers using phmdoctest.
+        # useful to developers using phmdoctest for other projects.
         # Check the generated test file against the expected file in doc folder
         - cmp doc/test_example1.py tests/tmp/test_example1.py
         - cmp doc/test_example2.py tests/tmp/test_example2.py
@@ -37,19 +38,14 @@ matrix:
         - cmp doc/example2_report.txt tests/tmp/example2_report.txt
 
     - python: 3.7
-      install: pip install tox coverage coveralls
+      install: pip install tox
       script: tox -e cover,inspect
-      after_success:
-        - coveralls
 
-    - python: 3.8
-      install: *utest_install
-      script: *utest_run
-
-    - python: pypy3.5
+    - python: pypy3
       install: *utest_install
       script: *utest_run
 
 branches:
   only:
   - master
+  - proto
