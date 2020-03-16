@@ -1,6 +1,7 @@
-# phmdoctest
+# phmdoctest 
+## version 0.0.1
 
-   Python syntax highlighted Markdown doctest
+Python syntax highlighted Markdown doctest
 
 Command line program to test Python syntax highlighted code
 examples in Markdown.
@@ -10,7 +11,8 @@ examples in Markdown.
 - Synthesizes a pytest test file from examples in Markdown.
 - Reads Python source code and expected
   terminal output from Markdown fenced code blocks.
-- The test cases are run separately by calling pytest.
+- The test cases are run separately by calling pytest.  
+- Get code coverage by running pytest with [coverage][6]. 
 - An included Python library runs phmdoctest and can run pytest too.
 
 phmdoctest does **not** do:
@@ -20,7 +22,7 @@ phmdoctest does **not** do:
 - Python console >>>, ...
 
 
-todo- license shield link
+# todo- license shield link
 [![](https://img.shields.io/pypi/l/phmdoctest.svg)]()
 [![PyPI](https://img.shields.io/pypi/v/phmdoctest.svg)](https://pypi.python.org/pypi/phmdoctest)
 [![PyPI Python Versions](https://img.shields.io/pypi/pyversions/phmdoctest.svg)](https://pypi.python.org/pypi/phmdoctest)
@@ -34,7 +36,7 @@ todo- license shield link
 
 # todo- quick links like in black's readme
 
-#### Installation
+## Installation
     pip install phmdoctest
 
 ## Sample usage
@@ -76,12 +78,12 @@ creates the python source code file [test_example1.py][2] also shown here...
 """pytest file built from tests/example1.md"""
 
 
-def line_compare_exact(want, got):
+def line_by_line_compare_exact(a, b):
     """Line by line helper compare function with assertion for pytest."""
-    if want:
-        want_lines = want.splitlines()
-        got_lines = got.splitlines()
-        assert want_lines == got_lines
+    a_lines = a.splitlines()
+    b_lines = b.splitlines()
+    for a_line, b_line in zip(a_lines, b_lines):
+        assert a_line == b_line
 
 
 def test_code_3_output_16(capsys):
@@ -101,7 +103,7 @@ Floats.CIDER
 Floats.CHERRIES
 Floats.ADUCK
 """
-    line_compare_exact(want=expected_str, got=capsys.readouterr().out)
+    line_by_line_compare_exact(a=expected_str, b=capsys.readouterr().out)
 
 ```
 
@@ -158,6 +160,9 @@ py3        72  code
 ```
 
 ## How phmdoctest identifies code and output blocks
+
+phmdoctest uses the PYPI [commonmark][7] project to extract fenced code
+blocks from Markdown. Specification [CommonMark Spec][8] and website [CommonMark][9].
 
 Only [GFM fenced code blocks][3] are considered.
 
@@ -266,6 +271,23 @@ It produces the same report and outfile.
 phmdoctest tests/example2.md -s "Python 3.7" -sLAST --report --outfile test_example2.py
 ```
 
+## --fail-nocode
+
+This option produces a pytest file that will always
+fail when no Python code blocks are found.
+
+If phmdoctest doesn't find any Python code blocks in the
+Markdown file a pytest file is still generated.
+This also happens when `--skip` eliminates all the
+Python code blocks. 
+The generated pytest file will have the function
+`def test_nothing_passes()`.
+
+If the option `--fail-nocode` is passed to phmdoctest the
+function is `def test_nothing_fails()` which raises an
+assertion.
+ 
+
 ## Send outfile to standard output
 To redirect the above outfile to the standard output stream use one
 of these two commands.
@@ -298,13 +320,20 @@ Options:
                    Markdown file is skipped. The fenced code block info string
                    is not searched.
   --report         Show how the Markdown fenced code blocks are used.
+  --fail-nocode    This option sets behavior when the Markdown file has no
+                   Python fenced code blocks or if all such blocks are
+                   skipped. When this option is present the generated pytest
+                   file has a test function called test_nothing_fails() that
+                   will raise an assertion. If this option is not present the
+                   generated pytest file has test_nothing_passes() which will
+                   never fail.
   --version        Show the version and exit.
   --help           Show this message and exit.
 ```
 
 ## Running on Travis CI  
 
-The partial script shown below is for Python 3.5 on [Travis CI][5].
+The partial script shown below is for Python 3.6 on [Travis CI][5].
 The script steps are:
 
 - Install pytest.
@@ -325,12 +354,11 @@ sudo: false
 matrix:
   include:
     - python: 3.5
-      install:
         - pip install "." pytest
       script:
         - mkdir tests/tmp
-        - phmdoctest README.md --report --outfile tests/tmp/test_project_readme.py
-        - pytest --strict -vv tests
+        - phmdoctest project.md --report --outfile tests/tmp/test_project_readme.py
+        - pytest --strict tests
 ```
 
 ## Running phmdoctest from the command line as a Python module.
@@ -355,7 +383,7 @@ import phmdoctest.simulator
 command = 'phmdoctest tests/example2.md --report --outfile test_me.py'
 result = phmdoctest.simulator.run_and_pytest(
     well_formed_command=command,
-    pytest_options=['--strict', '-vv']
+    pytest_options=['--strict', '-v']
 )
 assert result.status.exit_code == 0
 assert result.pytest_exit_code == 0
@@ -367,16 +395,23 @@ assert result.pytest_exit_code == 0
   Use `-` for MARKDOWN_FILE.
 - Write the test file to a temporary directory so that
   it is always up to date.
+- Its easy to use --output by mistake instead of `--outfile`.
+- phmdoctest ignores Markdown indented code blocks ([Spec][8] section 4.4).  
 
 
 ## Related PYPI programs
 - rundoc
 - byexample
 - doexec
+- egtest
 
 
 [1]: tests/example1.md
 [2]: doc/test_example1.py
 [3]: https://github.github.com/gfm/#fenced-code-blocks
+[7]: https://pypi.org/project/commonmark
+[8]: https://spec.commonmark.org
+[9]: https://commonmark.org
 [4]: https://docs.python.org/3/library/doctest.html
 [5]: https://docs.travis-ci.com
+[6]: https://pypi.python.org/project/coverage

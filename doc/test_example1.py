@@ -1,12 +1,12 @@
 """pytest file built from tests/example1.md"""
 
 
-def line_compare_exact(want, got):
+def line_by_line_compare_exact(a, b):
     """Line by line helper compare function with assertion for pytest."""
-    if want:
-        want_lines = want.splitlines()
-        got_lines = got.splitlines()
-        assert want_lines == got_lines
+    a_lines = a.splitlines()
+    b_lines = b.splitlines()
+    for a_line, b_line in zip(a_lines, b_lines):
+        assert a_line == b_line
 
 
 def test_code_3_output_16(capsys):
@@ -26,4 +26,4 @@ Floats.CIDER
 Floats.CHERRIES
 Floats.ADUCK
 """
-    line_compare_exact(want=expected_str, got=capsys.readouterr().out)
+    line_by_line_compare_exact(a=expected_str, b=capsys.readouterr().out)

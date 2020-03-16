@@ -2,7 +2,7 @@ import phmdoctest.print_capture
 import phmdoctest.simulator
 
 
-def _verify_a_and_b_are_the_same(a, b):
+def a_and_b_are_the_same(a, b):
     """Line by line helper compare function with assertion for pytest."""
     a_lines = a.splitlines()
     b_lines = b.splitlines()
@@ -24,8 +24,7 @@ def one_example(
     if want_file_name is not None:
         with open(want_file_name) as f:
             want = f.read()
-            # phmdoctest.print_capture.line_by_line_compare_exact(
-            _verify_a_and_b_are_the_same(result.outfile, want)
+            a_and_b_are_the_same(result.outfile, want)
 
     if pytest_options is not None:
         assert result.pytest_exit_code == 0

@@ -1,12 +1,12 @@
 """pytest file built from tests/example2.md"""
 
 
-def line_compare_exact(want, got):
+def line_by_line_compare_exact(a, b):
     """Line by line helper compare function with assertion for pytest."""
-    if want:
-        want_lines = want.splitlines()
-        got_lines = got.splitlines()
-        assert want_lines == got_lines
+    a_lines = a.splitlines()
+    b_lines = b.splitlines()
+    for a_line, b_line in zip(a_lines, b_lines):
+        assert a_line == b_line
 
 
 def test_code_9_output_14(capsys):
@@ -16,7 +16,7 @@ def test_code_9_output_14(capsys):
     expected_str = """\
 [1, 4, 9, 16, 25]
 """
-    line_compare_exact(want=expected_str, got=capsys.readouterr().out)
+    line_by_line_compare_exact(a=expected_str, b=capsys.readouterr().out)
 
 
 def test_code_37(capsys):
@@ -38,4 +38,4 @@ cat 3
 window 6
 defenestrate 12
 """
-    line_compare_exact(want=expected_str, got=capsys.readouterr().out)
+    line_by_line_compare_exact(a=expected_str, b=capsys.readouterr().out)
