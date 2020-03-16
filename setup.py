@@ -4,11 +4,6 @@
 # Always prefer setuptools over distutils
 from setuptools import setup, find_packages
 from os import path
-# io.open is needed for projects that support Python 2.7
-# It ensures open() defaults to text mode with universal newlines,
-# and accepts an argument to specify the text encoding
-# Python 3 only projects can skip this import
-from io import open
 
 here = path.abspath(path.dirname(__file__))
 
@@ -44,7 +39,7 @@ setup(
     # This is a one-line description or tagline of what your project does. This
     # corresponds to the "Summary" metadata field:
     # https://packaging.python.org/specifications/core-metadata/#summary
-    description='~~~python highlighted Markdown doctest.',  # Optional
+    description='Python syntax highlighted Markdown doctest.',  # Optional
 
     # This is an optional longer description of your project that represents
     # the body of text which users will see when they visit PyPI.

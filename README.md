@@ -11,9 +11,11 @@ examples in Markdown.
 - Synthesizes a pytest test file from examples in Markdown.
 - Reads Python source code and expected
   terminal output from Markdown fenced code blocks.
-- The test cases are run separately by calling pytest.  
+- The test cases are run later by calling pytest.  
 - Get code coverage by running pytest with [coverage][6]. 
-- An included Python library runs phmdoctest and can run pytest too.
+- An included Python library:
+  - runs phmdoctest and can run pytest too. [simulator.py][10]
+  - functions to read fenced code blocks from Markdown. [tool.py][11]
 
 phmdoctest does **not** do:
 - setup and teardown
@@ -21,9 +23,6 @@ phmdoctest does **not** do:
 - ellipsis comparisons
 - Python console >>>, ...
 
-
-# todo- license shield link
-[![](https://img.shields.io/pypi/l/phmdoctest.svg)]()
 [![PyPI](https://img.shields.io/pypi/v/phmdoctest.svg)](https://pypi.python.org/pypi/phmdoctest)
 [![PyPI Python Versions](https://img.shields.io/pypi/pyversions/phmdoctest.svg)](https://pypi.python.org/pypi/phmdoctest)
 
@@ -34,8 +33,6 @@ phmdoctest does **not** do:
 [![Build Status](https://travis-ci.org/tmarktaylor/phmdoctest.svg?branch=master)](https://travis-ci.org/tmarktaylor/phmdoctest) on [Travis CI](https://travis-ci.org/)
 [![Code Coverage](https://codecov.io/gh/tmarktaylor/phmdoctest/coverage.svg?branch=master)](https://codecov.io/gh/tmarktaylor/phmdoctest?branch=master)
 
-# todo- quick links like in black's readme
-
 ## Installation
     pip install phmdoctest
 
@@ -45,6 +42,7 @@ Given the Markdown file [tests/example1.md][1]
 shown in raw form here...
 
 ~~~
+# This is Markdown file example1.md
 Code:
 ```python3
 from enum import Enum
@@ -86,7 +84,7 @@ def line_by_line_compare_exact(a, b):
         assert a_line == b_line
 
 
-def test_code_3_output_16(capsys):
+def test_code_4_output_17(capsys):
     from enum import Enum
 
     class Floats(Enum):
@@ -112,9 +110,9 @@ to test the Markdown code and expected output blocks.
 
     pytest --strict 
 
-The `3` in the function name `test_code_3_output_16` is the
+The `4` in the function name `test_code_4_output_17` is the
 line number in [tests/example1.md][1] of the first line
-of python code. `16` shows the line number of the expected 
+of python code. `17` shows the line number of the expected 
 terminal output.
 
 phmdoctest tries to generate one test case function for each 
@@ -175,7 +173,7 @@ with one of these:
 
 It is ok if the [info string](https://github.github.com/gfm/#info_string)
 is laden with additional text, phmdoctest will ignore it.  The
-entire info string will be shown in the Block type column of the
+entire info string will be shown in the block type column of the
 report.
 
 Output blocks are fenced code blocks that immediately follow a
@@ -211,7 +209,8 @@ in the test role column and the Python blocks that
 matched each --skip TEXT in the skips section.
 
 This option makes it **very easy** to **inadvertently exclude**
-Python blocks from the test cases.
+Python blocks from the test cases.  The option `--fail-nocode`
+will cause the generated test to fail.
 
 Three special `--skip TEXT` strings work a little differently.
 They select one of the first, second, or last of the Python blocks.
@@ -333,7 +332,7 @@ Options:
 
 ## Running on Travis CI  
 
-The partial script shown below is for Python 3.6 on [Travis CI][5].
+The partial script shown below is for Python 3.5 on [Travis CI][5].
 The script steps are:
 
 - Install pytest.
@@ -343,8 +342,6 @@ The script steps are:
 
 Writing the generated test files to a new directory
 assures an existing test file is not overwritten by mistake.
-
-Running pytest with     
 
 ```yaml
 dist: xenial
@@ -396,7 +393,9 @@ assert result.pytest_exit_code == 0
 - Write the test file to a temporary directory so that
   it is always up to date.
 - Its easy to use --output by mistake instead of `--outfile`.
-- phmdoctest ignores Markdown indented code blocks ([Spec][8] section 4.4).  
+- If Python code block has no output, put assert statements in the code.
+- phmdoctest ignores Markdown indented code blocks ([Spec][8] section 4.4).
+  
 
 
 ## Related PYPI programs
@@ -409,6 +408,8 @@ assert result.pytest_exit_code == 0
 [1]: tests/example1.md
 [2]: doc/test_example1.py
 [3]: https://github.github.com/gfm/#fenced-code-blocks
+[10]: https://github.com/tmarktaylor/phmdoctest/blob/master/src/phmdoctest/simulator.py
+[11]: https://github.com/tmarktaylor/phmdoctest/blob/master/src/phmdoctest/tool.py
 [7]: https://pypi.org/project/commonmark
 [8]: https://spec.commonmark.org
 [9]: https://commonmark.org
