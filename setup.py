@@ -90,13 +90,14 @@ setup(
         #   3 - Alpha
         #   4 - Beta
         #   5 - Production/Stable
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
 
         # Indicate who your project is intended for
         'Intended Audience :: Developers',
         'Topic :: Software Development :: Test Tools',
         "Topic :: Software Development :: Testing",
         "Topic :: Software Development :: Documentation",
+        'Topic :: Software Development :: Libraries :: Python Modules',
         'Topic :: Utilities',
 
         # Pick your license as you wish
@@ -111,9 +112,8 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: Implementation :: PyPy',
     ],
-    # todo- we are also a library
-
 
     # This field adds keywords for your project which will appear on the
     # project page. What does your project relate to?

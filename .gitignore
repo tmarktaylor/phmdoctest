@@ -9,6 +9,7 @@ __pycache__/
 *.so
 *~
 .exportToPDF/
+export.bat
 
 MANIFEST
 .sdist
