@@ -1,0 +1,30 @@
+          tests\example2.md fenced blocks
+---------------------------------------------------
+block    line  test         skip pattern/reason
+type   number  role         quoted and one per line
+---------------------------------------------------
+py3         9  skip-code    "print"
+           14  skip-output
+py3        20  skip-code    "print"
+           26  skip-output
+           31  --
+py3        37  skip-code    "print"
+py3        44  skip-code    "print"
+                            "len"
+           51  skip-output
+yaml       59  --
+text       67  --
+py3        72  skip-code    "print"
+           78  skip-output
+---------------------------------------------------
+0 test cases
+5 skipped code blocks
+0 code blocks missing an output block
+
+  skip pattern matches (blank means no match)
+------------------------------------------------
+skip pattern  matching code block line number(s)
+------------------------------------------------
+print         9, 20, 37, 44, 72
+len           44
+------------------------------------------------
