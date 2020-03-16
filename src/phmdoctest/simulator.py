@@ -3,13 +3,13 @@ import itertools
 import os.path
 import re
 from tempfile import TemporaryDirectory
+from typing import List, Optional
 
 from click.testing import CliRunner
 
 from .main import entry_point
 
 
-# todo- does click result include a copy of the command?
 TestStatus = namedtuple('TestStatus',
     ['status',
      'outfile',
@@ -20,7 +20,7 @@ counter = itertools.count()
 """
 Iterator that counts up from zero. Used for making a filename.
 
-It is used to make a unique basename (or PurePatn.name) when 
+It is used to make a unique basename (or PurePath.name) when 
 the invoked phmdoctest writes an OUTFILE into the tempdir.
 This avoids a pytest error when:
 1. simulate_and_pytest() is called a from a 
@@ -43,12 +43,12 @@ This avoids a pytest error when:
 
 
 def run_and_pytest(
-        well_formed_command,
-        pytest_options=None):
+        well_formed_command: str,
+        pytest_options: Optional[List[str]]=None) -> TestStatus:
     """
     Simulate a phmdoctest command, optionally run pytest.
 
-    If a filename is provide by the --outfile option, the
+    If a filename is provided by the --outfile option, the
     command is rewritten replacing the OUTFILE with a
     path to a temporary directory and a synthesized filename.
 
@@ -60,27 +60,28 @@ def run_and_pytest(
         pip install pytest
 
     Returns TestStatus object.
-
     TestStatus.status is the CliRunner.invoke return value.
 
     If an outfile is written or streamed to stdout a copy of it
     is returned in TestStatus.outfile.
 
-    well_formed_command
-    - starts with phmdoctest
-    - followed by MARKDOWN_FILE
-    - ends with --outfile OUTFILE (if needed)
-    - all other options are between MARKDOWN_FILE and --outfile
-    for example:
-    phmdoctest MARKDOWN_FILE --skip FIRST --outfile OUTFILE
+    Args:
+        well_formed_command
+            - starts with phmdoctest
+            - followed by MARKDOWN_FILE
+            - ends with --outfile OUTFILE (if needed)
+            - all other options are between MARKDOWN_FILE and --outfile
+            for example:
+            phmdoctest MARKDOWN_FILE --skip FIRST --outfile OUTFILE
 
-    pytest_options
-    List of strings like this: ['--strict', '-vv'].
-    Set to empty list to run pytest with no options.
-    Set to None to skip pytest.
+        pytest_options
+            List of strings like this: ['--strict', '-v'].
+            Set to empty list to run pytest with no options.
+            Set to None to skip pytest.
+
+    Returns:
+        TestStatus containing status, outfile, and pytest_exit_code.
     """
-    # todo- use a sphinx or other arg format for parameters
-
     # chop off phmdoctest since invoking by a python function call
     assert well_formed_command.startswith('phmdoctest ')
     command1 = well_formed_command.replace('phmdoctest ', '', 1)
@@ -159,7 +160,7 @@ def run_and_pytest(
 
         pytest_exit_code = None
         if pytest_options is not None:
-            import pytest
+            import pytest    # type: ignore
             print()    # desirable if terminal shows captured stdout
             pytest_exit_code = pytest.main(pytest_options + [tmpdirname])
         return TestStatus(

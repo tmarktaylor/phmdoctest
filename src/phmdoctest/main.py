@@ -1,17 +1,15 @@
 from collections import namedtuple
 from collections import Counter
 from enum import Enum
+import inspect
+from typing import List, Optional
 
 import click
-import commonmark
-import monotable
+import commonmark.node    # type: ignore
+import monotable    # type: ignore
 
+from . import tool
 from . import print_capture
-from . import __version__
-
-# todo- this works but click_version auto version finder will find
-# todo- the version in __init__.py
-# todo- conflict between running installed module and pycharm finding my modules
 
 
 class Role(Enum):
@@ -27,30 +25,30 @@ class Role(Enum):
 
 class FencedBlock:
     """Selected fields from commonmark node plus new field role."""
-    def __init__(self, node):
+    def __init__(self, node: commonmark.node.Node) -> None:
         """Extract fields from commonmark fenced code block node."""
         self.type = node.info
         self.line = node.sourcepos[0][0] + 1
         self.role = Role.UNKNOWN
         self.contents = node.literal
-        self.output = None
-        self.skip_reasons = list()
+        self.output = None    # type: Optional['FencedBlock']
+        self.skip_reasons = list()    # type: List[str]
 
-    def set(self, role):
+    def set(self, role: Role) -> None:
         """Set the role for the fenced code block in subsequent testing."""
         self.role = role
 
-    def set_link_to_output(self, fenced_block):
+    def set_link_to_output(self, fenced_block: 'FencedBlock') -> None:
         """Save a reference to the code block's output block."""
         assert self.role == Role.CODE, 'only allowed to be code'
         assert fenced_block.role == Role.OUTPUT, 'only allowed to be output'
         self.output = fenced_block
 
-    def get_output(self):
+    def get_output(self) -> Optional['FencedBlock']:
         """Get this code block's associated output block."""
         return self.output
 
-    def skip(self, reason):
+    def skip(self, reason: str) -> None:
         """Skip an already designated code block. Re-skip is OK."""
         assert self.role in (Role.CODE, Role.SKIP_CODE), (
             'Block at line {} cannot be skipped for pattern'
@@ -74,18 +72,22 @@ Args = namedtuple(
         'outfile',
         'skips',
         'is_report',
+        'fail_nocode'
     ]
 )
 """Command line arguments with some renames."""
 
 
 @click.command()
-# todo- need help text for markdown_file
 @click.argument(
-    'markdown_file', nargs=1, type=click.Path(
+    'markdown_file',
+    nargs=1,
+    type=click.Path(
         exists=True,
         dir_okay=False,
-        allow_dash=True))
+        allow_dash=True,    # type: ignore
+    )
+)
 @click.option(
     '--outfile',
     nargs=1,
@@ -112,19 +114,34 @@ Args = namedtuple(
 @click.option(
     '--report',
     is_flag=True,
-    help='Show how the Markdown fenced code blocks are used.')
-@click.version_option(version=__version__)
-def entry_point(markdown_file, outfile, skip, report):
+    help='Show how the Markdown fenced code blocks are used.'
+)
+@click.option(
+    '--fail-nocode',
+    is_flag=True,
+    help=(
+        'This option sets behavior when the Markdown file has no Python'
+        ' fenced code blocks or if all such blocks are skipped.'
+        ' When this option is present the generated pytest file'
+        ' has a test function called test_nothing_fails() that'
+        ' will raise an assertion.'
+        ' If this option is not present the generated pytest file'
+        ' has test_nothing_passes() which will never fail.'
+    )
+)
+@click.version_option()
+def entry_point(markdown_file, outfile, skip, report, fail_nocode):
     args = Args(
         markdown_file=markdown_file,
         outfile=outfile,
         skips=skip,
         is_report=report,
+        fail_nocode=fail_nocode,
     )
 
     # Find markdown blocks and pair up code and output blocks.
     with click.open_file(args.markdown_file, encoding='utf-8') as fp:
-        blocks = convert_nodes(fenced_block_nodes(fp))
+        blocks = convert_nodes(tool.fenced_block_nodes(fp))
     identify_code_and_output_blocks(blocks)
 
     code_blocks = [b for b in blocks if b.role == Role.CODE]
@@ -141,22 +158,7 @@ def entry_point(markdown_file, outfile, skip, report):
             ofp.write(test_case_string)
 
 
-def fenced_block_nodes(fp):
-    """Get markdown fenced code blocks."""
-    nodes = []
-    doc = fp.read()
-    parser = commonmark.Parser()
-    ast = parser.parse(doc)
-    walker = ast.walker()
-    # Presumably, because fenced code blocks nodes are leaf nodes
-    # they will only be entered once by the walker.
-    for node, entering in walker:
-        if node.t == 'code_block' and node.is_fenced:
-            nodes.append(node)
-    return nodes
-
-
-def convert_nodes(nodes):
+def convert_nodes(nodes: List[commonmark.node.Node]) -> List[FencedBlock]:
     """Create FencedBlock objects from commonmark fenced code block nodes."""
     blocks = []
     for node in nodes:
@@ -168,9 +170,9 @@ PYTHON_FLAVORS = ['python', 'py3', 'python3']
 """Python fenced code blocks info string will start with one of these."""
 
 
-def identify_code_and_output_blocks(blocks):
+def identify_code_and_output_blocks(blocks: List[FencedBlock]) -> None:
     """
-    Determine which blocks are Python and guess which are output.
+    Designate which blocks are Python and guess which are output.
 
     The block.type is a copy of the Markdown fenced code block info_string.
     This string may start with the language intended for syntax coloring.
@@ -199,7 +201,7 @@ def identify_code_and_output_blocks(blocks):
     # be added to the code block.
 
 
-def apply_skips(args, code_blocks):
+def apply_skips(args: Args, code_blocks: List[FencedBlock]) -> None:
     # Skip code blocks identified by patterns 'FIRST', 'SECOND', 'LAST'
     number_of_code_blocks = len(code_blocks)
     if number_of_code_blocks:
@@ -224,41 +226,38 @@ def apply_skips(args, code_blocks):
                 block.skip(pattern)
 
 
-# todo- show command line in the report
-# todo- show count of module-level and teardown blocks, output-ignored
-def print_report(args, blocks):
+def print_report(args: Args, blocks: List[FencedBlock]) -> None:
     report = []
-    if args.is_report:
-        filename = click.format_filename(args.markdown_file)
-        title1 = filename + ' fenced blocks'
-        text1 = fenced_block_report(blocks, title=title1)
-        report.append(text1)
+    filename = click.format_filename(args.markdown_file)
+    title1 = filename + ' fenced blocks'
+    text1 = fenced_block_report(blocks, title=title1)
+    report.append(text1)
 
-        roles = [b.role.name for b in blocks]
-        counts = Counter(roles)
+    roles = [b.role.name for b in blocks]
+    counts = Counter(roles)
 
-        report.append('{} test cases'.format(counts['CODE']))
-        if counts['SKIP_CODE'] > 0:
-            report.append('{} skipped code blocks'.format(
-                counts['SKIP_CODE']
-            ))
+    report.append('{} test cases'.format(counts['CODE']))
+    if counts['SKIP_CODE'] > 0:
+        report.append('{} skipped code blocks'.format(
+            counts['SKIP_CODE']
+        ))
 
-        num_missing_output = counts['CODE'] - counts['OUTPUT']
-        report.append(
-            '{} code blocks missing an output block'.format(
-                num_missing_output
-            )
+    num_missing_output = counts['CODE'] - counts['OUTPUT']
+    report.append(
+        '{} code blocks missing an output block'.format(
+            num_missing_output
         )
+    )
 
-        if args.skips:
-            report.append('')
-            title2 = 'skip pattern matches (blank means no match)'
-            text2 = skips_report(args.skips, blocks, title=title2)
-            report.append(text2)
-        print('\n'.join(report))
+    if args.skips:
+        report.append('')
+        title2 = 'skip pattern matches (blank means no match)'
+        text2 = skips_report(args.skips, blocks, title=title2)
+        report.append(text2)
+    print('\n'.join(report))
 
 
-def fenced_block_report(blocks, title=''):
+def fenced_block_report(blocks: List[FencedBlock], title: str='') -> str:
     table = monotable.MonoTable()
     table.max_cell_height = 7
     table.more_marker = '...'
@@ -274,10 +273,12 @@ def fenced_block_report(blocks, title=''):
         'block\ntype', 'line\nnumber', 'test\nrole',
         'skip pattern/reason\nquoted and one per line']
     formats = ['', '', '', '(width=30)']
-    return table.table(headings, formats, cell_grid, title)
+    text = table.table(headings, formats, cell_grid, title)    # type: str
+    return text
 
 
-def skips_report(skips, blocks, title=''):
+def skips_report(
+        skips: List[str], blocks: List[FencedBlock], title: str='') -> str:
     table = monotable.MonoTable()
     table.max_cell_height = 5
     table.more_marker = '...'
@@ -291,27 +292,56 @@ def skips_report(skips, blocks, title=''):
         cell_grid.append([skip, ', '.join(code_lines)])
     headings = ['skip pattern', 'matching code block line number(s)']
     formats = ['', '(width=36;wrap)']
-    return table.table(headings, formats, cell_grid, title)
+    text = table.table(headings, formats, cell_grid, title)    # type: str
+    return text
 
 
-def build_test_cases(args, blocks):
+_ASSERTION_MESSAGE = 'zero length {} block at line {}'
+
+
+def test_nothing_fails() -> None:
+    """Fail if no Python code blocks were processed."""
+    assert False, 'nothing to test'
+
+
+def test_nothing_passes() -> None:
+    """Succeed  if no Python code blocks were processed."""
+    # nothing to test
+    pass
+
+
+def build_test_cases(args: Args, blocks: List[FencedBlock]) -> str:
     # repr escapes back slashes from win filesystem paths
     # so it can be part of the generated test module docstring.
     quoted_markdown_path = repr(click.format_filename(args.markdown_file))
     markdown_path = quoted_markdown_path[1:-1]
     docstring_text = 'pytest file built from {}'.format(markdown_path)
     builder = print_capture.PytestFile(docstring_text)
+    number_of_test_cases = 0
     for block in blocks:
         if block.role == Role.CODE:
             code_identifier = 'code_' + str(block.line)
             output_identifier = ''
             code = block.contents
+            assert code, _ASSERTION_MESSAGE.format(
+                'code', block.line)
+
             output_block = block.get_output()
             if output_block:
                 output_identifier = '_output_' + str(output_block.line)
                 expected_output = output_block.contents
+                assert expected_output, _ASSERTION_MESSAGE.format(
+                    'expected output', block.line)
             else:
                 expected_output = ''
             identifier = code_identifier + output_identifier
             builder.add_test_case(identifier, code, expected_output)
+            number_of_test_cases += 1
+    if number_of_test_cases == 0:
+        if args.fail_nocode:
+            test_function = inspect.getsource(test_nothing_fails)
+        else:
+            test_function = inspect.getsource(test_nothing_passes)
+        builder.add_source(test_function)
     return str(builder)
+
