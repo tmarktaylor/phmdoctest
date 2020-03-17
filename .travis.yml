@@ -37,6 +37,11 @@ matrix:
         - phmdoctest tests/example2.md --skip "Python 3.7" --skip LAST --report > tests/tmp/example2_report.txt
         - cmp doc/example2_report.txt tests/tmp/example2_report.txt
 
+        # todo- delete experimental
+        # expected to fail since files are not the same.
+        # Should break the build
+        - cmp doc/test_example1.py doc/example2_report.txt
+
     - python: 3.7
       install: pip install tox
       script: tox -e cover,inspect
