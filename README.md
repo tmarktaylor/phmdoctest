@@ -355,7 +355,7 @@ matrix:
       script:
         - mkdir tests/tmp
         - phmdoctest project.md --report --outfile tests/tmp/test_project_readme.py
-        - pytest --strict tests
+        - pytest --strict -vv tests
 ```
 
 ## Running phmdoctest from the command line as a Python module.
