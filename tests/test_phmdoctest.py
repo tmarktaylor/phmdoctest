@@ -160,8 +160,8 @@ def test_skip_second_when_more_than_one():
     assert 'SECOND        20' in result.status.stdout
 
 
-def test_skip_code_tha_has_no_output_block():
-    """Verify --skip SECOND when more than 1 code block."""
+def test_skip_code_that_has_no_output_block():
+    """Skip code with no output block."""
     command = (
         'phmdoctest tests/example2.md --skip="while a < 1000:"'
         ' --report --outfile discarded.py'

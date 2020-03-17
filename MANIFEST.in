@@ -10,6 +10,7 @@ include doc/*.py
 include doc/*.txt
 include tests/*.md
 include tests/*.py
+include tests/*.txt
 
 include .gitignore
 include .travis.yml

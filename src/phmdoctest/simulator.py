@@ -151,6 +151,8 @@ def run_and_pytest(
         # get characters between double quotes including the quotes
         # get runs of non-whitespace characters
         args1 = re.findall(pattern=r'(".*"|\S+)', string=command4)
+        # todo- issue breaks if more than double quoted string on the line
+
         # If both leading and trailing double quotes, remove them.
         args2 = [re.sub('^"(.*)"$', r'\1', arg) for arg in args1]
         phm_args.extend(args2)
