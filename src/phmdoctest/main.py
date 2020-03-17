@@ -255,7 +255,7 @@ def print_report(args: Args, blocks: List[FencedBlock]) -> None:
     print('\n'.join(report))
 
 
-def fenced_block_report(blocks: List[FencedBlock], title: str='') -> str:
+def fenced_block_report(blocks: List[FencedBlock], title: str = '') -> str:
     """Generate text report about the input file fenced code blocks."""
     table = monotable.MonoTable()
     table.max_cell_height = 7
@@ -277,7 +277,7 @@ def fenced_block_report(blocks: List[FencedBlock], title: str='') -> str:
 
 
 def skips_report(
-        skips: List[str], blocks: List[FencedBlock], title: str='') -> str:
+        skips: List[str], blocks: List[FencedBlock], title: str = '') -> str:
     """Generate text report about the disposition of --skip options."""
     table = monotable.MonoTable()
     table.max_cell_height = 5
@@ -344,4 +344,3 @@ def build_test_cases(args: Args, blocks: List[FencedBlock]) -> str:
             test_function = inspect.getsource(test_nothing_passes)
         builder.add_source(test_function)
     return str(builder)
-

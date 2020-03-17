@@ -21,7 +21,8 @@ def line_by_line_compare_exact(a, b):
 #
 # This template will be customized by replacing:
 # - The _identifier substring of the function name.
-# - Insert example code indented 4 spaces on a new line after the def statement.
+# - Insert example code indented 4 spaces on a new line
+#   after the def statement.
 # - Triple quoted string contents with the expected output.
 def test_identifier(capsys):
     expected_str = """\
@@ -30,7 +31,7 @@ def test_identifier(capsys):
 
 
 class PytestFile:
-    def __init__(self, description: str=''):
+    def __init__(self, description: str = ''):
         docstring = '"""' + description + '"""'
         self.lines = [docstring]
         self._empty_line()

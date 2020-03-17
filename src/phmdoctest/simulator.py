@@ -19,7 +19,8 @@ from click.testing import CliRunner
 from .main import entry_point
 
 
-TestStatus = namedtuple('TestStatus',
+TestStatus = namedtuple(
+    'TestStatus',
     ['status',    # click.CliRunner().invoke() return value
      'outfile',   # copy of the output file as a string
      'pytest_exit_code'])
@@ -30,10 +31,10 @@ counter = itertools.count()
 """
 Iterator that counts up from zero. Used for making a filename.
 
-It is used to make a unique basename (or PurePath.name) when 
+It is used to make a unique basename (or PurePath.name) when
 the invoked phmdoctest writes an OUTFILE into the tempdir.
 This avoids a pytest error when:
-1. simulate_and_pytest() is called a from a 
+1. simulate_and_pytest() is called a from a
    pytest test case function.
 2. simulate_and_pytest() is called a second time from the
    same pytest test case function.
@@ -44,17 +45,17 @@ This avoids a pytest error when:
     <temp dir absolute path>test_1.py
   which is not the same as the test file we want to collect:
    <different temp dir absolute path>test_1.py
-  HINT: remove __pycache__ / .pyc files and/or use a 
+  HINT: remove __pycache__ / .pyc files and/or use a
   unique basename for your test file modules
-  
+
   To see this happen set up 1-3 above and patch counter
-  here to: counter = itertools.cycle([1]) 
+  here to: counter = itertools.cycle([1])
 """
 
 
 def run_and_pytest(
         well_formed_command: str,
-        pytest_options: Optional[List[str]]=None) -> TestStatus:
+        pytest_options: Optional[List[str]] = None) -> TestStatus:
     """
     Simulate a phmdoctest command, optionally run pytest.
 
