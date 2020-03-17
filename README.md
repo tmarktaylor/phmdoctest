@@ -150,8 +150,8 @@ py3        44  code
            51  output
 yaml       59  --
 text       67  --
-py3        72  code
-           78  output
+py3        74  code
+           80  output
 ----------------------------------------------
 5 test cases
 1 code blocks missing an output block
@@ -243,8 +243,8 @@ py3        44  code
            51  output
 yaml       59  --
 text       67  --
-py3        72  skip-code    "LAST"
-           78  skip-output
+py3        74  skip-code    "LAST"
+           80  skip-output
 ---------------------------------------------------
 3 test cases
 2 skipped code blocks
@@ -255,7 +255,7 @@ py3        72  skip-code    "LAST"
 skip pattern  matching code block line number(s)
 ------------------------------------------------
 Python 3.7    20
-LAST          72
+LAST          74
 ------------------------------------------------
 ```
  

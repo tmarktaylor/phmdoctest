@@ -148,7 +148,7 @@ def test_yaml():
         '- phmdoctest project.md --report'
         ' --outfile tests/tmp/test_project_readme.py'
     )
-    test = '- pytest --strict tests'
+    test = '- pytest --strict -vv tests'
     assert install in example_text
     assert mkdir in example_text
     assert command in example_text

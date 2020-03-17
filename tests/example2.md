@@ -68,12 +68,14 @@ some text
 ```
 
 #### One more code plus expected output pair.
+
+Example borrowed from Python Standard Library datetime documentation.
 ```py3
-import datetime
-d = datetime.date.fromisoformat('2020-02-25')
+from datetime import date
+d = date.fromordinal(730920) # 730920th day after 1. 1. 0001
 print(d)
 ```
 
 ```
-2020-02-25
+2002-03-11
 ```
