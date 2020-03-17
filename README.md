@@ -377,7 +377,7 @@ pytest_options are passed as a list of strings as shown below.
 
 ```python
 import phmdoctest.simulator
-command = 'phmdoctest tests/example2.md --report --outfile test_me.py'
+command = 'phmdoctest tests/example1.md --report --outfile test_me.py'
 result = phmdoctest.simulator.run_and_pytest(
     well_formed_command=command,
     pytest_options=['--strict', '-v']

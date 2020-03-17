@@ -38,6 +38,17 @@ class TestSameVersions:
         assert match.group(1) == self.module_version_attribute
 
 
+def test_def_test_nothing_fails():
+    """This is done for code coverage of the function."""
+    with pytest.raises(AssertionError):
+        phmdoctest.main.test_nothing_fails()
+
+
+def test_def_test_nothing_passes():
+    """This is done for code coverage of the function."""
+    phmdoctest.main.test_nothing_passes()
+
+
 def test_skip_same_block_twice():
     """Show identifying a skipped code block more than one time is OK."""
     command = (
@@ -61,17 +72,6 @@ def test_pytest_really_fails():
             pytest_options=['--strict', '-v']
         )
     assert excinfo.type == AssertionError
-
-
-def test_def_test_nothing_fails():
-    """This is done for code coverage of the function."""
-    with pytest.raises(AssertionError):
-        phmdoctest.main.test_nothing_fails()
-
-
-def test_def_test_nothing_passes():
-    """This is done for code coverage of the function."""
-    phmdoctest.main.test_nothing_passes()
 
 
 def test_def_test_identifier():

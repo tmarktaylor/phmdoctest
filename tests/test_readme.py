@@ -167,7 +167,7 @@ def test_yaml():
 # The guts of this function are an exact copy of example in README.md.
 def example_code():
     import phmdoctest.simulator
-    command = 'phmdoctest tests/example2.md --report --outfile test_me.py'
+    command = 'phmdoctest tests/example1.md --report --outfile test_me.py'
     result = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
         pytest_options=['--strict', '-v']
