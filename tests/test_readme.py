@@ -54,11 +54,12 @@ def test_example1():
         verify.a_and_b_are_the_same(want, got)
 
     # Run again and call pytest to make sure the file works with pytest.
-    _ = verify.one_example(
+    simulator_status = verify.one_example(
         example1_command,
         want_file_name=None,
         pytest_options=['--strict', '-v']
     )
+    assert simulator_status.pytest_exit_code == 0
 
 
 def test_report():

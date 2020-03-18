@@ -65,13 +65,12 @@ def test_skip_same_block_twice():
 
 def test_pytest_really_fails():
     """Make sure pytest fails due to incorrect expected output in the .md."""
-    with pytest.raises(AssertionError) as excinfo:
-        _ = verify.one_example(
-            'phmdoctest tests/unexpected_output.md --outfile test_unexpected_output.py',
-            want_file_name=None,
-            pytest_options=['--strict', '-v']
-        )
-    assert excinfo.type == AssertionError
+    simulator_status = verify.one_example(
+        'phmdoctest tests/unexpected_output.md --outfile test_unexpected_output.py',
+        want_file_name=None,
+        pytest_options=['--strict', '-v']
+    )
+    assert simulator_status.pytest_exit_code == 1
 
 
 def test_def_test_identifier():
@@ -160,6 +159,7 @@ def test_skip_second_when_more_than_one():
     assert 'SECOND        20' in result.status.stdout
 
 
+# todo- rewrite to avoid -f string literal failure on py3.5
 def test_skip_code_that_has_no_output_block():
     """Skip code with no output block."""
     command = (

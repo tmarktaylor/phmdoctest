@@ -27,7 +27,4 @@ def one_example(
         with open(want_file_name) as f:
             want = f.read()
             a_and_b_are_the_same(result.outfile, want)
-
-    if pytest_options is not None:
-        assert result.pytest_exit_code == 0
     return result
