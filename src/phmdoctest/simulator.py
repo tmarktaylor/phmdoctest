@@ -11,8 +11,9 @@ from collections import namedtuple
 import itertools
 import os.path
 import re
+import subprocess
 from tempfile import TemporaryDirectory
-from typing import List, Optional
+from typing import Any, List, Optional, NamedTuple
 
 from click.testing import CliRunner
 
@@ -23,7 +24,7 @@ TestStatus = namedtuple(
     'TestStatus',
     ['status',    # click.CliRunner().invoke() return value
      'outfile',   # copy of the output file as a string
-     'pytest_exit_code'])
+     'pytest_exit_code'])    # type: NamedTuple[Any, str, int]
 """run_and_pytest() return value."""
 
 
@@ -173,9 +174,10 @@ def run_and_pytest(
 
         pytest_exit_code = None
         if pytest_options is not None:
-            import pytest    # type: ignore
-            print()    # desirable if terminal shows captured stdout
-            pytest_exit_code = pytest.main(pytest_options + [tmpdirname])
+            completed = subprocess.run(
+                ['python', '-m', 'pytest'] + pytest_options + [tmpdirname])
+            pytest_exit_code = completed.returncode
+
         return TestStatus(
             status=status,
             outfile=outfile_text,
