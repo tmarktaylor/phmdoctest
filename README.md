@@ -1,5 +1,5 @@
 # phmdoctest 
-## version 0.0.2
+## version 0.0.3
 
 Python syntax highlighted Markdown doctest
 
@@ -23,6 +23,7 @@ phmdoctest does **not** do:
 - ellipsis comparisons
 - Python console >>>, ...
 
+[![](https://img.shields.io/pypi/l/phmdoctest.svg)](https://github.com/tmarktaylor/phmdoctest/blob/master/LICENSE.txt)
 [![PyPI](https://img.shields.io/pypi/v/phmdoctest.svg)](https://pypi.python.org/pypi/phmdoctest)
 [![PyPI Python Versions](https://img.shields.io/pypi/pyversions/phmdoctest.svg)](https://pypi.python.org/pypi/phmdoctest)
 
