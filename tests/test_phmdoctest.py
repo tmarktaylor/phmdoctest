@@ -163,7 +163,7 @@ def test_skip_second_when_more_than_one():
 def test_skip_code_that_has_no_output_block():
     """Skip code with no output block."""
     command = (
-        'phmdoctest tests/example2.md --skip="while a < 1000:"'
+        'phmdoctest tests/example2.md --skip SECOND --skip="while a < 1000:"'
         ' --report --outfile discarded.py'
     )
     result = phmdoctest.simulator.run_and_pytest(
@@ -172,7 +172,9 @@ def test_skip_code_that_has_no_output_block():
     )
     assert result.status.exit_code == 0
     assert result.pytest_exit_code == 0
-    assert 'py3        37  skip-code  "while a < 1000:"' in result.status.stdout
+    assert 'py3        20  skip-code    "SECOND"' in result.status.stdout
+    assert 'py3        37  skip-code    "while a < 1000:"' in result.status.stdout
+    assert 'SECOND           20' in result.status.stdout
     assert 'while a < 1000:  37' in result.status.stdout
 
 
