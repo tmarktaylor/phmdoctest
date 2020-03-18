@@ -159,7 +159,6 @@ def test_skip_second_when_more_than_one():
     assert 'SECOND        20' in result.status.stdout
 
 
-# todo- rewrite to avoid -f string literal failure on py3.5
 def test_skip_code_that_has_no_output_block():
     """Skip code with no output block."""
     command = (
