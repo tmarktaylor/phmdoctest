@@ -378,12 +378,12 @@ pytest_options are passed as a list of strings as shown below.
 ```python
 import phmdoctest.simulator
 command = 'phmdoctest tests/example1.md --report --outfile test_me.py'
-result = phmdoctest.simulator.run_and_pytest(
+simulator_status = phmdoctest.simulator.run_and_pytest(
     well_formed_command=command,
     pytest_options=['--strict', '-v']
 )
-assert result.status.exit_code == 0
-assert result.pytest_exit_code == 0
+assert simulator_status.runner_status.exit_code == 0
+assert simulator_status.pytest_exit_code == 0
 ```
 
 ## Hints

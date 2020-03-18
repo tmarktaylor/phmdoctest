@@ -9,7 +9,7 @@ def a_and_b_are_the_same(a, b):
     a_lines = a.splitlines()
     b_lines = b.splitlines()
     for a_line, b_line in zip(a_lines, b_lines):
-        assert a_line == b_line
+        assert a_line == b_line, a_line + '|' + b_line
 
 
 def one_example(
@@ -17,14 +17,14 @@ def one_example(
         want_file_name=None,
         pytest_options=None):
     """Simulate running a phmdoctest command and pytest on the result."""
-    result = phmdoctest.simulator.run_and_pytest(
+    simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command, pytest_options=pytest_options)
     # check that the phmdoctest command succeeded
-    assert result.status.exit_code == 0
+    assert simulator_status.runner_status.exit_code == 0
 
     # check the OUTFILE against the expected value
     if want_file_name is not None:
         with open(want_file_name) as f:
             want = f.read()
-            a_and_b_are_the_same(result.outfile, want)
-    return result
+            a_and_b_are_the_same(simulator_status.outfile, want)
+    return simulator_status

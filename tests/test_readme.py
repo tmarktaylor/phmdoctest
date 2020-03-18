@@ -14,9 +14,9 @@ import verify
 
 # Caution:
 # This test file is run by pytest.
-# The call to invoke_and_pytest() will re-enter pytest main.
-# Pytest captures stdout and so do both CliRunner.invoke()
-# and the pytest main run by invoke_and_pytest().
+# The call to invoke_and_pytest() will start pytest in a
+# subprocess.
+# Pytest captures stdout and so does CliRunner.invoke().
 
 
 def setup_module():
@@ -66,9 +66,9 @@ def test_report():
     """README report output is same as produced by the command."""
     report_command = next(readme_blocks)
     want = next(readme_blocks)
-    result = phmdoctest.simulator.run_and_pytest(
+    simulator_result = phmdoctest.simulator.run_and_pytest(
         report_command, pytest_options=None)
-    got = result.status.stdout
+    got = simulator_result.runner_status.stdout
     verify.a_and_b_are_the_same(want, got)
 
 
@@ -77,21 +77,21 @@ def test_skip_example():
     skip_command = next(readme_blocks)
     want = next(readme_blocks)    # get the skip report
     short_form_command = next(readme_blocks)
-    result = verify.one_example(
+    simulator_status = verify.one_example(
         skip_command,
         want_file_name='doc/test_example2.py',
         pytest_options=None
     )
-    got = result.status.stdout
+    got = simulator_status.runner_status.stdout
     verify.a_and_b_are_the_same(want, got)
 
     # test the first -s form of the --skip
-    result = verify.one_example(
+    simulator_status = verify.one_example(
         short_form_command,
         want_file_name='doc/test_example2.py',
         pytest_options=None
     )
-    got = result.status.stdout
+    got = simulator_status.runner_status.stdout
     verify.a_and_b_are_the_same(want, got)
 
 
@@ -99,22 +99,22 @@ def test_outfile_to_stdout():
     """Make sure generated --outfile and --report are as expected."""
     outfile_command1 = next(readme_blocks)
     outfile_command2 = next(readme_blocks)
-    result = verify.one_example(
+    simulator_status = verify.one_example(
         outfile_command1,
         want_file_name='doc/test_example2.py',
         pytest_options=None
     )
     with open('doc/test_example2.py') as fp:
         want = fp.read()
-    got = result.status.stdout
+    got = simulator_status.runner_status.stdout
     verify.a_and_b_are_the_same(want, got)
 
-    result = verify.one_example(
+    simulator_status = verify.one_example(
         outfile_command2,
         want_file_name='doc/test_example2.py',
         pytest_options=None
     )
-    got = result.status.stdout
+    got = simulator_status.runner_status.stdout
     verify.a_and_b_are_the_same(want, got)
 
 
@@ -129,12 +129,12 @@ def test_usage():
     #       which calls  Click.CliRunner.invoke().  invoke()
     #       displays entry-point as the calling program.
     #       The test here replaces 'entry-point' with 'phmdoctest'.
-    result = phmdoctest.simulator.run_and_pytest(
+    simulator_status = phmdoctest.simulator.run_and_pytest(
         'phmdoctest --help', pytest_options=None)
     want1 = next(readme_blocks)
     want2 = re.sub(r'\s+', ' ', want1)
 
-    got1 = result.status.stdout
+    got1 = simulator_status.runner_status.stdout
     got2 = got1.replace('entry-point', 'phmdoctest', 1)
     got3 = re.sub(r'\s+', ' ', got2)
     verify.a_and_b_are_the_same(want2, got3)
@@ -169,12 +169,12 @@ def test_yaml():
 def example_code():
     import phmdoctest.simulator
     command = 'phmdoctest tests/example1.md --report --outfile test_me.py'
-    result = phmdoctest.simulator.run_and_pytest(
+    simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
         pytest_options=['--strict', '-v']
     )
-    assert result.status.exit_code == 0
-    assert result.pytest_exit_code == 0
+    assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code == 0
 
 
 def test_simulator_python_code():
