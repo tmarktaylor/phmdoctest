@@ -29,11 +29,17 @@ class TestSameVersions:
     module_version_attribute = phmdoctest.__version__
 
     def test_readme_md(self):
-        """Check the version in the second line of README.md."""
+        """Check the version near the top of README.md."""
         with open('README.md', 'r', encoding='utf-8') as f:
-            readme_text = f.readlines()[1]
-        assert readme_text.startswith('## version ')
+            first_few_lines = f.readlines()[:5]
+            readme_text = '\n'.join(first_few_lines)
         assert self.module_version_attribute in readme_text
+
+    def test_recent_changes(self):
+        """Check the version is anywhere in recent_changes.md."""
+        with open('doc/recent_changes.md', 'r', encoding='utf-8') as f:
+            text = f.read()
+        assert self.module_version_attribute in text
 
     def test_setup_py(self):
         """Check the version anywhere in setup.py."""
@@ -42,6 +48,14 @@ class TestSameVersions:
         # keep the part between single or double quotes after version=
         match = re.search(r" *version=['\"]([^'\"]*)['\"]", setup_text, re.M)
         assert match.group(1) == self.module_version_attribute
+
+    def test_conf_py_release(self):
+        """Check version in the release = line in conf.py."""
+        with open('doc/conf.py', 'r', encoding='utf-8') as f:
+            conf_text = f.read()
+        quoted_version = "'" + self.module_version_attribute + "'"
+        want = '\nrelease = ' + quoted_version + '\n'
+        assert want in conf_text
 
 
 def test_def_test_nothing_fails():

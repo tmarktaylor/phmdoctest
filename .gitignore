@@ -24,6 +24,5 @@ htmlcov/
 .idea/
 .exportToHTML
 
-#
-*.html
-tests/*.html
+# Sphinx
+doc/_build/*

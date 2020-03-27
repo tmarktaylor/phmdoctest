@@ -1,5 +1,6 @@
-# phmdoctest 
-## version 0.0.3
+## Introduction
+
+version 0.0.3
 
 Python syntax highlighted Markdown doctest
 
@@ -23,13 +24,13 @@ phmdoctest does **not** do:
 - ellipsis comparisons
 - Python console >>>, ...
 
-[![](https://img.shields.io/pypi/l/phmdoctest.svg)](https://github.com/tmarktaylor/phmdoctest/blob/master/LICENSE.txt)
-[![PyPI](https://img.shields.io/pypi/v/phmdoctest.svg)](https://pypi.python.org/pypi/phmdoctest)
-[![PyPI Python Versions](https://img.shields.io/pypi/pyversions/phmdoctest.svg)](https://pypi.python.org/pypi/phmdoctest)
+[![License Badge](https://img.shields.io/pypi/l/phmdoctest.svg)](https://github.com/tmarktaylor/phmdoctest/blob/master/LICENSE.txt)
+[![PyPI Package Version Badge](https://img.shields.io/pypi/v/phmdoctest.svg)](https://pypi.python.org/pypi/phmdoctest)
+[![PyPI Python Versions Badge](https://img.shields.io/pypi/pyversions/phmdoctest.svg)](https://pypi.python.org/pypi/phmdoctest)
 
 [Python Package Index/phmdoctest](https://pypi.python.org/pypi/phmdoctest)
 
-#### master branch status
+## Master branch status
 
 [![Build Status](https://travis-ci.org/tmarktaylor/phmdoctest.svg?branch=master)](https://travis-ci.org/tmarktaylor/phmdoctest) on [Travis CI](https://travis-ci.org/)
 [![Code Coverage](https://codecov.io/gh/tmarktaylor/phmdoctest/coverage.svg?branch=master)](https://codecov.io/gh/tmarktaylor/phmdoctest?branch=master)
@@ -71,7 +72,7 @@ the command...
 phmdoctest tests/example1.md --outfile test_example1.py
 ```
 
-creates the python source code file [test_example1.py][2] also shown here...
+creates the python source code file `test_example1.py` shown here...
 
 ```python
 """pytest file built from tests/example1.md"""
@@ -260,7 +261,7 @@ LAST          74
 ------------------------------------------------
 ```
  
-and creates the output file [test_example2.py](doc/test_example2.py).
+and creates the output file [test_example2.py](doc/test_example2)
 
 ## -s short option form of --skip
 
@@ -359,13 +360,13 @@ matrix:
         - pytest --strict -vv tests
 ```
 
-## Running phmdoctest from the command line as a Python module.
+## Running phmdoctest from the command line as a Python module
 
 Here is an example:
 
 `python -m phmdoctest tests/example2.md --report`
 
-## Testing phmdoctest from within a Python script.
+## Testing phmdoctest from within a Python script
 
 `phmdoctest.simulator` offers the function `run_and_pytest()`
 which simulates running phmdoctest from the command line.
@@ -398,16 +399,15 @@ assert simulator_status.pytest_exit_code == 0
 - phmdoctest ignores Markdown indented code blocks ([Spec][8] section 4.4).
   
 
-
-## Related PYPI programs
+## Related PYPI projects
 - rundoc
 - byexample
 - doexec
 - egtest
 
+[Recent Changes](doc/recent_changes.md)
 
 [1]: tests/example1.md
-[2]: doc/test_example1.py
 [3]: https://github.github.com/gfm/#fenced-code-blocks
 [10]: https://github.com/tmarktaylor/phmdoctest/blob/master/src/phmdoctest/simulator.py
 [11]: https://github.com/tmarktaylor/phmdoctest/blob/master/src/phmdoctest/tool.py
