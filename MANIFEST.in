@@ -6,11 +6,16 @@ include *.md
 # Include the license file
 include LICENSE.txt
 
-include doc/*.py
-include doc/*.txt
+include checklist.txt
+
+recursive-include doc *.md
+recursive-include doc *.py
+recursive-include doc *.rst
+recursive-include doc *.txt
 include tests/*.md
 include tests/*.py
 include tests/*.txt
+include *.rst
 
 include .gitignore
 include .travis.yml
