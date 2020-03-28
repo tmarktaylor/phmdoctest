@@ -39,7 +39,7 @@ matrix:
 
     - python: 3.7
       install: pip install tox
-      script: tox -e cover,inspect
+      script: tox -e cover,inspect,docs
 
     - python: pypy3
       install: *utest_install
