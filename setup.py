@@ -154,8 +154,14 @@ setup(
     # Similar to `install_requires` above, these must be valid existing
     # projects.
     extras_require={  # Optional
-        'dev': ['check-manifest'],
-        'test': ['coverage', 'pytest'],
+        'test': ['coverage', 'pytest', 'codecov'],
+        'inspect': [
+            'flake8', 'pep8-naming',
+            'mypy', 'typing',
+            'check-manifest' 
+            'twine'
+        ],
+        'docs': ['recommonmark', 'sphinx', 'sphinx_rtd_theme'],
     },
 
     # To provide executable scripts, use entry points in preference to the

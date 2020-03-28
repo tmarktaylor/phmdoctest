@@ -1,0 +1,38 @@
+# .readthedocs.yml
+# Read the Docs configuration file
+# See https://docs.readthedocs.io/en/stable/config-file/v2.html for details
+
+# Required
+version: 2
+
+# Build documentation in the docs/ directory with Sphinx
+sphinx:configuration: doc/conf.py
+
+# Build documentation with MkDocs
+#mkdocs:
+#  configuration: mkdocs.yml
+
+# Optionally build your docs in additional formats such as PDF and ePub
+formats: all
+
+# Optionally set the version of Python and requirements required to build your docs
+#
+# Documentation is built using Sphinx and recommonmark from Markdown
+# with minimal reStrucuredText.
+#
+# Docs consist of the following:
+# index.rst, README.md both at project root
+# doc/conf.py
+# doc/*.md
+# Some README.md links to tests/*.md
+#
+# pip install "." is not required to build the docs.
+# extra_requirements resolves to: pip install .[docs]
+python:
+    version: 3.7
+    install:
+        - method: pip
+        path: .
+        extra_equirements:
+            - docs
+        method: setuptools

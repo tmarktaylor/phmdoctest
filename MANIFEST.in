@@ -18,5 +18,6 @@ include tests/*.txt
 include *.rst
 
 include .gitignore
+include .readthedocs.yml
 include .travis.yml
 include tox.ini
