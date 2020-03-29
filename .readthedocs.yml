@@ -20,12 +20,6 @@ formats: all
 # Documentation is built using Sphinx and recommonmark from Markdown
 # with minimal reStrucuredText.
 #
-# Docs consist of the following:
-# index.rst, README.md both at project root
-# doc/conf.py
-# doc/*.md
-# Some README.md links to tests/*.md
-#
 # pip install "." is not required to build the docs.
 # extra_requirements resolves to: pip install .[docs]
 python:
