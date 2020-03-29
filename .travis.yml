@@ -35,7 +35,7 @@ matrix:
         - cmp doc/test_example2.py tests/tmp/test_example2.py
         # check the saved report against the expected file in doc folder
         - phmdoctest doc/example2.md --skip "Python 3.7" --skip LAST --report > tests/tmp/example2_report.txt
-        - cmp doc/example2_report.txt tests/tmp/example2_report.txt
+        - cmp tests/example2_report.txt tests/tmp/example2_report.txt
 
     - python: 3.7
       install: pip install tox
