@@ -1,7 +1,8 @@
 include pyproject.toml
 
-# Include the README
+# Include the README and Sphinx master file
 include *.md
+include *.rst
 
 # Include the license file
 include LICENSE.txt
@@ -15,9 +16,11 @@ recursive-include doc *.txt
 recursive-include tests *.md
 recursive-include tests *.py
 recursive-include tests *.txt
-include *.rst
 
 include .gitignore
 include .readthedocs.yml
 include .travis.yml
 include tox.ini
+
+# Don't want Sphinx build artifacts
+recursive-exclude doc/_build *
