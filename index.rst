@@ -12,7 +12,7 @@ phmdoctest 0.0.3
 
    README.md
    doc/recent_changes
-   doc/list_of_examples
+   doc/about
 
    
 Search

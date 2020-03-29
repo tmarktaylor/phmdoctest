@@ -16,17 +16,7 @@ sphinx:configuration: doc/conf.py
 formats: all
 
 # Optionally set the version of Python and requirements required to build your docs
-#
-# Documentation is built using Sphinx and recommonmark from Markdown
-# with minimal reStrucuredText.
-#
-# pip install "." is not required to build the docs.
-# extra_requirements resolves to: pip install .[docs]
 python:
     version: 3.7
     install:
-        - method: pip
-        path: .
-        extra_equirements:
-            - docs
-        method: setuptools
+        - requirements: doc/requirements.txt
