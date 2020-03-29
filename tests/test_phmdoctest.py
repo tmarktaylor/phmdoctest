@@ -22,24 +22,34 @@ class TestSameVersions:
 
     Obtain the version string from various places in the source tree
     and check that they are all the same.
+    Compare all the occurrences to phmdoctest.__version__.
     This test does not prove the version is correct.
-
-    Whitespace around the equals sign in the version statement IS significant.
+    Whitespace may be significant in some cases.
     """
-    module_version_attribute = phmdoctest.__version__
+    package_version = phmdoctest.__version__
+
+    def verify_found_in_file(self, filename, format_spec='{}'):
+        """Format the package version and look for result in caller's file."""
+        looking_for = format_spec.format(self.package_version)
+        with open(filename, 'r', encoding='utf-8') as f:
+            text = f.read()
+        assert looking_for in text
 
     def test_readme_md(self):
         """Check the version near the top of README.md."""
-        with open('README.md', 'r', encoding='utf-8') as f:
-            first_few_lines = f.readlines()[:5]
-            readme_text = '\n'.join(first_few_lines)
-        assert self.module_version_attribute in readme_text
+        self.verify_found_in_file('README.md', '**phmdoctest {}**')
+
+    def test_index_rst(self):
+        """Check the version is anywhere in index.rst."""
+        self.verify_found_in_file('index.rst', 'phmdoctest {}\n=============')
 
     def test_recent_changes(self):
         """Check the version is anywhere in recent_changes.md."""
-        with open('doc/recent_changes.md', 'r', encoding='utf-8') as f:
-            text = f.read()
-        assert self.module_version_attribute in text
+        self.verify_found_in_file('doc/recent_changes.md', '{} - ')
+
+    def test_conf_py_release(self):
+        """Check version in the release = line in conf.py."""
+        self.verify_found_in_file('doc/conf.py', "release = '{}'")
 
     def test_setup_py(self):
         """Check the version anywhere in setup.py."""
@@ -47,15 +57,7 @@ class TestSameVersions:
             setup_text = f.read()
         # keep the part between single or double quotes after version=
         match = re.search(r" *version=['\"]([^'\"]*)['\"]", setup_text, re.M)
-        assert match.group(1) == self.module_version_attribute
-
-    def test_conf_py_release(self):
-        """Check version in the release = line in conf.py."""
-        with open('doc/conf.py', 'r', encoding='utf-8') as f:
-            conf_text = f.read()
-        quoted_version = "'" + self.module_version_attribute + "'"
-        want = '\nrelease = ' + quoted_version + '\n'
-        assert want in conf_text
+        assert match.group(1) == self.package_version
 
 
 def test_def_test_nothing_fails():
@@ -72,7 +74,7 @@ def test_def_test_nothing_passes():
 def test_skip_same_block_twice():
     """Show identifying a skipped code block more than one time is OK."""
     command = (
-        'phmdoctest tests/example2.md --skip "Python 3.7" --skip LAST'
+        'phmdoctest doc/example2.md --skip "Python 3.7" --skip LAST'
         ' --skip LAST --report --outfile discarded.py'
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
@@ -121,7 +123,7 @@ def test_def_test_identifier():
 def test_skip_first():
     """Verify --skip FIRST."""
     command = (
-        'phmdoctest tests/example2.md --skip "Python 3.7" -sFIRST'
+        'phmdoctest doc/example2.md --skip "Python 3.7" -sFIRST'
         ' --skip LAST --report --outfile discarded.py'
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
@@ -138,7 +140,7 @@ def test_skip_first():
 def test_skip_second():
     """Verify --skip SECOND."""
     command = (
-        'phmdoctest tests/example2.md --skip SECOND'
+        'phmdoctest doc/example2.md --skip SECOND'
         ' --report --outfile discarded.py'
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
@@ -155,7 +157,7 @@ def test_skip_second():
 def test_skip_second_when_only_one():
     """Verify --skip SECOND selects no block when only 1 code block."""
     command = (
-        'phmdoctest tests/example1.md -sFIRST'
+        'phmdoctest doc/example1.md -sFIRST'
         ' --skip SECOND --report --outfile discarded.py'
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
@@ -171,7 +173,7 @@ def test_skip_second_when_only_one():
 def test_skip_second_when_more_than_one():
     """Verify --skip SECOND when more than 1 code block."""
     command = (
-        'phmdoctest tests/example2.md -sFIRST'
+        'phmdoctest doc/example2.md -sFIRST'
         ' --skip SECOND --report --outfile discarded.py'
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
@@ -188,7 +190,7 @@ def test_skip_second_when_more_than_one():
 def test_skip_code_that_has_no_output_block():
     """Skip code with no output block."""
     command = (
-        'phmdoctest tests/example2.md --skip SECOND --skip="while a < 1000:"'
+        'phmdoctest doc/example2.md --skip SECOND --skip="while a < 1000:"'
         ' --report --outfile discarded.py'
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
@@ -206,7 +208,7 @@ def test_skip_code_that_has_no_output_block():
 
 def test_multiple_skips_report():
     """More than one skip applied to the same Python code block."""
-    command = 'phmdoctest tests/example2.md --report -sprint -slen'
+    command = 'phmdoctest doc/example2.md --report -sprint -slen'
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
         pytest_options=None
@@ -220,7 +222,7 @@ def test_multiple_skips_report():
 def test_no_blocks_left_to_test_passing():
     """Generate a pytest file that passes when no blocks to test."""
     command = (
-        'phmdoctest tests/example1.md -sFIRST'
+        'phmdoctest doc/example1.md -sFIRST'
         ' --skip SECOND --report --outfile discarded.py'
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
@@ -235,7 +237,7 @@ def test_no_blocks_left_to_test_passing():
 def test_no_blocks_left_to_test_fails():
     """Generate a pytest file that asserts when no blocks to test."""
     command = (
-        'phmdoctest tests/example1.md -sFIRST --fail-nocode'
+        'phmdoctest doc/example1.md -sFIRST --fail-nocode'
         ' --skip SECOND --report --outfile discarded.py'
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
@@ -279,7 +281,7 @@ def test_missing_markdown_file():
 
 def test_bad_usage_option():
     """Usage error for misspelled option."""
-    command = 'phmdoctest tests/example1.md --troper --outfile discarded.py'
+    command = 'phmdoctest doc/example1.md --troper --outfile discarded.py'
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
         pytest_options=['--strict', '-v']

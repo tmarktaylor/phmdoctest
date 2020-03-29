@@ -1,4 +1,4 @@
-"""pytest file built from tests/example1.md"""
+"""pytest file built from doc/example1.md"""
 
 
 def line_by_line_compare_exact(a, b):

@@ -23,8 +23,8 @@ matrix:
         - mkdir tests/tmp
         # Run phmdoctest to generate test file and print the report.
         - phmdoctest project.md --report --outfile tests/tmp/test_project_readme.py
-        - phmdoctest tests/example1.md --report --outfile tests/tmp/test_example1.py
-        - phmdoctest tests/example2.md --skip "Python 3.7" --skip LAST --report --outfile tests/tmp/test_example2.py
+        - phmdoctest doc/example1.md --report --outfile tests/tmp/test_example1.py
+        - phmdoctest doc/example2.md --skip "Python 3.7" --skip LAST --report --outfile tests/tmp/test_example2.py
         # run the project test suite including the generated tests
         - pytest --strict -vv tests
 
@@ -34,7 +34,7 @@ matrix:
         - cmp doc/test_example1.py tests/tmp/test_example1.py
         - cmp doc/test_example2.py tests/tmp/test_example2.py
         # check the saved report against the expected file in doc folder
-        - phmdoctest tests/example2.md --skip "Python 3.7" --skip LAST --report > tests/tmp/example2_report.txt
+        - phmdoctest doc/example2.md --skip "Python 3.7" --skip LAST --report > tests/tmp/example2_report.txt
         - cmp doc/example2_report.txt tests/tmp/example2_report.txt
 
     - python: 3.7

@@ -12,9 +12,9 @@ recursive-include doc *.md
 recursive-include doc *.py
 recursive-include doc *.rst
 recursive-include doc *.txt
-include tests/*.md
-include tests/*.py
-include tests/*.txt
+recursive-include tests *.md
+recursive-include tests *.py
+recursive-include tests *.txt
 include *.rst
 
 include .gitignore

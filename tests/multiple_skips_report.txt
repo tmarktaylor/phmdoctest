@@ -1,4 +1,4 @@
-          tests\example2.md fenced blocks
+           doc\example2.md fenced blocks
 ---------------------------------------------------
 block    line  test         skip pattern/reason
 type   number  role         quoted and one per line

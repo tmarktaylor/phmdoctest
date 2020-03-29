@@ -20,16 +20,26 @@ import verify
 
 
 def setup_module():
-    """Collect Markdown fenced code blocks contents from README.md."""
+    """Collect Markdown fenced code blocks contents from README.md.
+
+    The test cases here must be run in order because they
+    take remove items from readme_blocks defined below.
+
+    This means using a pytest -k KEY more specific than
+    "-k test_readme" risks taking the wrong block from the
+    iterator readme_blocks causing all subsequent test_readme
+    test case to fail.
+
+    """
     # test cases below iterate through the blocks.
     global readme_blocks
     readme_blocks = iter(phmdoctest.tool.fenced_code_blocks('README.md'))
 
 
 def test_raw_example1_md():
-    """README raw markdown is same as file tests/example1.md."""
+    """README raw markdown is same as file doc/example1.md."""
     want = next(readme_blocks)
-    with open('tests/example1.md') as fp:
+    with open('doc/example1.md') as fp:
         got = fp.read()
         verify.a_and_b_are_the_same(want, got)
 
@@ -168,7 +178,7 @@ def test_yaml():
 # The guts of this function are an exact copy of example in README.md.
 def example_code():
     import phmdoctest.simulator
-    command = 'phmdoctest tests/example1.md --report --outfile test_me.py'
+    command = 'phmdoctest doc/example1.md --report --outfile test_me.py'
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
         pytest_options=['--strict', '-v']

@@ -1,3 +1,4 @@
+# This file's generated test fails due to a bug.
 The code
 ```python3
 from enum import Enum

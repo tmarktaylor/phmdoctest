@@ -1,6 +1,6 @@
 ## Introduction
 
-version 0.0.3
+**phmdoctest 0.0.3**
 
 Python syntax highlighted Markdown doctest
 
@@ -8,7 +8,7 @@ Command line program to test Python syntax highlighted code
 examples in Markdown.
 
 - No extra tags or html comments needed in the Markdown. No Markdown edits at all.
-- No `<BLANKLINE>` needed in output. [doctest][1]
+- No `<BLANKLINE>` needed in output. [doctest][4]
 - Synthesizes a pytest test file from examples in Markdown.
 - Reads Python source code and expected
   terminal output from Markdown fenced code blocks.
@@ -28,10 +28,6 @@ phmdoctest does **not** do:
 [![PyPI Package Version Badge](https://img.shields.io/pypi/v/phmdoctest.svg)](https://pypi.python.org/pypi/phmdoctest)
 [![PyPI Python Versions Badge](https://img.shields.io/pypi/pyversions/phmdoctest.svg)](https://pypi.python.org/pypi/phmdoctest)
 
-[Python Package Index/phmdoctest](https://pypi.python.org/pypi/phmdoctest)
-
-## Master branch status
-
 [![Build Status](https://travis-ci.org/tmarktaylor/phmdoctest.svg?branch=master)](https://travis-ci.org/tmarktaylor/phmdoctest) on [Travis CI](https://travis-ci.org/)
 [![Code Coverage](https://codecov.io/gh/tmarktaylor/phmdoctest/coverage.svg?branch=master)](https://codecov.io/gh/tmarktaylor/phmdoctest?branch=master)
 
@@ -40,7 +36,7 @@ phmdoctest does **not** do:
 
 ## Sample usage
 
-Given the Markdown file [tests/example1.md][1]
+Given the Markdown file [example1.md](doc/example1.md)
 shown in raw form here...
 
 ~~~
@@ -69,13 +65,13 @@ Floats.ADUCK
 
 the command...
 ```
-phmdoctest tests/example1.md --outfile test_example1.py
+phmdoctest doc/example1.md --outfile test_example1.py
 ```
 
 creates the python source code file `test_example1.py` shown here...
 
 ```python
-"""pytest file built from tests/example1.md"""
+"""pytest file built from doc/example1.md"""
 
 
 def line_by_line_compare_exact(a, b):
@@ -113,7 +109,7 @@ to test the Markdown code and expected output blocks.
     pytest --strict 
 
 The `4` in the function name `test_code_4_output_17` is the
-line number in [tests/example1.md][1] of the first line
+line number in [example1.md](doc/example1.md) of the first line
 of python code. `17` shows the line number of the expected 
 terminal output.
 
@@ -128,16 +124,16 @@ To see the [GFM fenced code blocks][3] in the MARKDOWN_FILE use the
 --report option like this:
 
 ```
-phmdoctest tests/example2.md --report
+phmdoctest doc/example2.md --report
 ```
 
 which lists the fenced code blocks it found in
-the file [tests/example2.md](tests/example2.md).
+the file [example2.md](doc/example2.md).
 The `test role` column shows how phmdoctest 
 will test each fenced code block.  
 
 ```
-       tests/example2.md fenced blocks
+        doc/example2.md fenced blocks
 ----------------------------------------------
 block    line  test    skip pattern/reason
 type   number  role    quoted and one per line
@@ -225,12 +221,12 @@ Only Python blocks are counted.
 
 This command
 ```
-phmdoctest tests/example2.md --skip "Python 3.7" --skip LAST --report --outfile test_example2.py
+phmdoctest doc/example2.md --skip "Python 3.7" --skip LAST --report --outfile test_example2.py
 ```
 
 Produces the report
 ```
-          tests/example2.md fenced blocks
+           doc/example2.md fenced blocks
 ---------------------------------------------------
 block    line  test         skip pattern/reason
 type   number  role         quoted and one per line
@@ -269,7 +265,7 @@ This is the same command as above using the short `-s` form of the --skip option
 in two places.
 It produces the same report and outfile.
 ```
-phmdoctest tests/example2.md -s "Python 3.7" -sLAST --report --outfile test_example2.py
+phmdoctest doc/example2.md -s "Python 3.7" -sLAST --report --outfile test_example2.py
 ```
 
 ## --fail-nocode
@@ -295,11 +291,11 @@ of these two commands.
 
 Be sure to leave out `--report` when sending --outfile to standard output.
 ```
-phmdoctest tests/example2.md -s "Python 3.7" -sLAST --outfile -
+phmdoctest doc/example2.md -s "Python 3.7" -sLAST --outfile -
 ```
 or
 ```
-phmdoctest tests/example2.md -s "Python 3.7" -sLAST --outfile=-
+phmdoctest doc/example2.md -s "Python 3.7" -sLAST --outfile=-
 ```
 
 ## Usage
@@ -364,7 +360,7 @@ matrix:
 
 Here is an example:
 
-`python -m phmdoctest tests/example2.md --report`
+`python -m phmdoctest doc/example2.md --report`
 
 ## Testing phmdoctest from within a Python script
 
@@ -379,7 +375,7 @@ pytest_options are passed as a list of strings as shown below.
 
 ```python
 import phmdoctest.simulator
-command = 'phmdoctest tests/example1.md --report --outfile test_me.py'
+command = 'phmdoctest doc/example1.md --report --outfile test_me.py'
 simulator_status = phmdoctest.simulator.run_and_pytest(
     well_formed_command=command,
     pytest_options=['--strict', '-v']
@@ -407,7 +403,6 @@ assert simulator_status.pytest_exit_code == 0
 
 [Recent Changes](doc/recent_changes.md)
 
-[1]: tests/example1.md
 [3]: https://github.github.com/gfm/#fenced-code-blocks
 [10]: https://github.com/tmarktaylor/phmdoctest/blob/master/src/phmdoctest/simulator.py
 [11]: https://github.com/tmarktaylor/phmdoctest/blob/master/src/phmdoctest/tool.py
