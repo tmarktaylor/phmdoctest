@@ -11,6 +11,7 @@ Checklist
 - git ls-files
 - Run mypy against package sources
 - Run flake8
+- Build the Sphinx html documents and check/update doc/requirements.txt)
 - Release on GitHub
   - tag= v0.0.3
   - release= phmdoctest 0.0.0

@@ -57,6 +57,12 @@ They probably should be in a new folder.
 - doc/test_example1.py
 - doc/test_example2.py
 
+Read the Docs hosting
+~~~~~~~~~~~~~~~~~~~~~
+
+The Sphinx documentation is hosted by readthedocs.org.
+The versions in [doc/requirements.txt](requirements.txt) have been
+pinned to what is currently available.
 
 Issues
 ~~~~~~
@@ -74,7 +80,7 @@ Issues
   at the repository root.
   This problems is potentially solved by using Symlinks in the repository.
   That was not attempted. recommonmark and black use them to help build
-  their documentaion.
+  their documentation.
 
 (excluded from contents)
 ~~~~~~~~~~~~~~~~~~~~~~~~
