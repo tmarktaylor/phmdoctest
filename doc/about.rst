@@ -39,10 +39,10 @@ root
 - .readthedocs.yml
 - index.rst
 - README.md
+- conf.py
 
 /doc
 
-- conf.py
 - about.rst
 - recent_changes.md
 - requirements.txt

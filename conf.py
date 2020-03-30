@@ -14,6 +14,8 @@ import os
 
 # -- Project information -----------------------------------------------------
 
+# Configuration for Sphinx 1.8.5
+
 project = 'phmdoctest'
 copyright = '2020, Mark Taylor'
 author = 'Mark Taylor'
