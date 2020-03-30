@@ -24,13 +24,20 @@ phmdoctest does **not** do:
 - ellipsis comparisons
 - Python console >>>, ...
 
-[![License Badge](https://img.shields.io/pypi/l/phmdoctest.svg)](https://github.com/tmarktaylor/phmdoctest/blob/master/LICENSE.txt)
-[![PyPI Package Version Badge](https://img.shields.io/pypi/v/phmdoctest.svg)](https://pypi.python.org/pypi/phmdoctest)
-[![PyPI Python Versions Badge](https://img.shields.io/pypi/pyversions/phmdoctest.svg)](https://pypi.python.org/pypi/phmdoctest)
+##### master branch status
+[![](https://img.shields.io/pypi/l/phmdoctest.svg)](https://github.com/tmarktaylor/phmdoctest/blob/master/LICENSE.txt)
+[![](https://img.shields.io/pypi/v/phmdoctest.svg)](https://pypi.python.org/pypi/phmdoctest)
+[![](https://img.shields.io/pypi/pyversions/phmdoctest.svg)](https://pypi.python.org/pypi/phmdoctest)
 
-[![Documentation Status](https://readthedocs.org/projects/badge/?version=latest)](https://phmdoctest.readthedocs.io/en/latest/?badge=latest)
-[![Build Status](https://travis-ci.org/tmarktaylor/phmdoctest.svg?branch=master)](https://travis-ci.org/tmarktaylor/phmdoctest) on [Travis CI](https://travis-ci.org/)
-[![Code Coverage](https://codecov.io/gh/tmarktaylor/phmdoctest/coverage.svg?branch=master)](https://codecov.io/gh/tmarktaylor/phmdoctest?branch=master)
+[![](https://readthedocs.org/projects/phmdoctest/badge/?version=latest)](https://phmdoctest.readthedocs.io/en/latest/?badge=latest)
+[![](https://travis-ci.org/tmarktaylor/phmdoctest.svg?branch=master)](https://travis-ci.org/tmarktaylor/phmdoctest)
+[![](https://codecov.io/gh/tmarktaylor/phmdoctest/coverage.svg?branch=master)](https://codecov.io/gh/tmarktaylor/phmdoctest?branch=master)
+
+[License](https://github.com/tmarktaylor/phmdoctest/blob/master/LICENSE.txt) |
+[Documentation](https://phmdoctest.readthedocs.io/en/latest/) |
+[Build](https://travis-ci.org/tmarktaylor/phmdoctest) |
+[Coverage](https://codecov.io/gh/tmarktaylor/phmdoctest?branch=master)
+
 
 ## Installation
     pip install phmdoctest
