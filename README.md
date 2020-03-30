@@ -33,10 +33,11 @@ phmdoctest does **not** do:
 [![](https://travis-ci.org/tmarktaylor/phmdoctest.svg?branch=master)](https://travis-ci.org/tmarktaylor/phmdoctest)
 [![](https://codecov.io/gh/tmarktaylor/phmdoctest/coverage.svg?branch=master)](https://codecov.io/gh/tmarktaylor/phmdoctest?branch=master)
 
-[License](https://github.com/tmarktaylor/phmdoctest/blob/master/LICENSE.txt) |
 [Documentation](https://phmdoctest.readthedocs.io/en/latest/) |
+[Homepage](https://github.com/tmarktaylor/phmdoctest) |
 [Build](https://travis-ci.org/tmarktaylor/phmdoctest) |
-[Coverage](https://codecov.io/gh/tmarktaylor/phmdoctest?branch=master)
+[Coverage](https://codecov.io/gh/tmarktaylor/phmdoctest?branch=master) |
+[License](https://github.com/tmarktaylor/phmdoctest/blob/master/LICENSE.txt)
 
 
 ## Installation
