@@ -14,6 +14,8 @@ import os
 
 # -- Project information -----------------------------------------------------
 
+# This file is placed in the project root directory rather than /doc.
+
 # Configuration for Sphinx 1.8.5
 
 project = 'phmdoctest'

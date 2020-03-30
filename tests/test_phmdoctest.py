@@ -37,7 +37,7 @@ class TestSameVersions:
 
     def test_readme_md(self):
         """Check the version near the top of README.md."""
-        self.verify_found_in_file('README.md', '**phmdoctest {}**')
+        self.verify_found_in_file('README.md', '# phmdoctest {}')
 
     def test_index_rst(self):
         """Check the version is anywhere in index.rst."""
@@ -49,7 +49,7 @@ class TestSameVersions:
 
     def test_conf_py_release(self):
         """Check version in the release = line in conf.py."""
-        self.verify_found_in_file('doc/conf.py', "release = '{}'")
+        self.verify_found_in_file('conf.py', "release = '{}'")
 
     def test_setup_py(self):
         """Check the version anywhere in setup.py."""

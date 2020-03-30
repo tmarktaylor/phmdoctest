@@ -1,6 +1,6 @@
-## Introduction
+# phmdoctest 0.0.3
 
-**phmdoctest 0.0.3**
+## Introduction
 
 Python syntax highlighted Markdown doctest
 
