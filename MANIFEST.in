@@ -8,6 +8,7 @@ include *.rst
 include LICENSE.txt
 
 include checklist.txt
+include conf.py
 
 recursive-include doc *.md
 recursive-include doc *.py
