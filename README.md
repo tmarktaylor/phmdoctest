@@ -36,7 +36,7 @@ phmdoctest does **not** do:
 [Documentation](https://phmdoctest.readthedocs.io/en/latest/) |
 [Homepage](https://github.com/tmarktaylor/phmdoctest) |
 [Build](https://travis-ci.org/tmarktaylor/phmdoctest) |
-[Coverage](https://codecov.io/gh/tmarktaylor/phmdoctest?branch=master) |
+[Codecov](https://codecov.io/gh/tmarktaylor/phmdoctest?branch=master) |
 [License](https://github.com/tmarktaylor/phmdoctest/blob/master/LICENSE.txt)
 
 
