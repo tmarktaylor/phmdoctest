@@ -92,8 +92,8 @@ def test_skip_example():
         want_file_name='doc/test_example2.py',
         pytest_options=None
     )
-    got = simulator_status.runner_status.stdout
-    verify.a_and_b_are_the_same(want, got)
+    got1 = simulator_status.runner_status.stdout
+    verify.a_and_b_are_the_same(want, got1)
 
     # test the first -s form of the --skip
     simulator_status = verify.one_example(
@@ -101,8 +101,8 @@ def test_skip_example():
         want_file_name='doc/test_example2.py',
         pytest_options=None
     )
-    got = simulator_status.runner_status.stdout
-    verify.a_and_b_are_the_same(want, got)
+    got2 = simulator_status.runner_status.stdout
+    verify.a_and_b_are_the_same(want, got2)
 
 
 def test_outfile_to_stdout():
@@ -116,16 +116,16 @@ def test_outfile_to_stdout():
     )
     with open('doc/test_example2.py') as fp:
         want = fp.read()
-    got = simulator_status.runner_status.stdout
-    verify.a_and_b_are_the_same(want, got)
+    got1 = simulator_status.runner_status.stdout
+    verify.a_and_b_are_the_same(want, got1)
 
     simulator_status = verify.one_example(
         outfile_command2,
         want_file_name='doc/test_example2.py',
         pytest_options=None
     )
-    got = simulator_status.runner_status.stdout
-    verify.a_and_b_are_the_same(want, got)
+    got2 = simulator_status.runner_status.stdout
+    verify.a_and_b_are_the_same(want, got2)
 
 
 def test_usage():

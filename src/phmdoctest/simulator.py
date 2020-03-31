@@ -14,16 +14,16 @@ import subprocess
 from tempfile import TemporaryDirectory
 from typing import Any, List, Optional, NamedTuple
 
-from click.testing import CliRunner
+import click.testing
 
 from .main import entry_point
 
 
-SimulatorStatus = namedtuple(
-    'SimulatorStatus',
-    ['runner_status',    # click.CliRunner().invoke() return value
-     'outfile',   # copy of the output file as a string
-     'pytest_exit_code'])    # type: NamedTuple[Any, str, int]
+SimulatorStatus = NamedTuple('SimulatorStatus',
+    [('runner_status', click.testing.Result),
+     ('outfile', Optional[str]),
+     ('pytest_exit_code', Optional[int])
+    ])
 """run_and_pytest() return value."""
 
 
@@ -39,7 +39,6 @@ def run_and_pytest(
 
     To run pytest on an --outfile, pass a list of zero or
     more pytest_options.  pytest is run in a subprocess.
-    To see the subprocess output
 
     The PYPI package pytest must be installed separately
     since pytest is not required to install phmdoctest.
@@ -92,7 +91,7 @@ def run_and_pytest(
             command1.endswith('--outfile=-')
     )
     no_outfile = '--outfile' not in command1
-    runner = CliRunner()
+    runner = click.testing.CliRunner()
     if wants_help or wants_version or stream_outfile or no_outfile:
         return SimulatorStatus(
             runner_status=runner.invoke(cli=entry_point, args=command1),
@@ -152,7 +151,7 @@ def run_and_pytest(
             )
 
         # Copy the generated pytest file from the isolated filesystem.
-        with open(outfile_path, 'r') as fp:
+        with open(outfile_path, 'r', encoding='utf-8') as fp:
             outfile_text = fp.read()
 
         pytest_exit_code = None

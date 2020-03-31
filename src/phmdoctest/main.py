@@ -225,6 +225,7 @@ def apply_skips(args: Args, code_blocks: List[FencedBlock]) -> None:
 
 
 def print_report(args: Args, blocks: List[FencedBlock]) -> None:
+    """Print Markdown fenced block report and skips report."""
     report = []
     filename = click.format_filename(args.markdown_file)
     title1 = filename + ' fenced blocks'
@@ -296,9 +297,6 @@ def skips_report(
     return text
 
 
-_ASSERTION_MESSAGE = 'zero length {} block at line {}'
-
-
 def test_nothing_fails() -> None:
     """Fail if no Python code blocks were processed."""
     assert False, 'nothing to test'
@@ -308,6 +306,9 @@ def test_nothing_passes() -> None:
     """Succeed  if no Python code blocks were processed."""
     # nothing to test
     pass
+
+
+_ASSERTION_MESSAGE = 'zero length {} block at line {}'
 
 
 def build_test_cases(args: Args, blocks: List[FencedBlock]) -> str:
