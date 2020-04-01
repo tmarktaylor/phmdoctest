@@ -266,7 +266,7 @@ LAST          74
 ------------------------------------------------
 ```
  
-and creates the output file [test_example2.py](doc/test_example2)
+and creates the output file [test_example2.py](doc/test_example2.py)
 
 ## -s short option form of --skip
 

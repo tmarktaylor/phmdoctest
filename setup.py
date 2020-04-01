@@ -158,7 +158,7 @@ setup(
         'inspect': [
             'flake8', 'pep8-naming',
             'mypy', 'typing',
-            'check-manifest' 
+            'check-manifest',
             'twine'
         ],
         'docs': ['recommonmark', 'sphinx', 'sphinx_rtd_theme'],

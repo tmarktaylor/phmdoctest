@@ -19,6 +19,9 @@ import verify
 # Pytest captures stdout and so does CliRunner.invoke().
 
 
+readme_blocks = []
+
+
 def setup_module():
     """Collect Markdown fenced code blocks contents from README.md.
 

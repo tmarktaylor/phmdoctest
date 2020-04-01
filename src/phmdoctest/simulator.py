@@ -7,23 +7,23 @@ temporary directory.
 Optionally run pytest on the temporary file.
 """
 
-from collections import namedtuple
 import os.path
 import re
 import subprocess
 from tempfile import TemporaryDirectory
-from typing import Any, List, Optional, NamedTuple
+from typing import List, Optional, NamedTuple
 
 import click.testing
 
 from .main import entry_point
 
 
-SimulatorStatus = NamedTuple('SimulatorStatus',
+SimulatorStatus = NamedTuple(
+    'SimulatorStatus',
     [('runner_status', click.testing.Result),
      ('outfile', Optional[str]),
      ('pytest_exit_code', Optional[int])
-    ])
+     ])
 """run_and_pytest() return value."""
 
 
