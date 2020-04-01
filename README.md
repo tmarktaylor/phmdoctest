@@ -1,4 +1,4 @@
-# phmdoctest 0.0.3
+# phmdoctest 0.0.4
 
 ## Introduction
 
@@ -266,7 +266,7 @@ LAST          74
 ------------------------------------------------
 ```
  
-and creates the output file [test_example2.py](doc/test_example2.py)
+and creates the output file [test_example2.py][2]
 
 ## -s short option form of --skip
 
@@ -415,6 +415,7 @@ assert simulator_status.pytest_exit_code == 0
 [3]: https://github.github.com/gfm/#fenced-code-blocks
 [10]: https://github.com/tmarktaylor/phmdoctest/blob/master/src/phmdoctest/simulator.py
 [11]: https://github.com/tmarktaylor/phmdoctest/blob/master/src/phmdoctest/tool.py
+[2]: https://github.com/tmarktaylor/phmdoctest/blob/master/src/phmdoctest/doc/test_example2.py
 [7]: https://pypi.org/project/commonmark
 [8]: https://spec.commonmark.org
 [9]: https://commonmark.org

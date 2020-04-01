@@ -13,7 +13,7 @@ Checklist
 - Run flake8
 - Build the Sphinx html documents and check/update doc/requirements.txt)
 - Release on GitHub
-  - tag= v0.0.3
+  - tag= v0.0.0
   - release= phmdoctest 0.0.0
   - description= Version 0.0.0 uploaded to Python Package Index.
 - Download zip from github to scratch directory
