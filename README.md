@@ -216,8 +216,8 @@ in the test role column and the Python blocks that
 matched each --skip TEXT in the skips section.
 
 This option makes it **very easy** to **inadvertently exclude**
-Python blocks from the test cases.  The option `--fail-nocode`
-will cause the generated test to fail.
+Python blocks from the test cases.  In the event no test cases are
+generated, the option `--fail-nocode` described below is useful.
 
 Three special `--skip TEXT` strings work a little differently.
 They select one of the first, second, or last of the Python blocks.
@@ -342,7 +342,7 @@ Options:
 The partial script shown below is for Python 3.5 on [Travis CI][5].
 The script steps are:
 
-- Install pytest.
+- Install from setup.py and install pytest.
 - Create a new directory to take the generated test file.
 - Run phmdoctest to generate the test file and print the report.
 - Run pytest suite.
@@ -415,7 +415,7 @@ assert simulator_status.pytest_exit_code == 0
 [3]: https://github.github.com/gfm/#fenced-code-blocks
 [10]: https://github.com/tmarktaylor/phmdoctest/blob/master/src/phmdoctest/simulator.py
 [11]: https://github.com/tmarktaylor/phmdoctest/blob/master/src/phmdoctest/tool.py
-[2]: https://github.com/tmarktaylor/phmdoctest/blob/master/src/phmdoctest/doc/test_example2.py
+[2]: doc/test_example2.md
 [7]: https://pypi.org/project/commonmark
 [8]: https://spec.commonmark.org
 [9]: https://commonmark.org
