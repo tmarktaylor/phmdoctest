@@ -109,7 +109,6 @@ Floats.CHERRIES
 Floats.ADUCK
 """
     line_by_line_compare_exact(a=expected_str, b=capsys.readouterr().out)
-
 ```
 
 Then run a pytest command something like this in your terminal

@@ -49,7 +49,7 @@ def run_and_pytest(
     SimulatorStatus.runner_status is the CliRunner.invoke return value.
 
     If an outfile is written or streamed to stdout a copy of it
-    is returned in SimulatorStatus.outfile.
+    is found in simulator_status.runner_status.stdout.
 
     If calling run_and_pytest() from a pytest file, add the
     pytest option --capture=tee-sys to the command running
@@ -80,9 +80,11 @@ def run_and_pytest(
         SimulatorStatus containing runner_status, outfile,
         and pytest_exit_code.
     """
-    # chop off phmdoctest since invoking by a python function call
     assert well_formed_command.startswith('phmdoctest ')
-    command1 = well_formed_command.replace('phmdoctest ', '', 1)
+    # trim off any trailing whitespace
+    command0 = well_formed_command.rstrip()
+    # chop off phmdoctest since invoking by a python function call
+    command1 = command0.replace('phmdoctest ', '', 1)
     # simulate commands that don't write OUTFILE.
     wants_help = '--help' in command1
     wants_version = '--version' in command1

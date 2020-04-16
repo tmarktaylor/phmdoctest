@@ -114,7 +114,7 @@ def test_outfile_to_stdout():
     outfile_command2 = next(readme_blocks)
     simulator_status = verify.one_example(
         outfile_command1,
-        want_file_name='doc/test_example2.py',
+        want_file_name=None,
         pytest_options=None
     )
     with open('doc/test_example2.py') as fp:
@@ -124,7 +124,7 @@ def test_outfile_to_stdout():
 
     simulator_status = verify.one_example(
         outfile_command2,
-        want_file_name='doc/test_example2.py',
+        want_file_name=None,
         pytest_options=None
     )
     got2 = simulator_status.runner_status.stdout
