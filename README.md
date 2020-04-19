@@ -14,9 +14,9 @@ examples in Markdown.
   terminal output from Markdown fenced code blocks.
 - The test cases are run later by calling pytest.  
 - Get code coverage by running pytest with [coverage][6]. 
-- An included Python library:
-  - runs phmdoctest and can run pytest too. [Development tools API section][10]
-  - functions to read fenced code blocks from Markdown. [tool][11]
+- An included Python library: [Development tools API][10].
+  - runs phmdoctest and can run pytest too. *(simulator.py)*
+  - functions to read fenced code blocks from Markdown. *(tool.py)*
 
 phmdoctest does **not** do:
 - setup and teardown
@@ -415,7 +415,6 @@ assert simulator_status.pytest_exit_code == 0
 
 [3]: https://github.github.com/gfm/#fenced-code-blocks
 [10]: https://phmdoctest.readthedocs.io/en/latest/api.html#development-tools-api
-[11]: https://phmdoctest.readthedocs.io/en/latest/api.html#read-markdown-fenced-code-blocks
 [2]: https://github.com/tmarktaylor/phmdoctest/blob/master/src/phmdoctest/doc/test_example2.py
 [7]: https://pypi.org/project/commonmark
 [8]: https://spec.commonmark.org
