@@ -26,13 +26,12 @@ def setup_module():
     """Collect Markdown fenced code blocks contents from README.md.
 
     The test cases here must be run in order because they
-    take remove items from readme_blocks defined below.
+    pop items from the list readme_blocks.
 
     This means using a pytest -k KEY more specific than
     "-k test_readme" risks taking the wrong block from the
     iterator readme_blocks causing all subsequent test_readme
     test case to fail.
-
     """
     # test cases below iterate through the blocks.
     global readme_blocks

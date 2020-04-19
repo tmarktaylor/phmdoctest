@@ -129,6 +129,7 @@ Args = namedtuple(
 )
 @click.version_option()
 def entry_point(markdown_file, outfile, skip, report, fail_nocode):
+    """Start execution here."""
     args = Args(
         markdown_file=markdown_file,
         outfile=outfile,
@@ -200,7 +201,7 @@ def identify_code_and_output_blocks(blocks: List[FencedBlock]) -> None:
 
 
 def apply_skips(args: Args, code_blocks: List[FencedBlock]) -> None:
-    # Skip code blocks identified by patterns 'FIRST', 'SECOND', 'LAST'
+    """Skip code blocks identified by patterns 'FIRST', 'SECOND', 'LAST'"""
     number_of_code_blocks = len(code_blocks)
     if number_of_code_blocks:
         for pattern in args.skips:
@@ -312,6 +313,7 @@ _ASSERTION_MESSAGE = 'zero length {} block at line {}'
 
 
 def build_test_cases(args: Args, blocks: List[FencedBlock]) -> str:
+    """Generate test code from the Python fenced code blocks."""
     # repr escapes back slashes from win filesystem paths
     # so it can be part of the generated test module docstring.
     quoted_markdown_path = repr(click.format_filename(args.markdown_file))
