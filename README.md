@@ -358,6 +358,7 @@ sudo: false
 matrix:
   include:
     - python: 3.5
+      install:
         - pip install "." pytest
       script:
         - mkdir tests/tmp

@@ -78,9 +78,9 @@ def test_report():
     """README report output is same as produced by the command."""
     report_command = next(readme_blocks)
     want = next(readme_blocks)
-    simulator_result = phmdoctest.simulator.run_and_pytest(
+    simulator_status = phmdoctest.simulator.run_and_pytest(
         report_command, pytest_options=None)
-    got = simulator_result.runner_status.stdout
+    got = simulator_status.runner_status.stdout
     verify.a_and_b_are_the_same(want, got)
 
 
@@ -154,25 +154,25 @@ def test_usage():
 
 def test_yaml():
     """Show Markdown example and .travis.yml have the same commands."""
-    example_text = next(readme_blocks)
-    install = '- pip install "." pytest'
-    mkdir = '- mkdir tests/tmp'
-    command = (
-        '- phmdoctest project.md --report'
-        ' --outfile tests/tmp/test_project_readme.py'
-    )
-    test = '- pytest --strict -vv tests'
-    assert install in example_text
-    assert mkdir in example_text
-    assert command in example_text
-    assert test in example_text
+    markdown_example_text = next(readme_blocks)
+    expected = """\
+dist: xenial
+language: python
+sudo: false
 
+matrix:
+  include:
+    - python: 3.5
+      install:
+        - pip install "." pytest
+      script:
+        - mkdir tests/tmp
+        - phmdoctest project.md --report --outfile tests/tmp/test_project_readme.py
+        - pytest --strict -vv tests"""
+    verify.a_and_b_are_the_same(expected, markdown_example_text)
     with open('.travis.yml', 'r', encoding='utf-8') as f:
         travis_text = f.read()
-        assert install in travis_text
-        assert mkdir in travis_text
-        assert command in travis_text
-        assert test in travis_text
+        assert travis_text.startswith(expected)
 
 
 # Developers: Changes here must be mirrored in a fenced code block in README.md.

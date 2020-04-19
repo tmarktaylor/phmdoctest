@@ -3,6 +3,7 @@
 0.0.5 - 2020-04-19
 
 - Bugfix Issue- Won't fail if Python code block doesn't print.
+- Bugfix- issue- README CI example missing "install:".
 - Add Development tools API section to the documentation.
 - Pin phmdoctest dependency version ranges in setup.py.
 
