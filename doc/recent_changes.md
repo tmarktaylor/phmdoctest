@@ -1,5 +1,11 @@
 ## Recent Changes
 
+0.0.5 - 2020-04-19
+
+- Bugfix Issue- Won't fail if Python code block doesn't print.
+- Add Development tools API section to the documentation.
+- Pin phmdoctest dependency version ranges in setup.py.
+
 0.0.4 - 2020-03-31
 
 - Changes to build documentation on readthedocs.org.

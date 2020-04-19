@@ -23,7 +23,7 @@ copyright = '2020, Mark Taylor'
 author = 'Mark Taylor'
 
 # The full version, including alpha/beta/rc tags
-release = '0.0.4'
+release = '0.0.5'
 
 
 # -- General configuration ---------------------------------------------------
@@ -31,7 +31,9 @@ release = '0.0.4'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['recommonmark']
+extensions = ['recommonmark',
+              'sphinx.ext.autodoc',
+              'sphinx.ext.napoleon']
 
 source_suffix = {
     '.rst': 'restructuredtext',

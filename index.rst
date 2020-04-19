@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-phmdoctest 0.0.4
+phmdoctest 0.0.5
 ================
 
 .. toctree::
@@ -12,6 +12,7 @@ phmdoctest 0.0.4
 
    README.md
    doc/recent_changes
+   doc/api
    doc/about
 
    

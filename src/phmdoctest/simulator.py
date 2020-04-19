@@ -42,8 +42,7 @@ def run_and_pytest(
 
     The PYPI package pytest must be installed separately
     since pytest is not required to install phmdoctest.
-    Use this command:
-        pip install pytest
+    Use this command: ``pip install pytest``
 
     Returns SimulatorStatus object.
     SimulatorStatus.runner_status is the CliRunner.invoke return value.
@@ -51,12 +50,14 @@ def run_and_pytest(
     If an outfile is written or streamed to stdout a copy of it
     is found in simulator_status.runner_status.stdout.
 
-    If calling run_and_pytest() from a pytest file, add the
-    pytest option --capture=tee-sys to the command running
+    If calling run_and_pytest() from a pytest file, try adding the
+    pytest option ``--capture=tee-sys`` to the command running
     pytest on the file.
 
-    For example on a checkout of phmdoctest the command line
-    python -m pytest tests -v --capture=tee-sys
+    For example on a checkout of phmdoctest the command line:
+
+    ``python -m pytest tests -v --capture=tee-sys``
+
     will print the outputs from the subprocess.run() invocations
     of pytest on the --outfile written to the temporary directory.
     A wild guess would be that the subprocess inherited changes
@@ -68,11 +69,11 @@ def run_and_pytest(
             - followed by MARKDOWN_FILE
             - ends with --outfile OUTFILE (if needed)
             - all other options are between MARKDOWN_FILE and --outfile
-            for example:
-            phmdoctest MARKDOWN_FILE --skip FIRST --outfile OUTFILE
+              for example:
+              ``phmdoctest MARKDOWN_FILE --skip FIRST --outfile OUTFILE``
 
         pytest_options
-            List of strings like this: ['--strict', '-v'].
+            List of strings like this: ``['--strict', '-v']``.
             Set to empty list to run pytest with no options.
             Set to None to skip pytest.
 
