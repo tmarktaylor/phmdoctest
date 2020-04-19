@@ -43,11 +43,19 @@ source_suffix = {
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
+# tmarktaylor: The documentation sources are at the project root.
+# Any .md, .rst, or folders at the project root that don't
+# belong in the documentation should be listed here.
+#
+# tmarktaylor: Travis CI build log of tox.ini [testenv:docs] is finding
+# input files in the .tox tree so it is added here.
+
+#
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = [
-    'project.md', 'tests', '.pytest_cache',
+    'project.md', 'tests', '.tox', 'src', '.pytest_cache',
     '_build', 'Thumbs.db', '.DS_Store'
 ]
 
