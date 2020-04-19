@@ -10,7 +10,7 @@ phmdoctest 0.0.5
    :maxdepth: 2
    :caption: Contents:
 
-   README.md
+   README
    doc/recent_changes
    doc/api
    doc/about
