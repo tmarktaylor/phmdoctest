@@ -128,8 +128,8 @@ Args = namedtuple(
     )
 )
 @click.version_option()
+# Note- docstring for entry point shows up in click's usage text.
 def entry_point(markdown_file, outfile, skip, report, fail_nocode):
-    """Start execution here."""
     args = Args(
         markdown_file=markdown_file,
         outfile=outfile,
