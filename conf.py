@@ -11,6 +11,9 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 import os
+import sys
+py_sources_path = os.path.abspath('./src')
+sys.path.insert(0, py_sources_path)
 
 # -- Project information -----------------------------------------------------
 
