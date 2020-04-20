@@ -216,8 +216,8 @@ in the test role column and the Python blocks that
 matched each --skip TEXT in the skips section.
 
 This option makes it **very easy** to **inadvertently exclude**
-Python blocks from the test cases.  The option `--fail-nocode`
-will cause the generated test to fail.
+Python blocks from the test cases.  In the event no test cases are
+generated, the option `--fail-nocode` described below is useful.
 
 Three special `--skip TEXT` strings work a little differently.
 They select one of the first, second, or last of the Python blocks.
@@ -406,7 +406,7 @@ assert simulator_status.pytest_exit_code == 0
 - phmdoctest ignores Markdown indented code blocks ([Spec][8] section 4.4).
   
 
-## Related PYPI projects
+## Related projects
 - rundoc
 - byexample
 - doexec
