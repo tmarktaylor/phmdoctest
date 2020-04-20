@@ -51,8 +51,7 @@ templates_path = ['_templates']
 # belong in the documentation should be listed here.
 #
 # tmarktaylor: Travis CI Job #28.3 build log of tox.ini docs is finding
-# input files in the .tox tree for the tox environments
-# cover, inspect, and docs so they are excluded here.
+# input files in the .tox tree.
 
 #
 # List of patterns, relative to source directory, that match files and
@@ -60,7 +59,7 @@ templates_path = ['_templates']
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = [
     'project.md', 'tests', 'src',
-    '.tox/cover', '.tox/inspect', '.tox/docs',
+    '.tox',
     '.pytest_cache',
     '_build', 'Thumbs.db', '.DS_Store'
 ]
