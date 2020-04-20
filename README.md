@@ -1,4 +1,4 @@
-# phmdoctest 0.0.4
+# phmdoctest 0.0.5
 
 ## Introduction
 
@@ -8,15 +8,15 @@ Command line program to test Python syntax highlighted code
 examples in Markdown.
 
 - No extra tags or html comments needed in the Markdown. No Markdown edits at all.
-- No `<BLANKLINE>` needed in output. [doctest][4]
+- No `<BLANKLINE>` needed in output. [doctest][4].
 - Synthesizes a pytest test file from examples in Markdown.
 - Reads Python source code and expected
   terminal output from Markdown fenced code blocks.
 - The test cases are run later by calling pytest.  
 - Get code coverage by running pytest with [coverage][6]. 
-- An included Python library:
-  - runs phmdoctest and can run pytest too. [simulator.py][10]
-  - functions to read fenced code blocks from Markdown. [tool.py][11]
+- An included Python library: [Development tools API][10].
+  - runs phmdoctest and can run pytest too. *(simulator.py)*
+  - functions to read fenced code blocks from Markdown. *(tool.py)*
 
 phmdoctest does **not** do:
 - setup and teardown
@@ -81,13 +81,14 @@ creates the python source code file `test_example1.py` shown here...
 
 ```python
 """pytest file built from doc/example1.md"""
+from itertools import zip_longest
 
 
 def line_by_line_compare_exact(a, b):
     """Line by line helper compare function with assertion for pytest."""
     a_lines = a.splitlines()
     b_lines = b.splitlines()
-    for a_line, b_line in zip(a_lines, b_lines):
+    for a_line, b_line in zip_longest(a_lines, b_lines):
         assert a_line == b_line
 
 
@@ -109,7 +110,6 @@ Floats.CHERRIES
 Floats.ADUCK
 """
     line_by_line_compare_exact(a=expected_str, b=capsys.readouterr().out)
-
 ```
 
 Then run a pytest command something like this in your terminal
@@ -216,8 +216,8 @@ in the test role column and the Python blocks that
 matched each --skip TEXT in the skips section.
 
 This option makes it **very easy** to **inadvertently exclude**
-Python blocks from the test cases.  In the event no test cases are
-generated, the option `--fail-nocode` described below is useful.
+Python blocks from the test cases.  The option `--fail-nocode`
+will cause the generated test to fail.
 
 Three special `--skip TEXT` strings work a little differently.
 They select one of the first, second, or last of the Python blocks.
@@ -342,7 +342,7 @@ Options:
 The partial script shown below is for Python 3.5 on [Travis CI][5].
 The script steps are:
 
-- Install from setup.py and install pytest.
+- Install pytest.
 - Create a new directory to take the generated test file.
 - Run phmdoctest to generate the test file and print the report.
 - Run pytest suite.
@@ -358,6 +358,7 @@ sudo: false
 matrix:
   include:
     - python: 3.5
+      install:
         - pip install "." pytest
       script:
         - mkdir tests/tmp
@@ -379,7 +380,8 @@ which simulates running phmdoctest from the command line.
 - creates the --outfile in a temporary directory
 - optionally runs pytest on the outfile 
 
-Please see the function `run_and_pytest()` docstring in the file `simulator.py.` 
+Please see the [Development tools API section][10] or
+the docstring of the function `run_and_pytest()` in the file `simulator.py.` 
 pytest_options are passed as a list of strings as shown below.
 
 ```python
@@ -404,7 +406,7 @@ assert simulator_status.pytest_exit_code == 0
 - phmdoctest ignores Markdown indented code blocks ([Spec][8] section 4.4).
   
 
-## Related projects
+## Related PYPI projects
 - rundoc
 - byexample
 - doexec
@@ -413,9 +415,8 @@ assert simulator_status.pytest_exit_code == 0
 [Recent Changes](doc/recent_changes.md)
 
 [3]: https://github.github.com/gfm/#fenced-code-blocks
-[10]: https://github.com/tmarktaylor/phmdoctest/blob/master/src/phmdoctest/simulator.py
-[11]: https://github.com/tmarktaylor/phmdoctest/blob/master/src/phmdoctest/tool.py
-[2]: doc/test_example2.md
+[10]: https://phmdoctest.readthedocs.io/en/latest/api.html#development-tools-api
+[2]: https://github.com/tmarktaylor/phmdoctest/blob/master/src/phmdoctest/doc/test_example2.py
 [7]: https://pypi.org/project/commonmark
 [8]: https://spec.commonmark.org
 [9]: https://commonmark.org

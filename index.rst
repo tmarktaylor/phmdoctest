@@ -3,15 +3,16 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-phmdoctest 0.0.4
+phmdoctest 0.0.5
 ================
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
-   README.md
+   README
    doc/recent_changes
+   doc/api
    doc/about
 
    

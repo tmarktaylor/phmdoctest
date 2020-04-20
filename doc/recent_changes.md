@@ -1,5 +1,12 @@
 ## Recent Changes
 
+0.0.5 - 2020-04-20
+
+- Bugfix- Issue- Won't fail if Python code block doesn't print.
+- Bugfix- Issue- README Travis CI example missing "install:".
+- Add Development tools API section to the documentation.
+- Pin phmdoctest dependency version ranges in setup.py.
+
 0.0.4 - 2020-04-02
 
 - Changes to build documentation on readthedocs.org.

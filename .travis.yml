@@ -15,7 +15,7 @@ matrix:
     - python: 3.6
       install:
         &utest_install
-        - pip install "." pytest coverage codecov
+        - pip install "." pytest
       script:
         &utest_run
         # These steps show how to use phmdoctest to generate

@@ -72,6 +72,59 @@ def test_def_test_nothing_passes():
     phmdoctest.main.test_nothing_passes()
 
 
+def test_empty_output_block_fails():
+    """Empty output block causes phmdoctest to raise AssertionError."""
+    command = (
+        'phmdoctest tests/empty_output_block.md --outfile discarded.py'
+    )
+    simulator_status = phmdoctest.simulator.run_and_pytest(
+        well_formed_command=command,
+        pytest_options=None
+    )
+    exc = simulator_status.runner_status.exception
+    assert 'zero length expected output block' in str(exc)
+    assert simulator_status.runner_status.exit_code == 1
+
+
+def test_code_does_not_print_fails():
+    """Show empty stdout mis-compares with non-empty output block."""
+    command = (
+        'phmdoctest tests/does_not_print.md --outfile discarded.py'
+    )
+    simulator_status = phmdoctest.simulator.run_and_pytest(
+        well_formed_command=command,
+        pytest_options=['--strict', '-v']
+    )
+    assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code == 1
+
+
+def test_more_printed_than_expected_fails():
+    """Show pytest fails when more lines are printed than expected."""
+    command = (
+        'phmdoctest tests/missing_some_output.md --outfile discarded.py'
+    )
+    simulator_status = phmdoctest.simulator.run_and_pytest(
+        well_formed_command=command,
+        pytest_options=['--strict', '-v']
+    )
+    assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code == 1
+
+
+def test_more_expected_than_printed_fails():
+    """Show pytest fails when more lines are printed than expected."""
+    command = (
+        'phmdoctest tests/extra_line_in_output.md --outfile discarded.py'
+    )
+    simulator_status = phmdoctest.simulator.run_and_pytest(
+        well_formed_command=command,
+        pytest_options=['--strict', '-v']
+    )
+    assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code == 1
+
+
 def test_skip_same_block_twice():
     """Show identifying a skipped code block more than one time is OK."""
     command = (

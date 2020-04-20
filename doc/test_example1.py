@@ -1,11 +1,12 @@
 """pytest file built from doc/example1.md"""
+from itertools import zip_longest
 
 
 def line_by_line_compare_exact(a, b):
     """Line by line helper compare function with assertion for pytest."""
     a_lines = a.splitlines()
     b_lines = b.splitlines()
-    for a_line, b_line in zip(a_lines, b_lines):
+    for a_line, b_line in zip_longest(a_lines, b_lines):
         assert a_line == b_line
 
 

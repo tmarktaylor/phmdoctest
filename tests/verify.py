@@ -1,5 +1,7 @@
 """Logic used by pytest test cases."""
 
+from itertools import zip_longest
+
 import phmdoctest.print_capture
 import phmdoctest.simulator
 
@@ -8,7 +10,7 @@ def a_and_b_are_the_same(a, b):
     """Line by line helper compare function with assertion for pytest."""
     a_lines = a.splitlines()
     b_lines = b.splitlines()
-    for a_line, b_line in zip(a_lines, b_lines):
+    for a_line, b_line in zip_longest(a_lines, b_lines):
         assert a_line == b_line, a_line + '|' + b_line
 
 

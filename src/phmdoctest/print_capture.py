@@ -1,6 +1,7 @@
 """pytest test case file code generator."""
 
 import inspect
+from itertools import zip_longest
 import textwrap
 
 
@@ -8,7 +9,7 @@ def line_by_line_compare_exact(a, b):
     """Line by line helper compare function with assertion for pytest."""
     a_lines = a.splitlines()
     b_lines = b.splitlines()
-    for a_line, b_line in zip(a_lines, b_lines):
+    for a_line, b_line in zip_longest(a_lines, b_lines):
         assert a_line == b_line
 
 
@@ -34,6 +35,7 @@ class PytestFile:
     def __init__(self, description: str = ''):
         docstring = '"""' + description + '"""'
         self.lines = [docstring]
+        self.lines.append('from itertools import zip_longest')
         self._empty_line()
         self._empty_line()
         # copy the helper function def
