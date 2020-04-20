@@ -3,3 +3,4 @@ sphinx <= 1.8.5
 sphinx_rtd_theme <= 0.5
 commonmark == 0.8.1
 Click >=7.1.1,<8
+monotable >=2.1.1,<4
