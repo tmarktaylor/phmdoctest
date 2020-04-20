@@ -222,6 +222,19 @@ def test_def_test_identifier():
     phmdoctest.print_capture.test_identifier(MockCapsys())
 
 
+def test_blanklines_in_output():
+    """Expected output has empty lines and does not have doctest <BLANKLINE>."""
+    command = (
+        'phmdoctest tests/output_has_blank_lines.md --outfile discarded.py'
+    )
+    simulator_status = phmdoctest.simulator.run_and_pytest(
+        well_formed_command=command,
+        pytest_options=['--strict', '-v']
+    )
+    assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code == 0
+
+
 def test_skip_first():
     """Verify --skip FIRST."""
     command = (
