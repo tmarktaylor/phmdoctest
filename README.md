@@ -415,7 +415,7 @@ assert simulator_status.pytest_exit_code == 0
 [Recent Changes](doc/recent_changes.md)
 
 [3]: https://github.github.com/gfm/#fenced-code-blocks
-[10]: https://phmdoctest.readthedocs.io/en/latest/api.html#development-tools-api
+[10]: https://phmdoctest.readthedocs.io/en/latest/api.html
 [2]: https://github.com/tmarktaylor/phmdoctest/blob/master/src/phmdoctest/doc/test_example2.py
 [7]: https://pypi.org/project/commonmark
 [8]: https://spec.commonmark.org
