@@ -1,5 +1,4 @@
-from collections import namedtuple
-from collections import Counter
+from collections import  Counter, namedtuple
 from enum import Enum
 import inspect
 from typing import List, Optional
@@ -8,8 +7,8 @@ import click
 import commonmark.node    # type: ignore
 import monotable    # type: ignore
 
-from . import tool
-from . import print_capture
+from phmdoctest import tool
+from phmdoctest import print_capture
 
 
 class Role(Enum):
@@ -201,7 +200,8 @@ def identify_code_and_output_blocks(blocks: List[FencedBlock]) -> None:
 
 
 def apply_skips(args: Args, code_blocks: List[FencedBlock]) -> None:
-    """Skip code blocks identified by patterns 'FIRST', 'SECOND', 'LAST'"""
+    """Designate Python code blocks that are exempt from testing."""
+    # Skip code blocks identified by patterns 'FIRST', 'SECOND', 'LAST'
     number_of_code_blocks = len(code_blocks)
     if number_of_code_blocks:
         for pattern in args.skips:

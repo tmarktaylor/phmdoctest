@@ -15,7 +15,7 @@ from typing import List, Optional, NamedTuple
 
 import click.testing
 
-from .main import entry_point
+from phmdoctest.main import entry_point
 
 
 SimulatorStatus = NamedTuple(
