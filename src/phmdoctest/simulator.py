@@ -47,7 +47,7 @@ def run_and_pytest(
     Returns SimulatorStatus object.
     SimulatorStatus.runner_status is the CliRunner.invoke return value.
 
-    If an outfile is written or streamed to stdout a copy of it
+    If an outfile is streamed to stdout a copy of it
     is found in simulator_status.runner_status.stdout.
 
     If calling run_and_pytest() from a pytest file, try adding the

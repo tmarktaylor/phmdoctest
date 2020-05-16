@@ -41,6 +41,10 @@ matrix:
       install: pip install tox
       script: tox -e cover,inspect,docs
 
+    - python: 3.8
+      install: *utest_install
+      script: *utest_run
+
     - python: pypy3
       install: *utest_install
       script: *utest_run

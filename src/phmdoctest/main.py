@@ -5,7 +5,7 @@ from typing import List, Optional
 
 import click
 import commonmark.node    # type: ignore
-import monotable    # type: ignore
+import monotable
 
 from phmdoctest import tool
 from phmdoctest import print_capture
@@ -182,7 +182,6 @@ def identify_code_and_output_blocks(blocks: List[FencedBlock]) -> None:
         for flavor in PYTHON_FLAVORS:
             if block.type.startswith(flavor):
                 block.set(Role.CODE)
-                continue
 
     # When we find an output block we update the preceding
     # code block with a link to it.
