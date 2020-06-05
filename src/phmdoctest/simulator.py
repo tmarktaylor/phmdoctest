@@ -108,7 +108,7 @@ def run_and_pytest(
     # Drop the rest of the command starting at --outfile and the
     # outfile path since we rename the outfile in the invoked command.
     with TemporaryDirectory() as tmpdirname:
-        # Create a filename in the temporary directly to
+        # Create a filename in the temporary directory to
         # receive the OUTFILE.
         # Rewrite the command to use the new OUTFILE path and
         # split up the command to a list of strings.
@@ -153,7 +153,7 @@ def run_and_pytest(
                 pytest_exit_code=None
             )
 
-        # Copy the generated pytest file from the isolated filesystem.
+        # Copy the generated pytest file from the temporary directory.
         with open(outfile_path, 'r', encoding='utf-8') as fp:
             outfile_text = fp.read()
 
