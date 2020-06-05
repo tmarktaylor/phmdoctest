@@ -407,9 +407,10 @@ assert simulator_status.pytest_exit_code == 0
 - phmdoctest ignores Markdown indented code blocks ([Spec][8] section 4.4).
   
 
-## Related PYPI projects
+## Related projects
 - rundoc
 - byexample
+- sybil
 - doexec
 - egtest
 
