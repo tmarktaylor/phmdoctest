@@ -41,10 +41,6 @@ class FencedBlock:
         assert fenced_block.role == Role.OUTPUT, 'only allowed to be output'
         self.output = fenced_block
 
-    def get_output(self) -> Optional['FencedBlock']:
-        """Get this code block's associated output block."""
-        return self.output
-
     def skip(self, reason: str) -> None:
         """Skip an already designated code block. Re-skip is OK."""
         assert self.role in (Role.CODE, Role.SKIP_CODE), (
@@ -56,7 +52,7 @@ class FencedBlock:
             Role.CODE.value, Role.SKIP_CODE.value)
         if self.role == Role.CODE:
             self.set(Role.SKIP_CODE)
-            output_block = self.get_output()
+            output_block = self.output
             if output_block:
                 output_block.set(Role.SKIP_OUTPUT)
         self.skip_reasons.append(reason)
@@ -328,7 +324,7 @@ def build_test_cases(args: Args, blocks: List[FencedBlock]) -> str:
             assert code, _ASSERTION_MESSAGE.format(
                 'code', block.line)
 
-            output_block = block.get_output()
+            output_block = block.output
             if output_block:
                 output_identifier = '_output_' + str(output_block.line)
                 expected_output = output_block.contents
