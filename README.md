@@ -1,4 +1,4 @@
-# phmdoctest 0.0.5
+# phmdoctest 0.0.6
 
 ## Introduction
 
