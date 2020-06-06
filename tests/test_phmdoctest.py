@@ -321,6 +321,24 @@ def test_skip_code_that_has_no_output_block():
     assert 'while a < 1000:  37' in stdout
 
 
+def test_skip_matches_start_of_contents():
+    """Skip pattern matching first characters of code block."""
+    command = (
+        'phmdoctest doc/example2.md --skip="words ="'
+        ' --report --outfile discarded.py'
+    )
+    simulator_status = phmdoctest.simulator.run_and_pytest(
+        well_formed_command=command,
+        pytest_options=['--strict', '-vv']
+    )
+    assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code == 0
+    stdout = simulator_status.runner_status.stdout
+    assert 'words =       44' in stdout
+
+
+# words = ['cat', 'window', 'defenestrate']
+
 def test_multiple_skips_report():
     """More than one skip applied to the same Python code block."""
     command = 'phmdoctest doc/example2.md --report -sprint -slen'
