@@ -216,7 +216,7 @@ def apply_skips(args: Args, code_blocks: List[FencedBlock]) -> None:
     # be skipped more than once.
     for block in code_blocks:
         for pattern in args.skips:
-            if block.contents.find(pattern) > 0:
+            if block.contents.find(pattern) > -1:
                 block.skip(pattern)
 
 

@@ -11,6 +11,9 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 import os
+import sys
+py_sources_path = os.path.abspath('./src')
+sys.path.insert(0, py_sources_path)
 
 # -- Project information -----------------------------------------------------
 
@@ -23,7 +26,7 @@ copyright = '2020, Mark Taylor'
 author = 'Mark Taylor'
 
 # The full version, including alpha/beta/rc tags
-release = '0.0.5'
+release = '0.0.6'
 
 
 # -- General configuration ---------------------------------------------------
@@ -47,15 +50,17 @@ templates_path = ['_templates']
 # Any .md, .rst, or folders at the project root that don't
 # belong in the documentation should be listed here.
 #
-# tmarktaylor: Travis CI build log of tox.ini [testenv:docs] is finding
-# input files in the .tox tree so it is added here.
+# tmarktaylor: Travis CI Job #28.3 build log of tox.ini docs is finding
+# input files in the .tox tree.
 
 #
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = [
-    'project.md', 'tests', '.tox', 'src', '.pytest_cache',
+    'project.md', 'tests', 'src',
+    '.tox',
+    '.pytest_cache',
     '_build', 'Thumbs.db', '.DS_Store'
 ]
 

@@ -61,6 +61,54 @@ class TestSameVersions:
         assert match.group(1) == self.package_version
 
 
+class TestDocBuildVersions:
+    """
+    Some versions are the same in doc/requirements.txt and setup.py.
+
+    Click and monotable versions should be the same.
+
+    For the Sphinx documentation build on readthedocs.org (RTD)
+    specific versions are pinned by the file doc/requirements.txt.
+
+    For Sphinx autodoc the phmdoctest dependencies Click and monotable
+    are installed so that the RTD build can import phmdoctest to look
+    for docstrings.
+
+    Note that commonmark is also a phmdoctest dependency. Because it is
+    pinned to different versions in doc/requirements.txt and setup.py
+    it is not tested here.
+    """
+    with open('doc/requirements.txt', 'r', encoding='utf-8') as f:
+        doc_requirements = f.read()
+        for line in doc_requirements.splitlines():
+            if line.startswith('Click'):
+                click_version = line
+            if line.startswith('monotable'):
+                monotable_version = line
+    with open('setup.py', 'r', encoding='utf-8') as f:
+        setup = f.read()
+
+    @staticmethod
+    def to_setup_style(value):
+        """Convert value from requirements.txt style to setup.py style."""
+        drop_newline = value.replace('\n', '', 1)
+        drop_space = drop_newline.replace(' ', '', 1)
+        quoted = drop_space.join(["'", "'"])
+        return quoted
+
+    def test_click(self):
+        """Click version in doc/requirements.txt same as setup.py"""
+        assert self.click_version in self.doc_requirements, 'sanity check'
+        expected = self.to_setup_style(self.click_version)
+        assert self.setup.count(expected) == 1
+
+    def test_monotable(self):
+        """monotable version in doc/requirements.txt same as setup.py"""
+        assert self.monotable_version in self.doc_requirements, 'sanity check'
+        expected = self.to_setup_style(self.monotable_version)
+        assert self.setup.count(expected) == 1
+
+
 def test_def_test_nothing_fails():
     """This is done for code coverage of the function."""
     with pytest.raises(AssertionError):
@@ -174,6 +222,19 @@ def test_def_test_identifier():
     phmdoctest.print_capture.test_identifier(MockCapsys())
 
 
+def test_blanklines_in_output():
+    """Expected output has empty lines and does not have doctest <BLANKLINE>."""
+    command = (
+        'phmdoctest tests/output_has_blank_lines.md --outfile discarded.py'
+    )
+    simulator_status = phmdoctest.simulator.run_and_pytest(
+        well_formed_command=command,
+        pytest_options=['--strict', '-v']
+    )
+    assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code == 0
+
+
 def test_skip_first():
     """Verify --skip FIRST."""
     command = (
@@ -259,6 +320,24 @@ def test_skip_code_that_has_no_output_block():
     assert 'SECOND           20' in stdout
     assert 'while a < 1000:  37' in stdout
 
+
+def test_skip_matches_start_of_contents():
+    """Skip pattern matching first characters of code block."""
+    command = (
+        'phmdoctest doc/example2.md --skip="words ="'
+        ' --report --outfile discarded.py'
+    )
+    simulator_status = phmdoctest.simulator.run_and_pytest(
+        well_formed_command=command,
+        pytest_options=['--strict', '-vv']
+    )
+    assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code == 0
+    stdout = simulator_status.runner_status.stdout
+    assert 'words =       44' in stdout
+
+
+# words = ['cat', 'window', 'defenestrate']
 
 def test_multiple_skips_report():
     """More than one skip applied to the same Python code block."""

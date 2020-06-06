@@ -1,4 +1,7 @@
 ## Recent Changes
+0.0.6 - 2020-06-07
+
+- Bugfix- Issue- Skip pattern matching start of code ignored.
 
 0.0.5 - 2020-04-20
 

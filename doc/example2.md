@@ -1,8 +1,8 @@
+# This is Markdown file example2.md
 #### Fenced code block expected output block pair.
-Since phmdoctest works with Python source code and
-terminal output there are no console prompts `>>>` and `...`
-in the source code and the print() statement is required
-to produce the expected output.  
+Since phmdoctest works with Python source code and terminal output there
+are no console prompts `>>>` and `...` in the source code and the print()
+statement is required to produce the expected output.  
 
 Example code adapted from the Python Tutorial:
 ```py3
