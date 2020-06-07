@@ -324,8 +324,8 @@ def test_skip_code_that_has_no_output_block():
 def test_skip_matches_start_of_contents():
     """Skip pattern matching first characters of code block."""
     command = (
-        'phmdoctest doc/example2.md --skip="words ="'
-        ' --report --outfile discarded.py'
+        'phmdoctest doc/example2.md --skip SECOND --skip="Python 3.7"'
+        '  --skip="words =" --report --outfile discarded.py'
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
