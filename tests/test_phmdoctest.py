@@ -296,7 +296,7 @@ def test_skip_second():
 def test_skip_first_session():
     """Verify --skip FIRST skips a session block."""
     command = (
-        'phmdoctest tests/twentysix_pycon_blocks.md -sFIRST'
+        'phmdoctest tests/twentysix_session_blocks.md -sFIRST'
         ' --report --outfile discarded.py'
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
@@ -313,7 +313,7 @@ def test_skip_first_session():
 def test_skip_second_session():
     """Verify --skip SECOND skips a session block."""
     command = (
-        'phmdoctest tests/twentysix_pycon_blocks.md -sSECOND'
+        'phmdoctest tests/twentysix_session_blocks.md -sSECOND'
         ' --report --outfile discarded.py'
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
@@ -410,7 +410,10 @@ def test_multiple_skips_report():
 
 def test_one_skip_many_matches():
     """Every block matches the skip pattern presenting multi-line report."""
-    command = 'phmdoctest tests/twentysix_pycon_blocks.md --skip=">>>" --report'
+    command = (
+        'phmdoctest tests/twentysix_session_blocks.md'
+        ' --skip=">>>" --report'
+    )
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
         pytest_options=None
