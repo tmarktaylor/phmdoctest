@@ -141,7 +141,7 @@ def test_code_does_not_print_fails():
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
-        pytest_options=['--strict', '-v']
+        pytest_options=['--strict', '--doctest-modules', '-v']
     )
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 1
@@ -154,7 +154,7 @@ def test_more_printed_than_expected_fails():
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
-        pytest_options=['--strict', '-v']
+        pytest_options=['--strict', '--doctest-modules', '-v']
     )
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 1
@@ -167,7 +167,7 @@ def test_more_expected_than_printed_fails():
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
-        pytest_options=['--strict', '-v']
+        pytest_options=['--strict', '--doctest-modules', '-v']
     )
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 1
@@ -181,7 +181,7 @@ def test_skip_same_block_twice():
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
-        pytest_options=['--strict', '-v']
+        pytest_options=['--strict', '--doctest-modules', '-v']
     )
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
@@ -193,11 +193,35 @@ def test_pytest_really_fails():
     Generate a pytest that will assert.
     """
     simulator_status = verify.one_example(
-        'phmdoctest tests/unexpected_output.md --outfile test_unexpected_output.py',
+        'phmdoctest tests/unexpected_output.md --outfile discarded.py',
         want_file_name=None,
-        pytest_options=['--strict', '-v']
+        pytest_options=['--strict', '--doctest-modules', '-v']
     )
     assert simulator_status.pytest_exit_code == 1
+
+
+def test_pytest_session_fails():
+    """Make sure pytest fails due to incorrect session output in the .md file.
+
+    Generate a pytest that fails pytest.
+    """
+    simulator_status = verify.one_example(
+        'phmdoctest tests/bad_session_output.md --outfile discarded.py',
+        want_file_name=None,
+        pytest_options=['--strict', '--doctest-modules', '-v']
+    )
+    assert simulator_status.pytest_exit_code == 1
+
+
+def test_project_md():
+    """Make sure that project.md generates a file that passes pytest."""
+    simulator_status = verify.one_example(
+        'phmdoctest project.md --outfile discarded.py',
+        want_file_name=None,
+        pytest_options=['--strict', '--doctest-modules', '-v']
+    )
+    assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code == 0
 
 
 def test_def_test_identifier():
@@ -229,7 +253,7 @@ def test_blanklines_in_output():
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
-        pytest_options=['--strict', '-v']
+        pytest_options=['--strict', '--doctest-modules', '-v']
     )
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
@@ -243,12 +267,12 @@ def test_skip_first():
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
-        pytest_options=['--strict', '-v']
+        pytest_options=['--strict', '--doctest-modules', '-v']
     )
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
     stdout = simulator_status.runner_status.stdout
-    assert 'py3         9  skip-code    "FIRST"' in stdout
+    assert 'py3         9  skip-code     "FIRST"' in stdout
     assert 'FIRST         9' in stdout
 
 
@@ -260,7 +284,7 @@ def test_skip_second():
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
-        pytest_options=['--strict', '-v']
+        pytest_options=['--strict', '--doctest-modules', '-v']
     )
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
@@ -269,15 +293,49 @@ def test_skip_second():
     assert 'SECOND        20' in stdout
 
 
+def test_skip_first_session():
+    """Verify --skip FIRST skips a session block."""
+    command = (
+        'phmdoctest tests/twentysix_pycon_blocks.md -sFIRST'
+        ' --report --outfile discarded.py'
+    )
+    simulator_status = phmdoctest.simulator.run_and_pytest(
+        well_formed_command=command,
+        pytest_options=['--strict', '--doctest-modules', '-v']
+    )
+    assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code == 0
+    stdout = simulator_status.runner_status.stdout
+    assert 'pycon        3  skip-session  "FIRST"' in stdout
+    assert 'FIRST         3' in stdout
+
+
+def test_skip_second_session():
+    """Verify --skip SECOND skips a session block."""
+    command = (
+        'phmdoctest tests/twentysix_pycon_blocks.md -sSECOND'
+        ' --report --outfile discarded.py'
+    )
+    simulator_status = phmdoctest.simulator.run_and_pytest(
+        well_formed_command=command,
+        pytest_options=['--strict', '--doctest-modules', '-v']
+    )
+    assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code == 0
+    stdout = simulator_status.runner_status.stdout
+    assert 'py           8  skip-session  "SECOND"' in stdout
+    assert 'SECOND        8' in stdout
+
+
 def test_skip_second_when_only_one():
     """Verify --skip SECOND selects no block when only 1 code block."""
     command = (
-        'phmdoctest doc/example1.md -sFIRST'
+        'phmdoctest tests/one_code_block.md -sFIRST'
         ' --skip SECOND --report --outfile discarded.py'
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
-        pytest_options=['--strict', '-v']
+        pytest_options=['--strict', '--doctest-modules', '-v']
     )
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
@@ -293,7 +351,7 @@ def test_skip_second_when_more_than_one():
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
-        pytest_options=['--strict', '-v']
+        pytest_options=['--strict', '--doctest-modules', '-v']
     )
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
@@ -310,7 +368,7 @@ def test_skip_code_that_has_no_output_block():
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
-        pytest_options=['--strict', '-v']
+        pytest_options=['--strict', '--doctest-modules', '-v']
     )
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
@@ -329,15 +387,13 @@ def test_skip_matches_start_of_contents():
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
-        pytest_options=['--strict', '-vv']
+        pytest_options=['--strict', '--doctest-modules', '-vv']
     )
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
     stdout = simulator_status.runner_status.stdout
     assert 'words =       44' in stdout
 
-
-# words = ['cat', 'window', 'defenestrate']
 
 def test_multiple_skips_report():
     """More than one skip applied to the same Python code block."""
@@ -352,6 +408,21 @@ def test_multiple_skips_report():
     assert 'len           44' in stdout
 
 
+def test_one_skip_many_matches():
+    """Every block matches the skip pattern presenting multi-line report."""
+    command = 'phmdoctest tests/twentysix_pycon_blocks.md --skip=">>>" --report'
+    simulator_status = phmdoctest.simulator.run_and_pytest(
+        well_formed_command=command,
+        pytest_options=None
+    )
+    assert simulator_status.runner_status.exit_code == 0
+    stdout = simulator_status.runner_status.stdout
+
+    with open('tests/twentysix_report.txt', 'r', encoding='utf-8') as f:
+        want = f.read()
+    verify.a_and_b_are_the_same(want, stdout)
+
+
 def test_no_blocks_left_to_test_passing():
     """Generate a pytest file that passes when no blocks to test."""
     command = (
@@ -360,7 +431,7 @@ def test_no_blocks_left_to_test_passing():
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
-        pytest_options=['--strict', '-v']
+        pytest_options=['--strict', '--doctest-modules', '-v']
     )
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
@@ -375,7 +446,7 @@ def test_no_blocks_left_to_test_fails():
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
-        pytest_options=['--strict', '-v']
+        pytest_options=['--strict', '--doctest-modules', '-v']
     )
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 1    # pytest failed
@@ -390,7 +461,7 @@ def test_no_code_blocks():
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
-        pytest_options=['--strict', '-v']
+        pytest_options=['--strict', '--doctest-modules', '-v']
     )
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
@@ -402,7 +473,7 @@ def test_missing_markdown_file():
     command = 'phmdoctest tests/bogus.md --outfile discarded.py'
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
-        pytest_options=['--strict', '-v']
+        pytest_options=['--strict', '--doctest-modules', '-v']
     )
     assert (
         simulator_status.runner_status.exit_code ==
@@ -417,7 +488,7 @@ def test_bad_usage_option():
     command = 'phmdoctest doc/example1.md --troper --outfile discarded.py'
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
-        pytest_options=['--strict', '-v']
+        pytest_options=['--strict', '--doctest-modules', '-v']
     )
     assert (
         simulator_status.runner_status.exit_code == click.UsageError.exit_code

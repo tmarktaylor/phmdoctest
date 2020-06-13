@@ -69,7 +69,7 @@ def test_example1():
     simulator_status = verify.one_example(
         example1_command,
         want_file_name=None,
-        pytest_options=['--strict', '-v']
+        pytest_options=['--strict', '--doctest-modules', '-v']
     )
     assert simulator_status.pytest_exit_code == 0
 
@@ -167,8 +167,8 @@ matrix:
         - pip install "." pytest
       script:
         - mkdir tests/tmp
-        - phmdoctest project.md --report --outfile tests/tmp/test_project_readme.py
-        - pytest --strict -vv tests"""
+        - phmdoctest project.md --report --outfile tests/tmp/test_project.py
+        - pytest --strict --doctest-modules -vv tests"""
     verify.a_and_b_are_the_same(expected, markdown_example_text)
     with open('.travis.yml', 'r', encoding='utf-8') as f:
         travis_text = f.read()
@@ -183,7 +183,7 @@ def example_code():
     command = 'phmdoctest doc/example1.md --report --outfile test_me.py'
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
-        pytest_options=['--strict', '-v']
+        pytest_options=['--strict', '--doctest-modules', '-v']
     )
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
