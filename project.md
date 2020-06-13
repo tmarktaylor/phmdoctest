@@ -1,24 +1,72 @@
-### project.md
+### Examples of code and session blocks
 
-This is an example Markdown file placed at the top level
-of phmdoctest to be used by the .travis.yml example
-in README.md.
+This file (project.md) has some example code and session blocks
+including a doctest directive example.
 
-It is needed because the test case Python file 
-generated from README.md is confusing.
+It is placed at the project root level for use
+by the .travis.yml example in README.md.
 
-Here is a Python source code example inspired by 
+
+#### An example with a blank line in the output
+
+Here is a Python source code example inspired by type hints in 
 [What’s New In Python 3.5](https://docs/python.org/3/whatsnew/3.5.html#pep-484-type-hints).
 
+No <BLANKLINE> directive is needed in the output block of a Python
+code block output block pair.
+ 
 ```python
-# An example with type hints 
 def greeting(name: str) -> str:
-    return 'Hello ' + name
-print(greeting('World'))
+    return 'Hello' + '\n\n' + name
+print(greeting('World!'))
 ```
 
-And the output it produces:
+And the output it produces.
 ```
-Hello World
+Hello
+
+World!
 ```
 
+#### Interactive Python session requires `<BLANKINE>` in the expected output 
+
+Blank lines in the expected output must be replaced with `<BLANKLINE>`.
+In the Readthedocs documentation, 
+use the view page source link at the top to see the `<BLANKLINE>` or
+view project.md on github in raw mode.
+
+```pycon
+>>> print('Hello\n\nWorld!')
+Hello
+<BLANKLINE>
+World!
+```
+
+#### Interactive Python session with doctest directive 
+
+Here is an interactive Python session showing an
+expected exception and use of the doctest directive
+`IGNORE_EXCEPTION_DETAIL`.
+In the Readthedocs documentation, 
+use the view page source link at the top to see the doctest directive or
+view project.md on github in raw mode.
+
+
+```pycon
+>>> int('def')    #doctest:+IGNORE_EXCEPTION_DETAIL   
+Traceback (most recent call last):
+    ...
+ValueError:
+```
+
+#### Session with `py` as the fenced code block info_string
+
+```py
+>>> coffee = 5
+>>> coding = 5
+>>> enjoyment = 10
+>>> print(coffee + coding)
+10
+>>> coffee + coding == enjoyment
+True
+```
