@@ -32,7 +32,9 @@ def test_identifier(capsys):
 
 
 class PytestFile:
+    """Format and assemble test cases as Python source file."""
     def __init__(self, description: str = ''):
+        """Add file docstring and helper to test code blocks."""
         docstring = '"""' + description + '"""'
         self.lines = [docstring]
         self.lines.append('from itertools import zip_longest')
@@ -77,3 +79,15 @@ class PytestFile:
         """Add the source code as is to the generated test file."""
         self._empty_line()
         self.lines.append(source)
+
+    def add_interactive_session(self, identifier: str, session: str) -> None:
+        """Add a do nothing function with doctest session as its docstring."""
+        self._empty_line()
+        indented_session = textwrap.indent(session, '    ')
+        lines = [
+            'def session_{}():'.format(identifier),
+            '    r"""',
+            indented_session,
+            ]
+        function_source = '\n'.join(lines) + '    """\n'
+        self.lines.append(function_source)

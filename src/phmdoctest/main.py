@@ -16,8 +16,10 @@ class Role(Enum):
     UNKNOWN = '--'
     CODE = 'code'
     OUTPUT = 'output'
+    SESSION = 'session'
     SKIP_CODE = 'skip-code'
     SKIP_OUTPUT = 'skip-output'
+    SKIP_SESSION = 'skip-session'
 
 
 class FencedBlock:
@@ -31,6 +33,10 @@ class FencedBlock:
         self.output = None    # type: Optional['FencedBlock']
         self.skip_reasons = list()    # type: List[str]
 
+    def __str__(self) -> str:
+        return 'FencedBlock(role={}, line={})'.format(
+            self.role.value, self.line)
+
     def set(self, role: Role) -> None:
         """Set the role for the fenced code block in subsequent testing."""
         self.role = role
@@ -43,18 +49,17 @@ class FencedBlock:
 
     def skip(self, reason: str) -> None:
         """Skip an already designated code block. Re-skip is OK."""
-        assert self.role in (Role.CODE, Role.SKIP_CODE), (
-            'Block at line {} cannot be skipped for pattern'
-            ' {} since\nthe block is designated as {}'
-            ' and must be either {} or {}.'
-            ).format(
-            self.line, reason, self.role.value,
-            Role.CODE.value, Role.SKIP_CODE.value)
         if self.role == Role.CODE:
             self.set(Role.SKIP_CODE)
-            output_block = self.output
-            if output_block:
-                output_block.set(Role.SKIP_OUTPUT)
+            if self.output:
+                self.output.set(Role.SKIP_OUTPUT)
+        elif self.role == Role.SESSION:
+            self.set(Role.SKIP_SESSION)
+        else:
+            is_skipped = any(
+                [self.role == Role.SKIP_CODE,
+                 self.role == Role.SKIP_SESSION])
+            assert is_skipped, 'cannot skip this Role {}'.format(self.role)
         self.skip_reasons.append(reason)
 
 
@@ -93,7 +98,8 @@ Args = namedtuple(
     '-s', '--skip',
     multiple=True,
     help=(
-        'Any Python block that contains the substring TEXT is not tested.'
+        'Any Python code or interactive session block that contains'
+        ' the substring TEXT is not tested.'
         ' More than one --skip TEXT is ok.'
         ' Double quote if TEXT contains spaces.'
         ' For example --skip="python 3.7" will skip every Python block that'
@@ -114,7 +120,8 @@ Args = namedtuple(
     is_flag=True,
     help=(
         'This option sets behavior when the Markdown file has no Python'
-        ' fenced code blocks or if all such blocks are skipped.'
+        ' fenced code blocks or interactive session blocks'
+        ' or if all such blocks are skipped.'
         ' When this option is present the generated pytest file'
         ' has a test function called test_nothing_fails() that'
         ' will raise an assertion.'
@@ -137,11 +144,7 @@ def entry_point(markdown_file, outfile, skip, report, fail_nocode):
     with click.open_file(args.markdown_file, encoding='utf-8') as fp:
         blocks = convert_nodes(tool.fenced_block_nodes(fp))
     identify_code_and_output_blocks(blocks)
-
-    code_blocks = [b for b in blocks if b.role == Role.CODE]
-
-    apply_skips(args, code_blocks)
-
+    apply_skips(args, blocks)
     if args.is_report:
         print_report(args, blocks)
 
@@ -166,18 +169,22 @@ PYTHON_FLAVORS = ['python', 'py3', 'python3']
 
 def identify_code_and_output_blocks(blocks: List[FencedBlock]) -> None:
     """
-    Designate which blocks are Python and guess which are output.
+    Designate which blocks are Python or session and guess which are output.
 
     The block.type is a copy of the Markdown fenced code block info_string.
     This string may start with the language intended for syntax coloring.
     A block is an output block if it has an empty markdown info field
     and follows a designated python code block.
-    """
 
+    A block is a session block if the info_string starts with 'py'
+    and the first line of the block starts with the session prompt '>>> '.
+    """
     for block in blocks:
         for flavor in PYTHON_FLAVORS:
             if block.type.startswith(flavor):
                 block.set(Role.CODE)
+        if block.contents.startswith('>>> ') and block.type.startswith('py'):
+            block.set(Role.SESSION)
 
     # When we find an output block we update the preceding
     # code block with a link to it.
@@ -194,30 +201,39 @@ def identify_code_and_output_blocks(blocks: List[FencedBlock]) -> None:
     # be added to the code block.
 
 
-def apply_skips(args: Args, code_blocks: List[FencedBlock]) -> None:
-    """Designate Python code blocks that are exempt from testing."""
-    # Skip code blocks identified by patterns 'FIRST', 'SECOND', 'LAST'
-    number_of_code_blocks = len(code_blocks)
-    if number_of_code_blocks:
-        for pattern in args.skips:
-            index = None
-            if pattern == 'FIRST':
-                index = 0
-            elif pattern == 'LAST':
-                index = -1
-            elif pattern == 'SECOND' and number_of_code_blocks > 1:
-                index = 1
-            if index is not None:
-                code_blocks[index].skip(pattern)
+def apply_skips(args: Args, blocks: List[FencedBlock]) -> None:
+    """Designate Python code/session blocks that are exempt from testing."""
+    skip_candidates = []     # type: List[FencedBlock]
+    for b in blocks:
+        if b.role in [Role.CODE, Role.SESSION]:
+            skip_candidates.append(b)
 
-    # skip code blocks identified by pattern matches with the code
-    # Try to find each skip pattern in each code block.
-    # If there is a match skip the code block.  Code blocks can
+    # Skip blocks identified by patterns 'FIRST', 'SECOND', 'LAST'
+    if skip_candidates:
+        apply_special_skips(skip_candidates, args.skips)
+
+    # Skip blocks identified by pattern matches.
+    # Try to find each skip pattern in each block.
+    # If there is a match, skip the block.  Blocks can
     # be skipped more than once.
-    for block in code_blocks:
+    for block in skip_candidates:
         for pattern in args.skips:
             if block.contents.find(pattern) > -1:
                 block.skip(pattern)
+
+
+def apply_special_skips(blocks: List[FencedBlock], skips: List[str]) -> None:
+    """Skip blocks identified by patterns 'FIRST', 'SECOND', 'LAST'"""
+    for pattern in skips:
+        index = None
+        if pattern == 'FIRST':
+            index = 0
+        elif pattern == 'LAST':
+            index = -1
+        elif pattern == 'SECOND' and len(blocks) > 1:
+            index = 1
+        if index is not None:
+            blocks[index].skip(pattern)
 
 
 def print_report(args: Args, blocks: List[FencedBlock]) -> None:
@@ -231,10 +247,15 @@ def print_report(args: Args, blocks: List[FencedBlock]) -> None:
     roles = [b.role.name for b in blocks]
     counts = Counter(roles)
 
-    report.append('{} test cases'.format(counts['CODE']))
+    number_of_test_cases = counts['CODE'] + counts['SESSION']
+    report.append('{} test cases'.format(number_of_test_cases))
     if counts['SKIP_CODE'] > 0:
         report.append('{} skipped code blocks'.format(
             counts['SKIP_CODE']
+        ))
+    if counts['SKIP_SESSION'] > 0:
+        report.append('{} skipped interactive session blocks'.format(
+            counts['SKIP_SESSION']
         ))
 
     num_missing_output = counts['CODE'] - counts['OUTPUT']
@@ -259,7 +280,7 @@ def fenced_block_report(blocks: List[FencedBlock], title: str = '') -> str:
     table.more_marker = '...'
     cell_grid = []
     for block in blocks:
-        if block.role == Role.SKIP_CODE:
+        if block.role in [Role.SKIP_CODE, Role.SKIP_SESSION]:
             quoted_skips = [r.join(['"', '"']) for r in block.skip_reasons]
             skips = '\n'.join(quoted_skips)
         else:
@@ -276,6 +297,8 @@ def fenced_block_report(blocks: List[FencedBlock], title: str = '') -> str:
 def skips_report(
         skips: List[str], blocks: List[FencedBlock], title: str = '') -> str:
     """Generate text report about the disposition of --skip options."""
+    # Blocks with role OUTPUT and SKIP_OUTPUT will always have an
+    # empty skip_reasons list even if the linking code block is skipped.
     table = monotable.MonoTable()
     table.max_cell_height = 5
     table.more_marker = '...'
@@ -294,12 +317,12 @@ def skips_report(
 
 
 def test_nothing_fails() -> None:
-    """Fail if no Python code blocks were processed."""
+    """Fail if no Python code blocks or sessions were processed."""
     assert False, 'nothing to test'
 
 
 def test_nothing_passes() -> None:
-    """Succeed  if no Python code blocks were processed."""
+    """Succeed  if no Python code blocks or sessions were processed."""
     # nothing to test
     pass
 
@@ -321,8 +344,7 @@ def build_test_cases(args: Args, blocks: List[FencedBlock]) -> str:
             code_identifier = 'code_' + str(block.line)
             output_identifier = ''
             code = block.contents
-            assert code, _ASSERTION_MESSAGE.format(
-                'code', block.line)
+            assert code, _ASSERTION_MESSAGE.format('code', block.line)
 
             output_block = block.output
             if output_block:
@@ -335,6 +357,13 @@ def build_test_cases(args: Args, blocks: List[FencedBlock]) -> str:
             identifier = code_identifier + output_identifier
             builder.add_test_case(identifier, code, expected_output)
             number_of_test_cases += 1
+
+        elif block.role == Role.SESSION:
+            session = block.contents
+            assert session, _ASSERTION_MESSAGE.format('session', block.line)
+            builder.add_interactive_session(str(block.line), session)
+            number_of_test_cases += 1
+
     if number_of_test_cases == 0:
         if args.fail_nocode:
             test_function = inspect.getsource(test_nothing_fails)

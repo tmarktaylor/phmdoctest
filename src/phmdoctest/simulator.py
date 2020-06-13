@@ -73,7 +73,8 @@ def run_and_pytest(
               ``phmdoctest MARKDOWN_FILE --skip FIRST --outfile OUTFILE``
 
         pytest_options
-            List of strings like this: ``['--strict', '-v']``.
+            List of strings like this: ``['--strict',
+            '--doctest-modules', '-v']``.
             Set to empty list to run pytest with no options.
             Set to None to skip pytest.
 
