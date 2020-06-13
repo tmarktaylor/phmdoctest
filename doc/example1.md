@@ -1,4 +1,14 @@
 # This is Markdown file example1.md
+
+## Interactive Python session (doctest)
+
+```pycon 
+>>> print('Hello World!')
+Hello World!
+```
+
+## Source Code and terminal output
+ 
 Code:
 ```python3
 from enum import Enum

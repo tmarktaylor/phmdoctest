@@ -10,7 +10,14 @@ def line_by_line_compare_exact(a, b):
         assert a_line == b_line
 
 
-def test_code_4_output_17(capsys):
+def session_6():
+    r"""
+    >>> print('Hello World!')
+    Hello World!
+    """
+
+
+def test_code_14_output_27(capsys):
     from enum import Enum
 
     class Floats(Enum):
