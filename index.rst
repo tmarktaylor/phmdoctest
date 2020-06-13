@@ -13,9 +13,9 @@ phmdoctest 0.0.6
    README
    doc/recent_changes
    doc/api
+   project
    doc/about
 
-   
 Search
 ======
 
