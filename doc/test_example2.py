@@ -42,7 +42,7 @@ defenestrate 12
     line_by_line_compare_exact(a=expected_str, b=capsys.readouterr().out)
 
 
-def session_72():
+def session_00001_line_72():
     r"""
     >>> print('Greetings Planet!')
     Greetings Planet!

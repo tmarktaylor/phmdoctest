@@ -101,7 +101,7 @@ def line_by_line_compare_exact(a, b):
         assert a_line == b_line
 
 
-def session_6():
+def session_00001_line_6():
     r"""
     >>> print('Hello World!')
     Hello World!

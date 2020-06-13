@@ -1,6 +1,7 @@
 """pytest test case file code generator."""
 
 import inspect
+import itertools
 from itertools import zip_longest
 import textwrap
 
@@ -42,6 +43,7 @@ class PytestFile:
         self._empty_line()
         # copy the helper function def
         self.lines.append(inspect.getsource(line_by_line_compare_exact))
+        self.session_counter = itertools.count(1)
 
     def __str__(self) -> str:
         return '\n'.join(self.lines)
@@ -83,9 +85,11 @@ class PytestFile:
     def add_interactive_session(self, identifier: str, session: str) -> None:
         """Add a do nothing function with doctest session as its docstring."""
         self._empty_line()
+        sequence_number = next(self.session_counter)
+        sequence_string = format(sequence_number, '05d')
         indented_session = textwrap.indent(session, '    ')
         lines = [
-            'def session_{}():'.format(identifier),
+            'def session_{}_line_{}():'.format(sequence_string, identifier),
             '    r"""',
             indented_session,
             ]
