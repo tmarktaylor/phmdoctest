@@ -138,9 +138,10 @@ Or these two commands:
     pytest --strict
     python -m doctest test_example1.py
 
-The `6` in the function name `session_6` is the line number
-in [example1.md](doc/example1.md) of the first line
-of the interactive session.
+The `line_6` in the function name `session_00001_line_6` is the 
+line number in [example1.md](doc/example1.md) of the first line
+of the interactive session. `00001` is a sequence number to
+order the doctests. 
 
 The `14` in the function name `test_code_14_output_27` is the
 line number of the first line
