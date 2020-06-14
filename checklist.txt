@@ -2,7 +2,7 @@ Checklist
 - Update __init__.py.__version__ per Semantic Versioning.  Tests will fail
   until all version strings are the same.
 - Check for outstanding to do's.
-- update recent changes in README.md
+- update recent changes in recent_changes.md
 - update copyright year
 - Run code inspections.
 - Run pytest cases on lowest Py version
@@ -18,6 +18,7 @@ Checklist
   - description= Version 0.0.0 uploaded to Python Package Index.
 - Download zip from github to scratch directory
 - upload to PYPI
+    python -m pip install --upgrade pip
 	python -m pip install --upgrade setuptools wheel twine
 	python setup.py sdist bdist_wheel
 	twine   upload dist/*

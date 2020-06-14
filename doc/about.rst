@@ -1,18 +1,16 @@
 About the documentation
 -----------------------
 
-The documentation is built from a combination of
-.md and .rst source files.  Most of the documentation
-is sourced from README.md.  To achieve the goals listed
-below the documentation root folder is moved from
-/doc to the project root.
+The documentation is built around README.md at the project root.
+README.md serves as the:
 
-Goals
-~~~~~
+- project home page
+- PYPI long description
+- user manual
 
 The documentation is constructed to achieve:
 
-- Everything in the README.
+- Most text is in the README.
 - Python Package Index long description taken from the README.
 - README at the Github repository root.
 - Examples in the README are fully syntax highlighted.
@@ -20,7 +18,8 @@ The documentation is constructed to achieve:
 - Building a static copy of the documentation for offline use.
 - No visible raw ReStructured text in the README rendered by Github.
 
-Implementation:
+Implementation
+~~~~~~~~~~~~~~
 
 - Github hosts the repository and renders README.md.
 - readthedocs.org hosts the HTML and creates the PDF for offline use.
@@ -73,7 +72,7 @@ pinned to what is currently available.
 This section is here only to suppress Sphinx WARNING: document isn't
 included in any toctree.  These files are referenced from README.md.
 
-   example1.md | example2.md | test_example2.md
+   example1.md | example2.md
 
 .. toctree::
    :maxdepth: 0
@@ -81,4 +80,3 @@ included in any toctree.  These files are referenced from README.md.
 
    example1.md
    example2.md
-   test_example2.md

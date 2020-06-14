@@ -1,13 +1,4 @@
-# This is Markdown file example1.md
-
-## Interactive Python session (doctest)
-
-```pycon 
->>> print('Hello World!')
-Hello World!
-```
-
-## Source Code and terminal output
+### Markdown with only one code block
  
 Code:
 ```python3

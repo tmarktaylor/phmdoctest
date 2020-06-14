@@ -15,7 +15,7 @@ from typing import List, Optional, NamedTuple
 
 import click.testing
 
-from .main import entry_point
+from phmdoctest.main import entry_point
 
 
 SimulatorStatus = NamedTuple(
@@ -47,7 +47,7 @@ def run_and_pytest(
     Returns SimulatorStatus object.
     SimulatorStatus.runner_status is the CliRunner.invoke return value.
 
-    If an outfile is written or streamed to stdout a copy of it
+    If an outfile is streamed to stdout a copy of it
     is found in simulator_status.runner_status.stdout.
 
     If calling run_and_pytest() from a pytest file, try adding the
@@ -73,7 +73,8 @@ def run_and_pytest(
               ``phmdoctest MARKDOWN_FILE --skip FIRST --outfile OUTFILE``
 
         pytest_options
-            List of strings like this: ``['--strict', '-v']``.
+            List of strings like this: ``['--strict',
+            '--doctest-modules', '-v']``.
             Set to empty list to run pytest with no options.
             Set to None to skip pytest.
 
@@ -108,7 +109,7 @@ def run_and_pytest(
     # Drop the rest of the command starting at --outfile and the
     # outfile path since we rename the outfile in the invoked command.
     with TemporaryDirectory() as tmpdirname:
-        # Create a filename in the temporary directly to
+        # Create a filename in the temporary directory to
         # receive the OUTFILE.
         # Rewrite the command to use the new OUTFILE path and
         # split up the command to a list of strings.
@@ -153,7 +154,7 @@ def run_and_pytest(
                 pytest_exit_code=None
             )
 
-        # Copy the generated pytest file from the isolated filesystem.
+        # Copy the generated pytest file from the temporary directory.
         with open(outfile_path, 'r', encoding='utf-8') as fp:
             outfile_text = fp.read()
 

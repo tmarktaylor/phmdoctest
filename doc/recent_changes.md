@@ -1,4 +1,8 @@
 ## Recent Changes
+0.1.0 - 2020-06-14
+
+- New feature to handle Python interactive sessions.
+
 0.0.6 - 2020-06-07
 
 - Bugfix- Issue- Skip pattern matching start of code ignored.

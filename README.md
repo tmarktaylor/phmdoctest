@@ -1,4 +1,4 @@
-# phmdoctest 0.0.6
+# phmdoctest 0.1.0
 
 ## Introduction
 
@@ -7,22 +7,19 @@ Python syntax highlighted Markdown doctest
 Command line program to test Python syntax highlighted code
 examples in Markdown.
 
-- No extra tags or html comments needed in the Markdown. No Markdown edits at all.
-- No `<BLANKLINE>` needed in output. [doctest][4].
 - Synthesizes a pytest test file from examples in Markdown.
-- Reads Python source code and expected
-  terminal output from Markdown fenced code blocks.
+- Reads these from Markdown fenced code blocks:
+  - Python interactive sessions described by [doctest][4].
+  - Python source code and expected terminal output.
+- No extra tags or html comments needed in the Markdown. No Markdown edits at all.
 - The test cases are run later by calling pytest.  
 - Get code coverage by running pytest with [coverage][6]. 
 - An included Python library: [Development tools API][10].
   - runs phmdoctest and can run pytest too. *(simulator.py)*
   - functions to read fenced code blocks from Markdown. *(tool.py)*
 
-phmdoctest does **not** do:
-- setup and teardown
-- catch exceptions
-- ellipsis comparisons
-- Python console >>>, ...
+phmdoctest does **not** do setup and teardown. Each test case runs
+independently. 
 
 ##### master branch status
 [![](https://img.shields.io/pypi/l/phmdoctest.svg)](https://github.com/tmarktaylor/phmdoctest/blob/master/LICENSE.txt)
@@ -41,7 +38,9 @@ phmdoctest does **not** do:
 
 
 ## Installation
-    pip install phmdoctest
+It is advisable to install in a virtual environment.
+
+    python -m pip install phmdoctest
 
 ## Sample usage
 
@@ -50,6 +49,16 @@ shown in raw form here...
 
 ~~~
 # This is Markdown file example1.md
+
+## Interactive Python session (doctest)
+
+```pycon 
+>>> print('Hello World!')
+Hello World!
+```
+
+## Source Code and terminal output
+ 
 Code:
 ```python3
 from enum import Enum
@@ -92,7 +101,14 @@ def line_by_line_compare_exact(a, b):
         assert a_line == b_line
 
 
-def test_code_4_output_17(capsys):
+def session_00001_line_6():
+    r"""
+    >>> print('Hello World!')
+    Hello World!
+    """
+
+
+def test_code_14_output_27(capsys):
     from enum import Enum
 
     class Floats(Enum):
@@ -113,17 +129,30 @@ Floats.ADUCK
 ```
 
 Then run a pytest command something like this in your terminal
-to test the Markdown code and expected output blocks.
+to test the Markdown session, code, and expected output blocks.
 
-    pytest --strict 
+    pytest --strict --doctest-modules
+    
+Or these two commands:
 
-The `4` in the function name `test_code_4_output_17` is the
+    pytest --strict
+    python -m doctest test_example1.py
+
+The `line_6` in the function name `session_00001_line_6` is the 
 line number in [example1.md](doc/example1.md) of the first line
-of python code. `17` shows the line number of the expected 
+of the interactive session. `00001` is a sequence number to
+order the doctests. 
+
+The `14` in the function name `test_code_14_output_27` is the
+line number of the first line
+of python code. `27` shows the line number of the expected 
 terminal output.
 
-phmdoctest tries to generate one test case function for each 
-Python-code/expected-output Markdown fenced code block pair.
+phmdoctest tries to generate one test case function for each: 
+
+- Markdown fenced code block interactive session 
+- Python-code/expected-output Markdown fenced code block pair
+
 The `--report` option below shows the blocks discovered and
 how phmdoctest will test them.
    
@@ -142,11 +171,11 @@ The `test role` column shows how phmdoctest
 will test each fenced code block.  
 
 ```
-        doc/example2.md fenced blocks
-----------------------------------------------
-block    line  test    skip pattern/reason
-type   number  role    quoted and one per line
-----------------------------------------------
+         doc/example2.md fenced blocks
+-----------------------------------------------
+block    line  test     skip pattern/reason
+type   number  role     quoted and one per line
+-----------------------------------------------
 py3         9  code
            14  output
 py3        20  code
@@ -157,26 +186,36 @@ py3        44  code
            51  output
 yaml       59  --
 text       67  --
-py3        74  code
-           80  output
-----------------------------------------------
-5 test cases
+py         72  session
+py3        80  code
+           86  output
+pycon      94  session
+-----------------------------------------------
+7 test cases
 1 code blocks missing an output block
 ```
 
-## How phmdoctest identifies code and output blocks
+## How phmdoctest identifies code, session, and output blocks
 
 phmdoctest uses the PYPI [commonmark][7] project to extract fenced code
 blocks from Markdown. Specification [CommonMark Spec][8] and website [CommonMark][9].
 
 Only [GFM fenced code blocks][3] are considered.
 
+A block is a session block if the info_string starts with 'py' 
+and the first line of the block starts with the
+session prompt: `'>>> '`.
+ 
 To be treated as Python code the opening fence should start 
 with one of these:
 
     ```python
     ```python3
     ```py3
+
+and the block contents can't start with `'>>> '`.
+
+[project.md](project.md) has more examples of code and session blocks.
 
 It is ok if the [info string](https://github.github.com/gfm/#info_string)
 is laden with additional text, phmdoctest will ignore it.  The
@@ -189,8 +228,13 @@ has an empty info string.
 
     ```
 
-If a Python block is followed by another Python block or a fenced code block
-with a non-empty info string the first Python block has no output. 
+If a Python code block has no output
+if it is followed by any of:
+
+- Python code block
+- Python session block
+- a fenced code block with a non-empty info string
+  
 phmdoctest will still generate test code for it, but there will be no
 assertion statement.
 
@@ -208,7 +252,7 @@ output file.
 - The Python code in the fenced code block is searched.
 - The info string is **not** searched.
 - Output blocks are **not** searched.
-- Only Python code blocks are searched.
+- Only Python code or session blocks are searched.
 - Case is significant.
 
 The report shows which Python blocks are skipped
@@ -236,13 +280,13 @@ phmdoctest doc/example2.md --skip "Python 3.7" --skip LAST --report --outfile te
 Produces the report
 ```
            doc/example2.md fenced blocks
----------------------------------------------------
-block    line  test         skip pattern/reason
-type   number  role         quoted and one per line
----------------------------------------------------
+----------------------------------------------------
+block    line  test          skip pattern/reason
+type   number  role          quoted and one per line
+----------------------------------------------------
 py3         9  code
            14  output
-py3        20  skip-code    "Python 3.7"
+py3        20  skip-code     "Python 3.7"
            26  skip-output
            31  --
 py3        37  code
@@ -250,11 +294,14 @@ py3        44  code
            51  output
 yaml       59  --
 text       67  --
-py3        74  skip-code    "LAST"
-           80  skip-output
----------------------------------------------------
-3 test cases
-2 skipped code blocks
+py         72  session
+py3        80  code
+           86  output
+pycon      94  skip-session  "LAST"
+----------------------------------------------------
+5 test cases
+1 skipped code blocks
+1 skipped interactive session blocks
 1 code blocks missing an output block
 
   skip pattern matches (blank means no match)
@@ -262,7 +309,7 @@ py3        74  skip-code    "LAST"
 skip pattern  matching code block line number(s)
 ------------------------------------------------
 Python 3.7    20
-LAST          74
+LAST          94
 ------------------------------------------------
 ```
  
@@ -317,22 +364,25 @@ Usage: phmdoctest [OPTIONS] MARKDOWN_FILE
 Options:
   --outfile TEXT   Write generated test case file to path TEXT. "-" writes to
                    stdout.
-  -s, --skip TEXT  Any Python block that contains the substring TEXT is not
-                   tested. More than one --skip TEXT is ok. Double quote if
-                   TEXT contains spaces. For example --skip="python 3.7" will
-                   skip every Python block that contains the substring "python
-                   3.7". If TEXT is one of the 3 capitalized strings FIRST
-                   SECOND LAST the first, second, or last Python block in the
-                   Markdown file is skipped. The fenced code block info string
-                   is not searched.
+
+  -s, --skip TEXT  Any Python code or interactive session block that contains
+                   the substring TEXT is not tested. More than one --skip TEXT
+                   is ok. Double quote if TEXT contains spaces. For example
+                   --skip="python 3.7" will skip every Python block that
+                   contains the substring "python 3.7". If TEXT is one of the
+                   3 capitalized strings FIRST SECOND LAST the first, second,
+                   or last Python block in the Markdown file is skipped. The
+                   fenced code block info string is not searched.
+
   --report         Show how the Markdown fenced code blocks are used.
   --fail-nocode    This option sets behavior when the Markdown file has no
-                   Python fenced code blocks or if all such blocks are
-                   skipped. When this option is present the generated pytest
-                   file has a test function called test_nothing_fails() that
-                   will raise an assertion. If this option is not present the
-                   generated pytest file has test_nothing_passes() which will
-                   never fail.
+                   Python fenced code blocks or interactive session blocks or
+                   if all such blocks are skipped. When this option is present
+                   the generated pytest file has a test function called
+                   test_nothing_fails() that will raise an assertion. If this
+                   option is not present the generated pytest file has
+                   test_nothing_passes() which will never fail.
+
   --version        Show the version and exit.
   --help           Show this message and exit.
 ```
@@ -362,8 +412,8 @@ matrix:
         - pip install "." pytest
       script:
         - mkdir tests/tmp
-        - phmdoctest project.md --report --outfile tests/tmp/test_project_readme.py
-        - pytest --strict -vv tests
+        - phmdoctest project.md --report --outfile tests/tmp/test_project.py
+        - pytest --strict --doctest-modules -vv tests
 ```
 
 ## Running phmdoctest from the command line as a Python module
@@ -389,11 +439,17 @@ import phmdoctest.simulator
 command = 'phmdoctest doc/example1.md --report --outfile test_me.py'
 simulator_status = phmdoctest.simulator.run_and_pytest(
     well_formed_command=command,
-    pytest_options=['--strict', '-v']
+    pytest_options=['--strict', '--doctest-modules', '-v']
 )
 assert simulator_status.runner_status.exit_code == 0
 assert simulator_status.pytest_exit_code == 0
 ```
+
+## Execution Context
+- Interactive sessions run in the doctest execution context.
+- Code/expected output run within a function body of a pytest test case.
+- Pytest and doctest determine the order of test case execution.
+
 
 ## Hints
 
@@ -403,12 +459,16 @@ assert simulator_status.pytest_exit_code == 0
   it is always up to date.
 - Its easy to use --output by mistake instead of `--outfile`.
 - If Python code block has no output, put assert statements in the code.
+- Use pytest option --doctest-modules to test the sessions. 
 - phmdoctest ignores Markdown indented code blocks ([Spec][8] section 4.4).
+- simulator_status.runner_status.exit_code == 2 is a click usage error.
+- Since phmdoctest generates code, the input file should be from a trusted
+  source.
   
-
 ## Related projects
 - rundoc
 - byexample
+- sybil
 - doexec
 - egtest
 

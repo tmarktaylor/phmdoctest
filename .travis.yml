@@ -9,8 +9,8 @@ matrix:
         - pip install "." pytest
       script:
         - mkdir tests/tmp
-        - phmdoctest project.md --report --outfile tests/tmp/test_project_readme.py
-        - pytest --strict -vv tests
+        - phmdoctest project.md --report --outfile tests/tmp/test_project.py
+        - pytest --strict --doctest-modules -vv tests
 
     - python: 3.6
       install:
@@ -22,11 +22,11 @@ matrix:
         # pytest files and reports.
         - mkdir tests/tmp
         # Run phmdoctest to generate test file and print the report.
-        - phmdoctest project.md --report --outfile tests/tmp/test_project_readme.py
+        - phmdoctest project.md --report --outfile tests/tmp/test_project.py
         - phmdoctest doc/example1.md --report --outfile tests/tmp/test_example1.py
         - phmdoctest doc/example2.md --skip "Python 3.7" --skip LAST --report --outfile tests/tmp/test_example2.py
         # run the project test suite including the generated tests
-        - pytest --strict -vv tests
+        - pytest --strict --doctest-modules -vv tests
 
         # These steps are specific to testing phmdoctest and are not
         # useful to developers using phmdoctest for other projects.
@@ -40,6 +40,10 @@ matrix:
     - python: 3.7
       install: pip install tox
       script: tox -e cover,inspect,docs
+
+    - python: 3.8
+      install: *utest_install
+      script: *utest_run
 
     - python: pypy3
       install: *utest_install

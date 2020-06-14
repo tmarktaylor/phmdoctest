@@ -1,0 +1,44 @@
+   tests/twentysix_session_blocks.md fenced blocks
+-----------------------------------------------------
+block     line  test          skip pattern/reason
+type    number  role          quoted and one per line
+-----------------------------------------------------
+pycon        3  skip-session  ">>>"
+py           8  skip-session  ">>>"
+pycon       13  skip-session  ">>>"
+py          18  skip-session  ">>>"
+pycon       23  skip-session  ">>>"
+pycon       28  skip-session  ">>>"
+python      33  skip-session  ">>>"
+pycon       38  skip-session  ">>>"
+pycon       43  skip-session  ">>>"
+pycon       48  skip-session  ">>>"
+pycon       53  skip-session  ">>>"
+pycon       58  skip-session  ">>>"
+pycon       63  skip-session  ">>>"
+pycon       68  skip-session  ">>>"
+pycon       73  skip-session  ">>>"
+pycon       78  skip-session  ">>>"
+pycon       83  skip-session  ">>>"
+pycon       88  skip-session  ">>>"
+pycon       93  skip-session  ">>>"
+pycon       98  skip-session  ">>>"
+pycon      103  skip-session  ">>>"
+pycon      108  skip-session  ">>>"
+pycon      113  skip-session  ">>>"
+pycon      118  skip-session  ">>>"
+py         123  skip-session  ">>>"
+pycon      128  skip-session  ">>>"
+-----------------------------------------------------
+0 test cases
+26 skipped interactive session blocks
+0 code blocks missing an output block
+
+   skip pattern matches (blank means no match)
+--------------------------------------------------
+skip pattern  matching code block line number(s)
+--------------------------------------------------
+>>>           3, 8, 13, 18, 23, 28, 33, 38, 43,
+              48, 53, 58, 63, 68, 73, 78, 83, 88,
+              93, 98, 103, 108, 113, 118, 123, 128
+--------------------------------------------------

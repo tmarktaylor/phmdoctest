@@ -34,7 +34,7 @@ setup(
     # For a discussion on single-sourcing the version across setup.py and the
     # project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='0.0.6',  # Required
+    version='0.1.0',  # Required
 
     # This is a one-line description or tagline of what your project does. This
     # corresponds to the "Summary" metadata field:
@@ -129,6 +129,8 @@ setup(
     #   py_modules=["my_module"],
     #
     packages=find_packages(where='src'),  # Required
+    package_data={"phmdoctest": ["py.typed"]},
+    zip_safe=False,    # per mypy 26.2  Making PEP 561 compatible packages
 
     # Specify which Python versions you support. In contrast to the
     # 'Programming Language' classifiers above, 'pip install' will check this

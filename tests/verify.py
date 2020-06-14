@@ -11,7 +11,7 @@ def a_and_b_are_the_same(a, b):
     a_lines = a.splitlines()
     b_lines = b.splitlines()
     for a_line, b_line in zip_longest(a_lines, b_lines):
-        assert a_line == b_line, a_line + '|' + b_line
+        assert a_line == b_line, str(a_line) + '|' + str(b_line)
 
 
 def one_example(

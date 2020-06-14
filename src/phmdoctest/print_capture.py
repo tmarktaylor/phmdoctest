@@ -1,6 +1,7 @@
 """pytest test case file code generator."""
 
 import inspect
+import itertools
 from itertools import zip_longest
 import textwrap
 
@@ -32,7 +33,9 @@ def test_identifier(capsys):
 
 
 class PytestFile:
+    """Format and assemble test cases as Python source file."""
     def __init__(self, description: str = ''):
+        """Add file docstring and helper to test code blocks."""
         docstring = '"""' + description + '"""'
         self.lines = [docstring]
         self.lines.append('from itertools import zip_longest')
@@ -40,6 +43,7 @@ class PytestFile:
         self._empty_line()
         # copy the helper function def
         self.lines.append(inspect.getsource(line_by_line_compare_exact))
+        self.session_counter = itertools.count(1)
 
     def __str__(self) -> str:
         return '\n'.join(self.lines)
@@ -77,3 +81,17 @@ class PytestFile:
         """Add the source code as is to the generated test file."""
         self._empty_line()
         self.lines.append(source)
+
+    def add_interactive_session(self, identifier: str, session: str) -> None:
+        """Add a do nothing function with doctest session as its docstring."""
+        self._empty_line()
+        sequence_number = next(self.session_counter)
+        sequence_string = format(sequence_number, '05d')
+        indented_session = textwrap.indent(session, '    ')
+        lines = [
+            'def session_{}_line_{}():'.format(sequence_string, identifier),
+            '    r"""',
+            indented_session,
+            ]
+        function_source = '\n'.join(lines) + '    """\n'
+        self.lines.append(function_source)

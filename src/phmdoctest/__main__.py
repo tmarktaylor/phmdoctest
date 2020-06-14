@@ -4,5 +4,5 @@
     the package when it is run with python -m phmdoctest.
 """
 
-from .main import entry_point
+from phmdoctest.main import entry_point
 entry_point()
