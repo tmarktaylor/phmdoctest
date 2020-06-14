@@ -13,7 +13,7 @@ import phmdoctest.simulator
 import phmdoctest.tool
 
 
-def test_fenced_block_dunder_str():
+def test_fenced_block_dunder_str() -> None:
     """Check result from FencedBlock.__str__()."""
     with open('doc/example1.md', encoding='utf-8') as fp:
         blocks = phmdoctest.main.convert_nodes(
