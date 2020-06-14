@@ -224,6 +224,21 @@ def test_project_md():
     assert simulator_status.pytest_exit_code == 0
 
 
+def test_example2_report():
+    """Check example2_report.txt used in .travis.yml."""
+    simulator_status = verify.one_example(
+        'phmdoctest doc/example2.md --skip "Python 3.7" --skip LAST --report'
+        ' --outfile discarded.py',
+        want_file_name=None,
+        pytest_options=None
+    )
+    assert simulator_status.runner_status.exit_code == 0
+    stdout = simulator_status.runner_status.stdout
+    with open('tests/example2_report.txt', 'r', encoding='utf-8') as f:
+        want = f.read()
+    verify.a_and_b_are_the_same(a=want, b=stdout)
+
+
 def test_def_test_identifier():
     """Painful way to eliminate 2 coverage missed statements."""
     # The function print_capture.test_identifier() is used as
