@@ -447,7 +447,8 @@ assert simulator_status.pytest_exit_code == 0
 
 ## Execution Context
 - Interactive sessions run in the doctest execution context.
-- Code/expected output run within a function body.
+- Code/expected output run within a function body of a pytest test case.
+- Pytest and doctest determine the order of test case execution.
 
 
 ## Hints
