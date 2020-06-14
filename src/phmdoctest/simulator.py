@@ -33,11 +33,11 @@ def run_and_pytest(
     """
     Simulate a phmdoctest command, optionally run pytest.
 
-    If a filename is provided by the --outfile option, the
+    If a filename is provided by the ``--outfile`` option, the
     command is rewritten replacing the OUTFILE with a
     path to a temporary directory and a synthesized filename.
 
-    To run pytest on an --outfile, pass a list of zero or
+    To run pytest on an ``--outfile``, pass a list of zero or
     more pytest_options.  pytest is run in a subprocess.
 
     The PYPI package pytest must be installed separately
@@ -59,7 +59,7 @@ def run_and_pytest(
     ``python -m pytest tests -v --capture=tee-sys``
 
     will print the outputs from the subprocess.run() invocations
-    of pytest on the --outfile written to the temporary directory.
+    of pytest on the ``--outfile`` written to the temporary directory.
     A wild guess would be that the subprocess inherited changes
     made to the parent by --capture=tee-sys.
 
@@ -67,8 +67,8 @@ def run_and_pytest(
         well_formed_command
             - starts with phmdoctest
             - followed by MARKDOWN_FILE
-            - ends with --outfile OUTFILE (if needed)
-            - all other options are between MARKDOWN_FILE and --outfile
+            - ends with ``--outfile`` OUTFILE (if needed)
+            - all other options are between MARKDOWN_FILE and ``--outfile``
               for example:
               ``phmdoctest MARKDOWN_FILE --skip FIRST --outfile OUTFILE``
 

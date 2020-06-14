@@ -31,9 +31,8 @@ World!
 #### Interactive Python session requires `<BLANKINE>` in the expected output 
 
 Blank lines in the expected output must be replaced with `<BLANKLINE>`.
-In the Readthedocs documentation, 
-use the view page source link at the top to see the `<BLANKLINE>` or
-view project.md on github in raw mode.
+To see the `<BLANKLINE>` navigate to [project.md unrendered][1]. 
+
 
 ```pycon
 >>> print('Hello\n\nWorld!')
@@ -47,9 +46,7 @@ World!
 Here is an interactive Python session showing an
 expected exception and use of the doctest directive
 `IGNORE_EXCEPTION_DETAIL`.
-In the Readthedocs documentation, 
-use the view page source link at the top to see the doctest directive or
-view project.md on github in raw mode.
+To see the doctest directive navigate to [project.md unrendered][1]. 
 
 
 ```pycon
@@ -70,3 +67,6 @@ ValueError:
 >>> coffee + coding == enjoyment
 True
 ```
+
+[1]: https://raw.githubusercontent.com/tmarktaylor/phmdoctest/master/project.md
+

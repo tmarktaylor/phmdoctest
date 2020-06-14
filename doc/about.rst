@@ -12,7 +12,7 @@ The documentation is constructed to achieve:
 
 - Most text is in the README.
 - Python Package Index long description taken from the README.
-- README at the Github repository root.
+- README is at the Github repository root.
 - Examples in the README are fully syntax highlighted.
 - README examples are tested by the test suite.
 - Building a static copy of the documentation for offline use.

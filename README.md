@@ -217,7 +217,7 @@ and the block contents can't start with `'>>> '`.
 
 [project.md](project.md) has more examples of code and session blocks.
 
-It is ok if the [info string](https://github.github.com/gfm/#info_string)
+It is ok if the [info string][11]
 is laden with additional text, phmdoctest will ignore it.  The
 entire info string will be shown in the block type column of the
 report.
@@ -327,9 +327,9 @@ phmdoctest doc/example2.md -s "Python 3.7" -sLAST --report --outfile test_exampl
 ## --fail-nocode
 
 This option produces a pytest file that will always
-fail when no Python code blocks are found.
+fail when no Python code or session blocks are found.
 
-If phmdoctest doesn't find any Python code blocks in the
+If phmdoctest doesn't find any Python code or session blocks in the
 Markdown file a pytest file is still generated.
 This also happens when `--skip` eliminates all the
 Python code blocks. 
@@ -392,7 +392,7 @@ Options:
 The partial script shown below is for Python 3.5 on [Travis CI][5].
 The script steps are:
 
-- Install pytest.
+- Install phmdoctest (the ".") and install pytest.
 - Create a new directory to take the generated test file.
 - Run phmdoctest to generate the test file and print the report.
 - Run pytest suite.
@@ -461,7 +461,8 @@ assert simulator_status.pytest_exit_code == 0
 - If Python code block has no output, put assert statements in the code.
 - Use pytest option --doctest-modules to test the sessions. 
 - phmdoctest ignores Markdown indented code blocks ([Spec][8] section 4.4).
-- simulator_status.runner_status.exit_code == 2 is a click usage error.
+- simulator_status.runner_status.exit_code == 2 is the click 
+  command line usage error.
 - Since phmdoctest generates code, the input file should be from a trusted
   source.
   
@@ -475,8 +476,9 @@ assert simulator_status.pytest_exit_code == 0
 [Recent Changes](doc/recent_changes.md)
 
 [3]: https://github.github.com/gfm/#fenced-code-blocks
+[11]: https://github.github.com/gfm/#info-string
 [10]: https://phmdoctest.readthedocs.io/en/latest/doc/api.html
-[2]: https://github.com/tmarktaylor/phmdoctest/blob/master/src/phmdoctest/doc/test_example2.py
+[2]: https://github.com/tmarktaylor/phmdoctest/blob/master/doc/test_example2.py
 [7]: https://pypi.org/project/commonmark
 [8]: https://spec.commonmark.org
 [9]: https://commonmark.org
