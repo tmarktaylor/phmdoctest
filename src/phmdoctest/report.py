@@ -4,7 +4,7 @@ from typing import List
 import click
 import monotable
 
-from phmdoctest.args import Args
+from phmdoctest.entryargs import Args
 from phmdoctest.fenced import Role, FencedBlock
 
 

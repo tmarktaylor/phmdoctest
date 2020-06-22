@@ -3,7 +3,7 @@ from typing import List
 
 import click
 
-from phmdoctest.args import Args
+from phmdoctest.entryargs import Args
 from phmdoctest.fenced import Role, FencedBlock
 import phmdoctest.print_capture
 
