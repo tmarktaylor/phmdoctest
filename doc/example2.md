@@ -1,8 +1,8 @@
 # This is Markdown file example2.md
 #### Fenced code block expected output block pair.
-Since phmdoctest works with Python source code and terminal output there
-are no console prompts `>>>` and `...` in the source code and the print()
-statement is required to produce the expected output.  
+In order for phmdoctest to work with Python source code and
+terminal output print statements are needed in the
+source code to produce the expected output.
 
 Example code adapted from the Python Tutorial:
 ```py3
@@ -68,9 +68,16 @@ some text
 ```
 
 #### A doctest session
+Here is a Python interactive session.  It is described by
+the Python Standard Library module doctest.  Note there is
+no need for an empty line at the end of the session. 
 ```py
->>> print('Greetings Planet!')
-Greetings Planet!
+>>> a = 'Greetings Planet!'
+>>> a
+'Greetings Planet!'
+>>> b = 12
+>>> b
+12
 ```
 
 #### One more code plus expected output pair.

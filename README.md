@@ -186,10 +186,10 @@ py3        44  code
            51  output
 yaml       59  --
 text       67  --
-py         72  session
-py3        80  code
-           86  output
-pycon      94  session
+py         75  session
+py3        87  code
+           93  output
+pycon     101  session
 -----------------------------------------------
 7 test cases
 1 code blocks missing an output block
@@ -294,10 +294,10 @@ py3        44  code
            51  output
 yaml       59  --
 text       67  --
-py         72  session
-py3        80  code
-           86  output
-pycon      94  skip-session  "LAST"
+py         75  session
+py3        87  code
+           93  output
+pycon     101  skip-session  "LAST"
 ----------------------------------------------------
 5 test cases
 1 skipped code blocks
@@ -309,7 +309,7 @@ pycon      94  skip-session  "LAST"
 skip pattern  matching code block line number(s)
 ------------------------------------------------
 Python 3.7    20
-LAST          94
+LAST          101
 ------------------------------------------------
 ```
  
