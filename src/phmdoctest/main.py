@@ -446,22 +446,26 @@ def build_test_cases(args: Args, blocks: List[FencedBlock]) -> str:
     builder = print_capture.PytestFile(docstring_text)
     number_of_test_cases = 0
     for block in blocks:
-        if block.role == Role.CODE:
-            code_identifier = 'code_' + str(block.line)
-            output_identifier = ''
-            code = block.contents
-            assert code, _ASSERTION_MESSAGE.format('code', block.line)
+        if block.role == Role.SETUP:
+            builder.add_setup(
+                identifier=more_readable(line_numbers_string(block)),
+                code=get_code(block),
+                expected_output=get_expected_output(block)
+            )
 
-            output_block = block.output
-            if output_block:
-                output_identifier = '_output_' + str(output_block.line)
-                expected_output = output_block.contents
-                assert expected_output, _ASSERTION_MESSAGE.format(
-                    'expected output', block.line)
-            else:
-                expected_output = ''
-            identifier = code_identifier + output_identifier
-            builder.add_test_case(identifier, code, expected_output)
+        elif block.role == Role.TEARDOWN:
+            builder.add_teardown(
+                identifier=more_readable(line_numbers_string(block)),
+                code=get_code(block),
+                expected_output=get_expected_output(block)
+            )
+
+        elif block.role == Role.CODE:
+            builder.add_test_case(
+                identifier=line_numbers_string(block),
+                code=get_code(block),
+                expected_output=get_expected_output(block)
+            )
             number_of_test_cases += 1
 
         elif block.role == Role.SESSION:
@@ -477,3 +481,32 @@ def build_test_cases(args: Args, blocks: List[FencedBlock]) -> str:
             test_function = inspect.getsource(test_nothing_passes)
         builder.add_source(test_function)
     return str(builder)
+
+
+def more_readable(text):
+    """Replace underscores with blanks."""
+    return text.replace('_', ' ')
+
+
+def line_numbers_string(block: FencedBlock) -> str:
+    """Return string showing code/output block file line numbers."""
+    code_identifier = 'code_' + str(block.line)
+    output_identifier = ''
+    if block.output:
+        output_identifier = '_output_' + str(block.output.line)
+    return code_identifier + output_identifier
+
+
+def get_code(block: FencedBlock) -> str:
+    assert block.contents, _ASSERTION_MESSAGE.format('code', block.line)
+    return block.contents
+
+
+def get_expected_output(block: FencedBlock) -> str:
+    if block.output:
+        expected_output = block.output.contents
+        assert expected_output, _ASSERTION_MESSAGE.format(
+            'expected output', block.line)
+    else:
+        expected_output = ''
+    return expected_output

@@ -95,3 +95,13 @@ class PytestFile:
             ]
         function_source = '\n'.join(lines) + '    """\n'
         self.lines.append(function_source)
+
+    def add_setup(
+            self, identifier: str, code: str, expected_output: str) -> None:
+        """Add code/output as module level setup code."""
+        pass
+
+    def add_teardown(
+            self, identifier: str, code: str, expected_output: str) -> None:
+        """Add code/output as module level teardown code."""
+        pass
