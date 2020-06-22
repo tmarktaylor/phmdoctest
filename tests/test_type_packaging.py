@@ -8,6 +8,7 @@ Run pytest here as well to assure the code runs without error.
 import commonmark.node    # type: ignore
 from typing import List
 
+import phmdoctest.fenced
 import phmdoctest.main
 import phmdoctest.simulator
 import phmdoctest.tool
@@ -16,7 +17,7 @@ import phmdoctest.tool
 def test_fenced_block_dunder_str() -> None:
     """Check result from FencedBlock.__str__()."""
     with open('doc/example1.md', encoding='utf-8') as fp:
-        blocks = phmdoctest.main.convert_nodes(
+        blocks = phmdoctest.fenced.convert_nodes(
             phmdoctest.tool.fenced_block_nodes(fp))
         assert str(blocks[0]) == 'FencedBlock(role=--, line=6)'
 

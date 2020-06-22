@@ -1,90 +1,15 @@
-from collections import Counter, namedtuple
-from enum import Enum
+from collections import Counter
 import inspect
-from typing import List, Optional
+from typing import List
 
 import click
-import commonmark.node    # type: ignore
 import monotable
 
-from phmdoctest import tool
-from phmdoctest import print_capture
-
-
-class Role(Enum):
-    """Role that markdown fenced code block plays in testing."""
-    UNKNOWN = '--'
-    CODE = 'code'
-    OUTPUT = 'output'
-    SESSION = 'session'
-    SKIP_CODE = 'skip-code'
-    SKIP_OUTPUT = 'skip-output'
-    SKIP_SESSION = 'skip-session'
-    SETUP = 'setup'
-    TEARDOWN = 'teardown'
-
-
-class FencedBlock:
-    """Selected fields from commonmark node plus new field role."""
-    def __init__(self, node: commonmark.node.Node) -> None:
-        """Extract fields from commonmark fenced code block node."""
-        self.type = node.info
-        self.line = node.sourcepos[0][0] + 1
-        self.role = Role.UNKNOWN
-        self.contents = node.literal
-        self.output = None    # type: Optional['FencedBlock']
-        self.patterns = list()    # type: List[str]
-
-    def __str__(self) -> str:
-        return 'FencedBlock(role={}, line={})'.format(
-            self.role.value, self.line)
-
-    def set(self, role: Role) -> None:
-        """Set the role for the fenced code block in subsequent testing."""
-        self.role = role
-
-    def add_pattern(self, pattern):
-        """Add the TEXT value that identified the block"""
-        self.patterns.append(pattern)
-
-    def set_link_to_output(self, fenced_block: 'FencedBlock') -> None:
-        """Save a reference to the code block's output block."""
-        assert self.role == Role.CODE, 'only allowed to be code'
-        assert fenced_block.role == Role.OUTPUT, 'only allowed to be output'
-        self.output = fenced_block
-
-    def skip(self, pattern: str) -> None:
-        """Skip an already designated code block. Re-skip is OK.
-
-        pattern is the TEXT value that identified the block
-        """
-        if self.role == Role.CODE:
-            self.set(Role.SKIP_CODE)
-            if self.output:
-                self.output.set(Role.SKIP_OUTPUT)
-        elif self.role == Role.SESSION:
-            self.set(Role.SKIP_SESSION)
-        else:
-            is_skipped = any(
-                [self.role == Role.SKIP_CODE,
-                 self.role == Role.SKIP_SESSION])
-            assert is_skipped, 'cannot skip this Role {}'.format(self.role)
-        self.patterns.append(pattern)
-
-
-Args = namedtuple(
-    'Args',
-    [
-        'markdown_file',
-        'outfile',
-        'skips',
-        'is_report',
-        'fail_nocode',
-        'setup',
-        'teardown'
-    ]
-)
-"""Command line arguments with some renames."""
+from phmdoctest.args import Args
+from phmdoctest.fenced import Role, FencedBlock
+import phmdoctest.fenced
+import phmdoctest.print_capture
+import phmdoctest.tool
 
 
 @click.command()
@@ -186,7 +111,8 @@ def entry_point(
 
     # Find markdown blocks and pair up code and output blocks.
     with click.open_file(args.markdown_file, encoding='utf-8') as fp:
-        blocks = convert_nodes(tool.fenced_block_nodes(fp))
+        blocks = phmdoctest.fenced.convert_nodes(
+            phmdoctest.tool.fenced_block_nodes(fp))
     identify_code_and_output_blocks(blocks)
     code_and_session_blocks = [
         b for b in blocks if b.role in [Role.CODE, Role.SESSION]
@@ -204,14 +130,6 @@ def entry_point(
         test_case_string = build_test_cases(args, blocks)
         with click.open_file(args.outfile, 'w', encoding='utf-8') as ofp:
             ofp.write(test_case_string)
-
-
-def convert_nodes(nodes: List[commonmark.node.Node]) -> List[FencedBlock]:
-    """Create FencedBlock objects from commonmark fenced code block nodes."""
-    blocks = []
-    for node in nodes:
-        blocks.append(FencedBlock(node))
-    return blocks
 
 
 PYTHON_FLAVORS = ['python', 'py3', 'python3']
@@ -443,7 +361,7 @@ def build_test_cases(args: Args, blocks: List[FencedBlock]) -> str:
     quoted_markdown_path = repr(click.format_filename(args.markdown_file))
     markdown_path = quoted_markdown_path[1:-1]
     docstring_text = 'pytest file built from {}'.format(markdown_path)
-    builder = print_capture.PytestFile(docstring_text)
+    builder = phmdoctest.print_capture.PytestFile(docstring_text)
     number_of_test_cases = 0
     for block in blocks:
         if block.role == Role.SETUP:
