@@ -173,7 +173,7 @@ will test each fenced code block.
 ```
          doc/example2.md fenced blocks
 -----------------------------------------------
-block    line  test     skip pattern/reason
+block    line  test     matching TEXT pattern
 type   number  role     quoted and one per line
 -----------------------------------------------
 py3         9  code
@@ -281,7 +281,7 @@ Produces the report
 ```
            doc/example2.md fenced blocks
 ----------------------------------------------------
-block    line  test          skip pattern/reason
+block    line  test          matching TEXT pattern
 type   number  role          quoted and one per line
 ----------------------------------------------------
 py3         9  code
@@ -362,29 +362,50 @@ phmdoctest doc/example2.md -s "Python 3.7" -sLAST --outfile=-
 Usage: phmdoctest [OPTIONS] MARKDOWN_FILE
 
 Options:
-  --outfile TEXT   Write generated test case file to path TEXT. "-" writes to
-                   stdout.
+  --outfile TEXT       Write generated test case file to path TEXT. "-" writes
+                       to stdout.
 
-  -s, --skip TEXT  Any Python code or interactive session block that contains
-                   the substring TEXT is not tested. More than one --skip TEXT
-                   is ok. Double quote if TEXT contains spaces. For example
-                   --skip="python 3.7" will skip every Python block that
-                   contains the substring "python 3.7". If TEXT is one of the
-                   3 capitalized strings FIRST SECOND LAST the first, second,
-                   or last Python block in the Markdown file is skipped. The
-                   fenced code block info string is not searched.
+  -s, --skip TEXT      Any Python code or interactive session block that
+                       contains the substring TEXT is not tested. More than
+                       one --skip TEXT is ok. Double quote if TEXT contains
+                       spaces. For example --skip="python 3.7" will skip every
+                       Python block that contains the substring "python 3.7".
+                       If TEXT is one of the 3 capitalized strings FIRST
+                       SECOND LAST the first, second, or last Python code or
+                       session block in the Markdown file is skipped.
 
-  --report         Show how the Markdown fenced code blocks are used.
-  --fail-nocode    This option sets behavior when the Markdown file has no
-                   Python fenced code blocks or interactive session blocks or
-                   if all such blocks are skipped. When this option is present
-                   the generated pytest file has a test function called
-                   test_nothing_fails() that will raise an assertion. If this
-                   option is not present the generated pytest file has
-                   test_nothing_passes() which will never fail.
+  --report             Show how the Markdown fenced code blocks are used.
+  --fail-nocode        This option sets behavior when the Markdown file has no
+                       Python fenced code blocks or interactive session blocks
+                       or if all such blocks are skipped. When this option is
+                       present the generated pytest file has a test function
+                       called test_nothing_fails() that will raise an
+                       assertion. If this option is not present the generated
+                       pytest file has test_nothing_passes() which will never
+                       fail.
 
-  --version        Show the version and exit.
-  --help           Show this message and exit.
+  -u, --setup TEXT     The Python code block that contains the substring TEXT
+                       is run at test module setup time.  Variables assigned
+                       at the outer level are visible as globals to the other
+                       Python code blocks. Python sessions cannot access the
+                       globals. TEXT should match exactly one code block. If
+                       TEXT is one of the 3 capitalized strings FIRST SECOND
+                       LAST the first, second, or last Python code or session
+                       block in the Markdown file is matched. A block will not
+                       match --setup if it matches --skip, or if it is a
+                       session block.
+
+  -d, --teardown TEXT  The Python code block that contains the substring TEXT
+                       is run at test module teardown time. TEXT should match
+                       exactly one code block. If TEXT is one of the 3
+                       capitalized strings FIRST SECOND LAST the first,
+                       second, or last Python code or session block in the
+                       Markdown file is matched. A block will not match
+                       --teardown if it matches either --skip or --setup, or
+                       if it is a session block.
+
+  --version            Show the version and exit.
+  --help               Show this message and exit.
 ```
 
 ## Running on Travis CI  

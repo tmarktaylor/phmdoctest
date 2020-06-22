@@ -1,6 +1,6 @@
            doc\example2.md fenced blocks
 ---------------------------------------------------
-block    line  test         skip pattern/reason
+block    line  test         matching TEXT pattern
 type   number  role         quoted and one per line
 ---------------------------------------------------
 py3         9  skip-code    "print"

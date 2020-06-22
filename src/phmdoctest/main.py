@@ -20,6 +20,8 @@ class Role(Enum):
     SKIP_CODE = 'skip-code'
     SKIP_OUTPUT = 'skip-output'
     SKIP_SESSION = 'skip-session'
+    SETUP = 'setup'
+    TEARDOWN = 'teardown'
 
 
 class FencedBlock:
@@ -31,7 +33,7 @@ class FencedBlock:
         self.role = Role.UNKNOWN
         self.contents = node.literal
         self.output = None    # type: Optional['FencedBlock']
-        self.skip_reasons = list()    # type: List[str]
+        self.patterns = list()    # type: List[str]
 
     def __str__(self) -> str:
         return 'FencedBlock(role={}, line={})'.format(
@@ -41,14 +43,21 @@ class FencedBlock:
         """Set the role for the fenced code block in subsequent testing."""
         self.role = role
 
+    def add_pattern(self, pattern):
+        """Add the TEXT value that identified the block"""
+        self.patterns.append(pattern)
+
     def set_link_to_output(self, fenced_block: 'FencedBlock') -> None:
         """Save a reference to the code block's output block."""
         assert self.role == Role.CODE, 'only allowed to be code'
         assert fenced_block.role == Role.OUTPUT, 'only allowed to be output'
         self.output = fenced_block
 
-    def skip(self, reason: str) -> None:
-        """Skip an already designated code block. Re-skip is OK."""
+    def skip(self, pattern: str) -> None:
+        """Skip an already designated code block. Re-skip is OK.
+
+        pattern is the TEXT value that identified the block
+        """
         if self.role == Role.CODE:
             self.set(Role.SKIP_CODE)
             if self.output:
@@ -60,7 +69,7 @@ class FencedBlock:
                 [self.role == Role.SKIP_CODE,
                  self.role == Role.SKIP_SESSION])
             assert is_skipped, 'cannot skip this Role {}'.format(self.role)
-        self.skip_reasons.append(reason)
+        self.patterns.append(pattern)
 
 
 Args = namedtuple(
@@ -70,7 +79,9 @@ Args = namedtuple(
         'outfile',
         'skips',
         'is_report',
-        'fail_nocode'
+        'fail_nocode',
+        'setup',
+        'teardown'
     ]
 )
 """Command line arguments with some renames."""
@@ -105,9 +116,8 @@ Args = namedtuple(
         ' For example --skip="python 3.7" will skip every Python block that'
         ' contains the substring "python 3.7".'
         ' If TEXT is one of the 3 capitalized strings FIRST SECOND LAST'
-        ' the first, second, or last Python block in the'
+        ' the first, second, or last Python code or session block in the'
         ' Markdown file is skipped.'
-        ' The fenced code block info string is not searched.'
     )
 )
 @click.option(
@@ -129,22 +139,63 @@ Args = namedtuple(
         ' has test_nothing_passes() which will never fail.'
     )
 )
+@click.option(
+    '-u', '--setup',
+    nargs=1,
+    help=(
+            'The Python code block that contains the substring TEXT'
+            ' is run at test module setup time.  Variables assigned'
+            ' at the outer level are visible as globals to the other'
+            ' Python code blocks.'
+            ' Python sessions cannot access the globals.'
+            ' TEXT should match exactly one code block.'
+            ' If TEXT is one of the 3 capitalized strings FIRST SECOND LAST'
+            ' the first, second, or last Python code or session block in the'
+            ' Markdown file is matched.'
+            ' A block will not match --setup if it matches --skip,'
+            ' or if it is a session block.'
+    )
+)
+@click.option(
+    '-d', '--teardown',
+    nargs=1,
+    help=(
+            'The Python code block that contains the substring TEXT'
+            ' is run at test module teardown time.'
+            ' TEXT should match exactly one code block.'
+            ' If TEXT is one of the 3 capitalized strings FIRST SECOND LAST'
+            ' the first, second, or last Python code or session block in the'
+            ' Markdown file is matched.'
+            ' A block will not match --teardown if it matches either'
+            ' --skip or --setup, or if it is a session block.'
+    )
+)
 @click.version_option()
 # Note- docstring for entry point shows up in click's usage text.
-def entry_point(markdown_file, outfile, skip, report, fail_nocode):
+def entry_point(
+        markdown_file, outfile, skip, report, fail_nocode, setup, teardown):
     args = Args(
         markdown_file=markdown_file,
         outfile=outfile,
         skips=skip,
         is_report=report,
         fail_nocode=fail_nocode,
+        setup=setup,
+        teardown=teardown
     )
 
     # Find markdown blocks and pair up code and output blocks.
     with click.open_file(args.markdown_file, encoding='utf-8') as fp:
         blocks = convert_nodes(tool.fenced_block_nodes(fp))
     identify_code_and_output_blocks(blocks)
-    apply_skips(args, blocks)
+    code_and_session_blocks = [
+        b for b in blocks if b.role in [Role.CODE, Role.SESSION]
+    ]
+    apply_skips(args, code_and_session_blocks)
+    if args.setup:
+        identify_setup_block(args.setup, code_and_session_blocks)
+    if args.teardown:
+        identify_teardown_block(args.teardown, code_and_session_blocks)
     if args.is_report:
         print_report(args, blocks)
 
@@ -203,37 +254,85 @@ def identify_code_and_output_blocks(blocks: List[FencedBlock]) -> None:
 
 def apply_skips(args: Args, blocks: List[FencedBlock]) -> None:
     """Designate Python code/session blocks that are exempt from testing."""
-    skip_candidates = []     # type: List[FencedBlock]
-    for b in blocks:
-        if b.role in [Role.CODE, Role.SESSION]:
-            skip_candidates.append(b)
+    for pattern in args.skips:
+        found = findall(pattern, blocks)
+        for block in found:
+            block.skip(pattern)
 
-    # Skip blocks identified by patterns 'FIRST', 'SECOND', 'LAST'
-    if skip_candidates:
-        apply_special_skips(skip_candidates, args.skips)
 
-    # Skip blocks identified by pattern matches.
-    # Try to find each skip pattern in each block.
-    # If there is a match, skip the block.  Blocks can
-    # be skipped more than once.
-    for block in skip_candidates:
-        for pattern in args.skips:
+def findall(pattern: str, blocks: List[FencedBlock]) -> List[FencedBlock]:
+    """Return list of blocks that contain search pattern."""
+    found = []     # type: List[FencedBlock]
+    if pattern == 'FIRST':
+        found.append(blocks[0])
+    elif pattern == 'LAST':
+        found.append(blocks[-1])
+    elif pattern == 'SECOND' and len(blocks) > 1:
+        found.append(blocks[1])
+    if pattern not in ['FIRST', 'SECOND', 'LAST']:
+        for block in blocks:
             if block.contents.find(pattern) > -1:
-                block.skip(pattern)
+                found.append(block)
+    return found
 
 
-def apply_special_skips(blocks: List[FencedBlock], skips: List[str]) -> None:
-    """Skip blocks identified by patterns 'FIRST', 'SECOND', 'LAST'"""
-    for pattern in skips:
-        index = None
-        if pattern == 'FIRST':
-            index = 0
-        elif pattern == 'LAST':
-            index = -1
-        elif pattern == 'SECOND' and len(blocks) > 1:
-            index = 1
-        if index is not None:
-            blocks[index].skip(pattern)
+def identify_setup_block(
+       pattern: str, blocks: List[FencedBlock]) -> None:
+    """Designate Python code that runs setup_module code.
+
+    Caller should call apply_skips() to blocks before calling here.
+    Search the contents of each block for the setup TEXT.
+    Report an error if more than one block matches the search.
+    If exactly one code block contains TEXT and it is not already
+    skipped, designate it as the setup block.
+    If the block is skipped then no setup block is identified.
+    """
+    matches = findall(pattern, blocks)
+    if matches:
+        if len(matches) == 1:
+            first_match = matches[0]
+            if first_match.role == Role.CODE:
+                first_match.set(Role.SETUP)
+                first_match.add_pattern(pattern)
+        else:
+            message = many_matches_message('setup', matches)
+            assert False, message
+
+
+def identify_teardown_block(
+        pattern: str, blocks: List[FencedBlock]) -> None:
+    """Designate Python code that runs teardown_module code.
+
+    Caller should call apply_skips() to blocks before calling here.
+    Caller should call identify_setup_block() before calling here.
+    Search the contents of each block for the teardown TEXT.
+    Report an error if more than one block matches the search.
+    If exactly one code block contains TEXT and it is not already
+    skipped or setup, designate it as the teardown block.
+    If the block is skipped or setup then no teardown block is identified.
+    """
+    matches = findall(pattern, blocks)
+    if matches:
+        if len(matches) == 1:
+            first_match = matches[0]
+            if first_match.role == Role.CODE:
+                first_match.set(Role.TEARDOWN)
+                first_match.add_pattern(pattern)
+        else:
+            description = 'teardown ' + pattern
+            message = many_matches_message(description, matches)
+            assert False, message
+
+
+def many_matches_message(
+        description: str, offending_blocks: List[FencedBlock]) -> str:
+    """Compose error message listing the offending blocks by line number."""
+    line_numbers = [str(b.line) for b in offending_blocks]
+    message = (
+        'More than one block matched --{}.\nOnly one match is allowed.\n'
+        'The matching blocks are at line numbers {}.'
+    ).format(description, ', '.join(line_numbers))
+    return message
 
 
 def print_report(args: Args, blocks: List[FencedBlock]) -> None:
@@ -258,7 +357,12 @@ def print_report(args: Args, blocks: List[FencedBlock]) -> None:
             counts['SKIP_SESSION']
         ))
 
-    num_missing_output = counts['CODE'] - counts['OUTPUT']
+    # assumes session blocks can never be designated setup or teardown
+    num_code_blocks = sum(
+        [counts['CODE'], counts['SETUP'], counts['TEARDOWN']]
+    )
+    num_missing_output = num_code_blocks - counts['OUTPUT']
+    assert num_missing_output >= 0, 'sanity check'
     report.append(
         '{} code blocks missing an output block'.format(
             num_missing_output
@@ -281,14 +385,16 @@ def fenced_block_report(blocks: List[FencedBlock], title: str = '') -> str:
     cell_grid = []
     for block in blocks:
         if block.role in [Role.SKIP_CODE, Role.SKIP_SESSION]:
-            quoted_skips = [r.join(['"', '"']) for r in block.skip_reasons]
+            quoted_skips = [r.join(['"', '"']) for r in block.patterns]
             skips = '\n'.join(quoted_skips)
+        elif block.role in [Role.SETUP, Role.TEARDOWN]:
+            skips = '"' + block.patterns[0] + '"'
         else:
             skips = ''
         cell_grid.append([block.type, block.line, block.role.value, skips])
     headings = [
         'block\ntype', 'line\nnumber', 'test\nrole',
-        'skip pattern/reason\nquoted and one per line']
+        'matching TEXT pattern\nquoted and one per line']
     formats = ['', '', '', '(width=30)']
     text = table.table(headings, formats, cell_grid, title)    # type: str
     return text
@@ -306,7 +412,7 @@ def skips_report(
     for skip in skips:
         code_lines = []
         for block in blocks:
-            if skip in block.skip_reasons:
+            if skip in block.patterns:
                 code_lines.append(str(block.line))
 
         cell_grid.append([skip, ', '.join(code_lines)])
