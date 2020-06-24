@@ -1,3 +1,5 @@
+"""Top level assembly of the pytest test case file."""
+
 import inspect
 from typing import List
 
@@ -29,19 +31,7 @@ def build_test_cases(args: Args, blocks: List[FencedBlock]) -> str:
     builder = phmdoctest.print_capture.PytestFile(docstring_text)
     number_of_test_cases = 0
     for block in blocks:
-        if block.role == Role.SETUP:
-            builder.add_setup(
-                identifier=more_readable(line_numbers_string(block)),
-                code=block.contents
-            )
-
-        elif block.role == Role.TEARDOWN:
-            builder.add_teardown(
-                identifier=more_readable(line_numbers_string(block)),
-                code=block.contents
-            )
-
-        elif block.role == Role.CODE:
+        if block.role == Role.CODE:
             builder.add_test_case(
                 identifier=line_numbers_string(block),
                 code=block.contents,
@@ -53,6 +43,18 @@ def build_test_cases(args: Args, blocks: List[FencedBlock]) -> str:
             session = block.contents
             builder.add_interactive_session(str(block.line), session)
             number_of_test_cases += 1
+
+        elif block.role == Role.SETUP:
+            builder.add_setup(
+                identifier=more_readable(line_numbers_string(block)),
+                code=block.contents
+            )
+
+        elif block.role == Role.TEARDOWN:
+            builder.add_teardown(
+                identifier=more_readable(line_numbers_string(block)),
+                code=block.contents
+            )
 
     if number_of_test_cases == 0:
         if args.fail_nocode:
