@@ -1,3 +1,5 @@
+"""Fenced code block data structures."""
+
 from enum import Enum
 
 from typing import List, Optional
@@ -51,7 +53,7 @@ class FencedBlock:
         self.output = fenced_block
 
     def get_output_contents(self) -> str:
-        """Return contents of linked output block or empty str in no link."""
+        """Return contents of linked output block or empty str if no link."""
         if self.output:
             return self.output.contents
         else:

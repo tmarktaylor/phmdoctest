@@ -1,3 +1,5 @@
+"""Click processed command line arguments collected into a single type."""
+
 from collections import namedtuple
 
 Args = namedtuple(

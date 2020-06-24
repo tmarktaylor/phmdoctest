@@ -1,3 +1,5 @@
+"""Print report about fenced code blocks and how they are used."""
+
 from collections import Counter
 from typing import List
 
