@@ -73,6 +73,9 @@ def fenced_block_report(blocks: List[FencedBlock], title: str = '') -> str:
     return text
 
 
+# todo- we need to list any del- counts in the report <------------------------------------
+
+
 def skips_report(
         skips: List[str], blocks: List[FencedBlock], title: str = '') -> str:
     """Generate text report about the disposition of --skip options."""

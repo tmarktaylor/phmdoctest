@@ -112,15 +112,18 @@ def entry_point(
     with click.open_file(args.markdown_file, encoding='utf-8') as fp:
         blocks = phmdoctest.fenced.convert_nodes(
             phmdoctest.tool.fenced_block_nodes(fp))
-    identify_code_and_output_blocks(blocks)
+    identify_code_output_session_blocks(blocks)
+    del_problem_blocks(blocks)
     code_and_session_blocks = [
         b for b in blocks if b.role in [Role.CODE, Role.SESSION]
     ]
     apply_skips(args, code_and_session_blocks)
     if args.setup:
-        identify_setup_block(args.setup, code_and_session_blocks)
+        find_and_designate_setup_or_teardown(
+            Role.SETUP, args.setup, code_and_session_blocks)
     if args.teardown:
-        identify_teardown_block(args.teardown, code_and_session_blocks)
+        find_and_designate_setup_or_teardown(
+            Role.TEARDOWN, args.teardown, code_and_session_blocks)
     if args.is_report:
         phmdoctest.report.print_report(args, blocks)
 
@@ -135,7 +138,7 @@ PYTHON_FLAVORS = ['python', 'py3', 'python3']
 """Python fenced code blocks info string will start with one of these."""
 
 
-def identify_code_and_output_blocks(blocks: List[FencedBlock]) -> None:
+def identify_code_output_session_blocks(blocks: List[FencedBlock]) -> None:
     """
     Designate which blocks are Python or session and guess which are output.
 
@@ -193,60 +196,60 @@ def findall(pattern: str, blocks: List[FencedBlock]) -> List[FencedBlock]:
     return found
 
 
-def identify_setup_block(
-       pattern: str, blocks: List[FencedBlock]) -> None:
-    """Designate Python code that runs setup_module code.
+# todo- need test cases for empty code, session, output blocks <-----------------------------
+# todo- need del block list in the report               <-----------------------------
+def del_problem_blocks(blocks: List[FencedBlock]) -> None:
+    """Re-designate blocks that can't be used."""
+    # Rather than asserting and blowing up the caller, just set the
+    # blocks we can't deal with aside for later discovery in
+    # del'd block list section the report.
+    empty_blocks = [b for b in blocks if not b.contents]
+    for block in empty_blocks:
+        if block.role == Role.CODE:
+            block.set(Role.DEL_CODE)
+        elif block.role == Role.OUTPUT:
+            block.set(Role.DEL_OUTPUT)
+        elif block.role == Role.SESSION:
+            block.set(Role.DEL_SESSION)
 
-    Caller should call apply_skips() to blocks before calling here.
-    Search the contents of each block for the setup TEXT.
+
+# todo- test cases for the new ClickException <--------------------------------------
+# todo- create special role type that has two values setup, teardown <-------------------
+def find_and_designate_setup_or_teardown(
+        role: Role, pattern: str, blocks: List[FencedBlock]) -> None:
+    """Find and designate Python code block as setup or teardown.
+
+    Search the contents of each block for the pattern.
     Report an error if more than one block matches the search.
-    If exactly one code block contains TEXT and it is not already
-    skipped, designate it as the setup block.
-    If the block is skipped then no setup block is identified.
+    If exactly one code block contains pattern and it
+    has not been changed from Role.CODE set it to the caller's role.
+    Setup and teardown code can't have an output block since there is
+    no way to generate code for it.
+    If there is one, change it role to DEL_OUTPUT so it will show up
+    in the report.
     """
+    assert role in [Role.SETUP, Role.TEARDOWN], 'only these roles please'
     matches = findall(pattern, blocks)
     if matches:
         if len(matches) == 1:
             first_match = matches[0]
             if first_match.role == Role.CODE:
-                first_match.set(Role.SETUP)
+                first_match.set(role)
                 first_match.add_pattern(pattern)
+                if first_match.output is not None:
+                    first_match.output.set(Role.DEL_OUTPUT)
         else:
-            message = many_matches_message('setup', matches)
-            assert False, message
-
-
-def identify_teardown_block(
-        pattern: str, blocks: List[FencedBlock]) -> None:
-    """Designate Python code that runs teardown_module code.
-
-    Caller should call apply_skips() to blocks before calling here.
-    Caller should call identify_setup_block() before calling here.
-    Search the contents of each block for the teardown TEXT.
-    Report an error if more than one block matches the search.
-    If exactly one code block contains TEXT and it is not already
-    skipped or setup, designate it as the teardown block.
-    If the block is skipped or setup then no teardown block is identified.
-    """
-    matches = findall(pattern, blocks)
-    if matches:
-        if len(matches) == 1:
-            first_match = matches[0]
-            if first_match.role == Role.CODE:
-                first_match.set(Role.TEARDOWN)
-                first_match.add_pattern(pattern)
-        else:
-            description = 'teardown ' + pattern
-            message = many_matches_message(description, matches)
-            assert False, message
-
-
-def many_matches_message(
-        description: str, offending_blocks: List[FencedBlock]) -> str:
-    """Compose error message listing the offending blocks by line number."""
-    line_numbers = [str(b.line) for b in offending_blocks]
-    message = (
-        'More than one block matched --{}.\nOnly one match is allowed.\n'
-        'The matching blocks are at line numbers {}.'
-    ).format(description, ', '.join(line_numbers))
-    return message
+            # More than one block matched the search pattern.
+            # The logic here can only get code from a single block.
+            description = ''    # avoid inspection nag
+            if role == Role.SETUP:
+                description = '--setup {0} or -u{0}'.format(pattern)
+            elif role == Role.TEARDOWN:
+                description = '--teardown {0} or -d{0}'.format(pattern)
+            line_numbers = [str(b.line) for b in matches]
+            message = (
+                'More than one block matched command line {}.\n'
+                'Only one match is allowed.\n'
+                'The matching blocks are at line numbers {}.'
+            ).format(description, ', '.join(line_numbers))
+            raise click.ClickException(message)

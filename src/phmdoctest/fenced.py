@@ -16,6 +16,9 @@ class Role(Enum):
     SKIP_SESSION = 'skip-session'
     SETUP = 'setup'
     TEARDOWN = 'teardown'
+    DEL_CODE = 'del-code'
+    DEL_OUTPUT = 'del-output'
+    DEL_SESSION = 'del-session'
 
 
 class FencedBlock:
@@ -46,6 +49,13 @@ class FencedBlock:
         assert self.role == Role.CODE, 'only allowed to be code'
         assert fenced_block.role == Role.OUTPUT, 'only allowed to be output'
         self.output = fenced_block
+
+    def get_output_contents(self) -> str:
+        """Return contents of linked output block or empty str in no link."""
+        if self.output:
+            return self.output.contents
+        else:
+            return ''
 
     def skip(self, pattern: str) -> None:
         """Skip an already designated code block. Re-skip is OK.

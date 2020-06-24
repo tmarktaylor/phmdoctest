@@ -19,9 +19,6 @@ def test_nothing_passes() -> None:
     pass
 
 
-_ASSERTION_MESSAGE = 'zero length {} block at line {}'
-
-
 def build_test_cases(args: Args, blocks: List[FencedBlock]) -> str:
     """Generate test code from the Python fenced code blocks."""
     # repr escapes back slashes from win filesystem paths
@@ -35,28 +32,25 @@ def build_test_cases(args: Args, blocks: List[FencedBlock]) -> str:
         if block.role == Role.SETUP:
             builder.add_setup(
                 identifier=more_readable(line_numbers_string(block)),
-                code=get_code(block),
-                expected_output=get_expected_output(block)
+                code=block.contents
             )
 
         elif block.role == Role.TEARDOWN:
             builder.add_teardown(
                 identifier=more_readable(line_numbers_string(block)),
-                code=get_code(block),
-                expected_output=get_expected_output(block)
+                code=block.contents
             )
 
         elif block.role == Role.CODE:
             builder.add_test_case(
                 identifier=line_numbers_string(block),
-                code=get_code(block),
-                expected_output=get_expected_output(block)
+                code=block.contents,
+                expected_output=block.get_output_contents()
             )
             number_of_test_cases += 1
 
         elif block.role == Role.SESSION:
             session = block.contents
-            assert session, _ASSERTION_MESSAGE.format('session', block.line)
             builder.add_interactive_session(str(block.line), session)
             number_of_test_cases += 1
 
@@ -71,7 +65,7 @@ def build_test_cases(args: Args, blocks: List[FencedBlock]) -> str:
 
 def more_readable(text):
     """Replace underscores with blanks."""
-    return text.replace('_', ' ')
+    return text.replace('_', ' line ')
 
 
 def line_numbers_string(block: FencedBlock) -> str:
@@ -81,18 +75,3 @@ def line_numbers_string(block: FencedBlock) -> str:
     if block.output:
         output_identifier = '_output_' + str(block.output.line)
     return code_identifier + output_identifier
-
-
-def get_code(block: FencedBlock) -> str:
-    assert block.contents, _ASSERTION_MESSAGE.format('code', block.line)
-    return block.contents
-
-
-def get_expected_output(block: FencedBlock) -> str:
-    if block.output:
-        expected_output = block.output.contents
-        assert expected_output, _ASSERTION_MESSAGE.format(
-            'expected output', block.line)
-    else:
-        expected_output = ''
-    return expected_output
