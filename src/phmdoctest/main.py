@@ -243,9 +243,9 @@ def find_and_designate_setup_or_teardown(
             # The logic here can only get code from a single block.
             description = ''    # avoid inspection nag
             if role == Role.SETUP:
-                description = '--setup {0} or -u{0}'.format(pattern)
+                description = '--setup {0} (or -u{0})'.format(pattern)
             elif role == Role.TEARDOWN:
-                description = '--teardown {0} or -d{0}'.format(pattern)
+                description = '--teardown {0} (or -d{0})'.format(pattern)
             line_numbers = [str(b.line) for b in matches]
             message = (
                 'More than one block matched command line {}.\n'
