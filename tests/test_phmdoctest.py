@@ -123,7 +123,8 @@ def test_def_test_nothing_passes():
 def test_empty_output_block_fails():
     """Empty output block get del'd."""
     simulator_status = verify.one_example(
-        'phmdoctest tests/empty_output_block.md --report --outfile discarded.py',
+        'phmdoctest tests/empty_output_block.md'
+        ' --report --outfile discarded.py',
         want_file_name=None,
         pytest_options=['--strict', '--doctest-modules', '-v']
     )
@@ -262,7 +263,7 @@ def test_def_test_identifier():
 
 
 def test_blanklines_in_output():
-    """Expected output has empty lines and does not have doctest <BLANKLINE>."""
+    """Expected output has empty lines and no doctest <BLANKLINE>."""
     command = (
         'phmdoctest tests/output_has_blank_lines.md --outfile discarded.py'
     )

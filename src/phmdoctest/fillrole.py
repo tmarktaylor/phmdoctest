@@ -87,7 +87,7 @@ def findall(pattern: str, blocks: List[FencedBlock]) -> List[FencedBlock]:
 
 
 # todo- test cases for the new ClickException <--------------------------------------
-# todo- create special role type that has two values setup, teardown <-------------------
+# todo- create special role type that has two values setup, teardown
 def find_and_designate_setup_or_teardown(
         role: Role, pattern: str, blocks: List[FencedBlock]) -> None:
     """Find and designate Python code block as setup or teardown.

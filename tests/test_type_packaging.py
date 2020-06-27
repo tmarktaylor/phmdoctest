@@ -41,5 +41,5 @@ def test_mypy_likes_fenced_code_blocks() -> None:
 def test_mypy_likes_fenced_block_nodes() -> None:
     """Compile time use of fenced_block_nodes() to be type checked by mypy."""
     with open('doc/example1.md', encoding='utf-8') as fp:
-        nodes = phmdoctest.tool.fenced_block_nodes(fp)    # type: List[commonmark.node.Node]
+        nodes = phmdoctest.tool.fenced_block_nodes(fp)    # type: List[commonmark.node.Node]    # noqa: E501
         assert len(nodes) > 0

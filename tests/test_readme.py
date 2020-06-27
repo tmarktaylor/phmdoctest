@@ -174,7 +174,7 @@ matrix:
         assert travis_text.startswith(expected)
 
 
-# Developers: Changes here must be mirrored in a fenced code block in README.md.
+# Developers: Changes here must be mirrored in a Markdown FCB in README.md.
 # Runnable version of example code in README.md.
 # The guts of this function are an exact copy of example in README.md.
 def example_code():

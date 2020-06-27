@@ -97,7 +97,8 @@ def interactive_session(
     indented_session = textwrap.indent(session, '    ')
     stream = StringIO()
     stream.write('\n')
-    stream.write('def session_{}_line_{}():\n'.format(sequence_string, identifier))
+    stream.write('def session_{}_line_{}():\n'.format(
+        sequence_string, identifier))
     stream.write('    r"""\n')
     stream.write(indented_session)
     stream.write('    """\n')
