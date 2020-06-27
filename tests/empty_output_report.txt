@@ -1,0 +1,10 @@
+     tests/empty_output_block.md fenced blocks
+---------------------------------------------------
+block     line  test        matching TEXT pattern
+type    number  role        quoted and one per line
+---------------------------------------------------
+python       8  code
+            14  del-output
+---------------------------------------------------
+1 test cases
+1 code blocks missing an output block

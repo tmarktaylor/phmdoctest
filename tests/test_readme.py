@@ -8,7 +8,6 @@ import pytest
 
 import phmdoctest.main
 import phmdoctest.simulator
-import phmdoctest.print_capture
 import phmdoctest.tool
 import verify
 

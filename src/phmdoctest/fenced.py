@@ -30,7 +30,7 @@ class FencedBlock:
         self.type = node.info
         self.line = node.sourcepos[0][0] + 1
         self.role = Role.UNKNOWN
-        self.contents = node.literal
+        self.contents = node.literal    # type: str
         self.output = None    # type: Optional['FencedBlock']
         self.patterns = list()    # type: List[str]
 
@@ -42,7 +42,7 @@ class FencedBlock:
         """Set the role for the fenced code block in subsequent testing."""
         self.role = role
 
-    def add_pattern(self, pattern):
+    def add_pattern(self, pattern: str) -> None:
         """Add the TEXT value that identified the block"""
         self.patterns.append(pattern)
 

@@ -1,3 +1,5 @@
+"""Assign role in test file generation to fenced code blocks."""
+
 from typing import List
 
 import click
@@ -84,7 +86,7 @@ def findall(pattern: str, blocks: List[FencedBlock]) -> List[FencedBlock]:
     return found
 
 
- # todo- test cases for the new ClickException <--------------------------------------
+# todo- test cases for the new ClickException <--------------------------------------
 # todo- create special role type that has two values setup, teardown <-------------------
 def find_and_designate_setup_or_teardown(
         role: Role, pattern: str, blocks: List[FencedBlock]) -> None:

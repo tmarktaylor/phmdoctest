@@ -7,7 +7,6 @@ from phmdoctest.fenced import Role
 import phmdoctest.cases
 import phmdoctest.fenced
 import phmdoctest.fillrole
-import phmdoctest.print_capture
 import phmdoctest.report
 import phmdoctest.tool
 
@@ -19,9 +18,9 @@ import phmdoctest.tool
     type=click.Path(
         exists=True,
         dir_okay=False,
-        allow_dash=True,    # type: ignore
+        allow_dash=True,
     )
-)
+)    # type: ignore
 @click.option(
     '--outfile',
     nargs=1,

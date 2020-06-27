@@ -2,7 +2,6 @@
 
 from itertools import zip_longest
 
-import phmdoctest.print_capture
 import phmdoctest.simulator
 
 

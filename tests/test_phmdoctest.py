@@ -9,7 +9,6 @@ import phmdoctest
 import phmdoctest.cases
 import phmdoctest.main
 import phmdoctest.simulator
-import phmdoctest.print_capture
 import verify
 
 
@@ -122,17 +121,17 @@ def test_def_test_nothing_passes():
 
 
 def test_empty_output_block_fails():
-    """Empty output block causes phmdoctest to raise AssertionError."""
-    command = (
-        'phmdoctest tests/empty_output_block.md --outfile discarded.py'
+    """Empty output block get del'd."""
+    simulator_status = verify.one_example(
+        'phmdoctest tests/empty_output_block.md --report --outfile discarded.py',
+        want_file_name=None,
+        pytest_options=['--strict', '--doctest-modules', '-v']
     )
-    simulator_status = phmdoctest.simulator.run_and_pytest(
-        well_formed_command=command,
-        pytest_options=None
-    )
-    exc = simulator_status.runner_status.exception
-    assert 'zero length expected output block' in str(exc)
-    assert simulator_status.runner_status.exit_code == 1
+    assert simulator_status.runner_status.exit_code == 0
+    stdout = simulator_status.runner_status.stdout
+    with open('tests/empty_output_report.txt', 'r', encoding='utf-8') as f:
+        want = f.read()
+    verify.a_and_b_are_the_same(a=want, b=stdout)
 
 
 def test_code_does_not_print_fails():
@@ -242,7 +241,7 @@ def test_example2_report():
 
 def test_def_test_identifier():
     """Painful way to eliminate 2 coverage missed statements."""
-    # The function print_capture.test_identifier() is used as
+    # The function coder.test_identifier() is used as
     # a template to generate Python code.
     # It accepts the pytest fixture called capsys when the
     # generated pytest is run.
@@ -259,7 +258,7 @@ def test_def_test_identifier():
         def readouterr():
             return MockReadouterr()
 
-    phmdoctest.print_capture.test_identifier(MockCapsys())
+    phmdoctest.coder.test_identifier(MockCapsys())
 
 
 def test_blanklines_in_output():

@@ -1,13 +1,15 @@
 """Top level assembly of the pytest test case file."""
 
 import inspect
+from io import StringIO
+import itertools
 from typing import List
 
 import click
 
 from phmdoctest.entryargs import Args
 from phmdoctest.fenced import Role, FencedBlock
-import phmdoctest.print_capture
+import phmdoctest.coder
 
 
 def test_nothing_fails() -> None:
@@ -23,49 +25,65 @@ def test_nothing_passes() -> None:
 
 def build_test_cases(args: Args, blocks: List[FencedBlock]) -> str:
     """Generate test code from the Python fenced code blocks."""
+    session_counter = itertools.count(1)
+
     # repr escapes back slashes from win filesystem paths
     # so it can be part of the generated test module docstring.
     quoted_markdown_path = repr(click.format_filename(args.markdown_file))
     markdown_path = quoted_markdown_path[1:-1]
+    testfile = StringIO()
     docstring_text = 'pytest file built from {}'.format(markdown_path)
-    builder = phmdoctest.print_capture.PytestFile(docstring_text)
+    testfile.write(phmdoctest.coder.docstring_and_helpers(docstring_text))
     number_of_test_cases = 0
     for block in blocks:
         if block.role == Role.CODE:
-            builder.add_test_case(
+            test_case_str = phmdoctest.coder.test_case(
                 identifier=line_numbers_string(block),
                 code=block.contents,
                 expected_output=block.get_output_contents()
             )
+            testfile.write('\n')
+            testfile.write(test_case_str)
             number_of_test_cases += 1
 
         elif block.role == Role.SESSION:
             session = block.contents
-            builder.add_interactive_session(str(block.line), session)
+            sequence_number = next(session_counter)
+            session_str = phmdoctest.coder.interactive_session(
+                sequence_number, str(block.line), session)
+            testfile.write('\n')
+            testfile.write(session_str)
             number_of_test_cases += 1
 
         elif block.role == Role.SETUP:
-            builder.add_setup(
+            setup_str = phmdoctest.coder.setup(
                 identifier=more_readable(line_numbers_string(block)),
                 code=block.contents
             )
+            testfile.write('\n')
+            testfile.write(setup_str)
 
         elif block.role == Role.TEARDOWN:
-            builder.add_teardown(
+            teardown_str = phmdoctest.coder.teardown(
                 identifier=more_readable(line_numbers_string(block)),
                 code=block.contents
             )
+            testfile.write('\n')
+            testfile.write(teardown_str)
 
     if number_of_test_cases == 0:
         if args.fail_nocode:
-            test_function = inspect.getsource(test_nothing_fails)
+            fail_nocode_str = inspect.getsource(test_nothing_fails)
         else:
-            test_function = inspect.getsource(test_nothing_passes)
-        builder.add_source(test_function)
-    return str(builder)
+            fail_nocode_str = inspect.getsource(test_nothing_passes)
+        testfile.write('\n')
+        testfile.write(fail_nocode_str)
+    output = testfile.getvalue()
+    testfile.close()
+    return output
 
 
-def more_readable(text):
+def more_readable(text: str) -> str:
     """Replace underscores with blanks."""
     return text.replace('_', ' line ')
 
