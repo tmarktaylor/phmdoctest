@@ -1,6 +1,5 @@
 """pytest test case file code generator."""
 
-from io import StringIO
 import inspect
 from itertools import zip_longest
 import textwrap
@@ -55,15 +54,11 @@ def teardown_module():
 
 
 def docstring_and_helpers(description: str = '') -> str:
-    stream = StringIO()
-    stream.write('"""' + description + '"""\n')
-    stream.write('from itertools import zip_longest\n')
-    stream.write('\n')
-    stream.write('\n')
-    stream.write(inspect.getsource(line_by_line_compare_exact))
-    output = stream.getvalue()
-    stream.close()
-    return output
+    text = '"""' + description + '"""\n'
+    text += 'from itertools import zip_longest\n'
+    text += '\n'
+    text += '\n'
+    return text + inspect.getsource(line_by_line_compare_exact)
 
 
 def _remove_output_check(source: str) -> str:
@@ -95,42 +90,31 @@ def interactive_session(
     """Add a do nothing function with doctest session as its docstring."""
     sequence_string = format(sequence_number, '05d')
     indented_session = textwrap.indent(session, '    ')
-    stream = StringIO()
-    stream.write('\n')
-    stream.write('def session_{}_line_{}():\n'.format(
-        sequence_string, identifier))
-    stream.write('    r"""\n')
-    stream.write(indented_session)
-    stream.write('    """\n')
-    output = stream.getvalue()
-    stream.close()
-    return output
+    text = '\n'
+    text += 'def session_{}_line_{}():\n'.format(
+        sequence_string, identifier)
+    text += '    r"""\n'
+    text += indented_session
+    return text + '    """\n'
 
 
 def setup(identifier: str, code: str) -> str:
     """Add code as module level setup code."""
-    stream = StringIO()
-    stream.write('\n')
+    text = '\n'
     src = inspect.getsource(setup_module)
     src = src.replace('<put identifier here>', identifier)
     indented_code = textwrap.indent(code, '    ')
     src = src.replace('    # <put code here>\n', indented_code)
-    stream.write(src)
-    output = stream.getvalue()
-    stream.close()
-    return output
+    return text + src
 
 
 def teardown(identifier: str, code: str) -> str:
     """Add teardown code to teardown fixture."""
-    stream = StringIO()
-    stream.write('\n')
+    # stream = StringIO()
+    text = '\n'
     src = inspect.getsource(teardown_module)
     src = src.replace('    pass\n', '')
     src = src.replace('<put identifier here>', identifier)
-    stream.write(src)
+    text += src
     indented_code = textwrap.indent(code, '    ')
-    stream.write(indented_code)
-    output = stream.getvalue()
-    stream.close()
-    return output
+    return text + indented_code
