@@ -13,8 +13,8 @@ phmdoctest 0.1.0
    README
    doc/recent_changes
    doc/api
-   project
    doc/about
+   doc/examples
 
 Search
 ======

@@ -313,7 +313,8 @@ LAST          101
 ------------------------------------------------
 ```
  
-and creates the output file [test_example2.py][2]
+and creates the output file [test_example2.py](doc/test_example2_py.md)
+
 
 ## -s short option form of --skip
 
@@ -387,13 +388,13 @@ Options:
   -u, --setup TEXT     The Python code block that contains the substring TEXT
                        is run at test module setup time.  Variables assigned
                        at the outer level are visible as globals to the other
-                       Python code blocks. Python sessions cannot access the
-                       globals. TEXT should match exactly one code block. If
-                       TEXT is one of the 3 capitalized strings FIRST SECOND
-                       LAST the first, second, or last Python code or session
-                       block in the Markdown file is matched. A block will not
-                       match --setup if it matches --skip, or if it is a
-                       session block.
+                       Python code blocks. TEXT should match exactly one code
+                       block. If TEXT is one of the 3 capitalized strings
+                       FIRST SECOND LAST the first, second, or last Python
+                       code or session block in the Markdown file is matched.
+                       A block will not match --setup if it matches --skip, or
+                       if it is a session block. Use --setup-doctest below to
+                       grant Python sessions access to the globals.
 
   -d, --teardown TEXT  The Python code block that contains the substring TEXT
                        is run at test module teardown time. TEXT should match
@@ -403,6 +404,15 @@ Options:
                        Markdown file is matched. A block will not match
                        --teardown if it matches either --skip or --setup, or
                        if it is a session block.
+
+  --setup-doctest      Make globals created by the --setup Python code block
+                       visible to session blocks and only when they are tested
+                       with the pytest --doctest-modules option.  Please note
+                       that pytest runs  doctests in a separate context that
+                       only runs doctests. If this option is specified, the
+                       sessions in the generated test file cannot be tested
+                       with Python Standard Library doctest. This option is
+                       ignored if there is no --setup option.
 
   --version            Show the version and exit.
   --help               Show this message and exit.
@@ -499,7 +509,6 @@ assert simulator_status.pytest_exit_code == 0
 [3]: https://github.github.com/gfm/#fenced-code-blocks
 [11]: https://github.github.com/gfm/#info-string
 [10]: https://phmdoctest.readthedocs.io/en/latest/doc/api.html
-[2]: https://github.com/tmarktaylor/phmdoctest/blob/master/doc/test_example2.py
 [7]: https://pypi.org/project/commonmark
 [8]: https://spec.commonmark.org
 [9]: https://commonmark.org

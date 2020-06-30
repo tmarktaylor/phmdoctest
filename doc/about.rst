@@ -65,18 +65,3 @@ Read the Docs hosting
 The Sphinx documentation is hosted by readthedocs.org.
 The documentation build dependencies ``doc/requirements.txt`` are
 pinned to what is currently available.
-
-(excluded from contents)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-This section is here only to suppress Sphinx WARNING: document isn't
-included in any toctree.  These files are referenced from README.md.
-
-   example1.md | example2.md
-
-.. toctree::
-   :maxdepth: 0
-   :hidden:
-
-   example1.md
-   example2.md
