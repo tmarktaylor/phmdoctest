@@ -21,7 +21,8 @@ def one_example(
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command, pytest_options=pytest_options)
     # check that the phmdoctest command succeeded
-    assert simulator_status.runner_status.exit_code == 0
+    exit_code = simulator_status.runner_status.exit_code
+    assert exit_code == 0, exit_code
 
     # check the OUTFILE against the expected value
     if want_file_name is not None:
