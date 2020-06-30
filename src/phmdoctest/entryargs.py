@@ -11,7 +11,8 @@ Args = namedtuple(
         'is_report',
         'fail_nocode',
         'setup',
-        'teardown'
+        'teardown',
+        'setup_doctest',
     ]
 )
 """Command line arguments with some renames."""

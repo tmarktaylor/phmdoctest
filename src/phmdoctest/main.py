@@ -20,7 +20,7 @@ import phmdoctest.tool
         dir_okay=False,
         allow_dash=True,
     )
-)    # type: ignore
+)
 @click.option(
     '--outfile',
     nargs=1,
@@ -71,13 +71,14 @@ import phmdoctest.tool
             ' is run at test module setup time.  Variables assigned'
             ' at the outer level are visible as globals to the other'
             ' Python code blocks.'
-            ' Python sessions cannot access the globals.'
             ' TEXT should match exactly one code block.'
             ' If TEXT is one of the 3 capitalized strings FIRST SECOND LAST'
             ' the first, second, or last Python code or session block in the'
             ' Markdown file is matched.'
             ' A block will not match --setup if it matches --skip,'
             ' or if it is a session block.'
+            ' Use --setup-doctest below to grant Python sessions access'
+            ' to the globals.'
     )
 )
 @click.option(
@@ -94,10 +95,24 @@ import phmdoctest.tool
             ' --skip or --setup, or if it is a session block.'
     )
 )
+@click.option(
+    '--setup-doctest',
+    is_flag=True,
+    help=(
+            'Make globals created by the --setup Python code block visible to'
+            ' session blocks and only when they are tested with the pytest'
+            ' --doctest-modules option.  Please note that pytest runs '
+            ' doctests in a separate context that only runs doctests.'
+            ' If this option is specified, the sessions in the generated test'
+            ' file cannot be tested with Python Standard Library doctest.'
+            ' This option is ignored if there is no --setup option.'
+    )
+)
 @click.version_option()
 # Note- docstring for entry point shows up in click's usage text.
 def entry_point(
-        markdown_file, outfile, skip, report, fail_nocode, setup, teardown):
+        markdown_file, outfile, skip, report, fail_nocode,
+        setup, teardown, setup_doctest):
     args = Args(
         markdown_file=markdown_file,
         outfile=outfile,
@@ -105,7 +120,8 @@ def entry_point(
         is_report=report,
         fail_nocode=fail_nocode,
         setup=setup,
-        teardown=teardown
+        teardown=teardown,
+        setup_doctest=setup_doctest
     )
 
     # Find markdown blocks and pair up code and output blocks.

@@ -31,7 +31,10 @@ def build_test_cases(args: Args, blocks: List[FencedBlock]) -> str:
     quoted_markdown_path = repr(click.format_filename(args.markdown_file))
     markdown_path = quoted_markdown_path[1:-1]
     docstring_text = 'pytest file built from {}'.format(markdown_path)
-    test_code = coder.docstring_and_helpers(docstring_text)
+
+    # collect the generated code in a single string
+    generated = coder.docstring_and_helpers(docstring_text)
+    setup_insertion_point = len(generated)
     number_of_test_cases = 0
     for block in blocks:
         if block.role == Role.CODE:
@@ -40,46 +43,46 @@ def build_test_cases(args: Args, blocks: List[FencedBlock]) -> str:
             if block.output:
                 output_identifier = '_output_' + str(block.output.line)
             whole_identifier = code_identifier + output_identifier
-
-            test_case_str = coder.test_case(
+            generated += '\n'
+            generated += coder.test_case(
                 identifier=whole_identifier,
                 code=block.contents,
                 expected_output=block.get_output_contents()
             )
-            test_code += '\n'
-            test_code += test_case_str
             number_of_test_cases += 1
 
         elif block.role == Role.SESSION:
             session = block.contents
             sequence_number = next(session_counter)
-            session_str = coder.interactive_session(
-                sequence_number, str(block.line), session)
-            test_code += '\n'
-            test_code += session_str
+            generated += '\n'
+            generated += coder.interactive_session(
+                sequence_number, block.line, session)
             number_of_test_cases += 1
 
         elif block.role == Role.SETUP:
-            setup_str = coder.setup(
+            setup_text = '\n'
+            setup_text += coder.setup(
                 identifier='code line ' + str(block.line),
-                code=block.contents
+                code=block.contents,
+                setup_doctest=args.setup_doctest
             )
-            test_code += '\n'
-            test_code += setup_str
+            # insert the setup code near the top of the test file
+            top_part = generated[:setup_insertion_point]
+            rest = generated[setup_insertion_point:]
+            generated = top_part + setup_text + rest
 
         elif block.role == Role.TEARDOWN:
-            teardown_str = coder.teardown(
+            generated += '\n'
+            generated += coder.teardown(
                 identifier='code line ' + str(block.line),
                 code=block.contents
             )
-            test_code += '\n'
-            test_code += teardown_str
 
     if number_of_test_cases == 0:
         if args.fail_nocode:
             nocode_func = test_nothing_fails
         else:
             nocode_func = test_nothing_passes
-        test_code += '\n'
-        test_code += inspect.getsource(nocode_func)
-    return test_code
+        generated += '\n'
+        generated += inspect.getsource(nocode_func)
+    return generated

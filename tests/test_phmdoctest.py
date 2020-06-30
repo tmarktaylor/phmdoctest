@@ -259,7 +259,7 @@ def test_def_test_identifier():
         def readouterr():
             return MockReadouterr()
 
-    phmdoctest.coder.test_identifier(MockCapsys())
+    phmdoctest.functions.test_identifier(MockCapsys())
 
 
 def test_blanklines_in_output():
