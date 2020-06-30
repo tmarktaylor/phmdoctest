@@ -191,8 +191,8 @@ py3        87  code
            93  output
 pycon     101  session
 -----------------------------------------------
-7 test cases
-1 code blocks missing an output block
+7 test cases.
+1 code blocks missing an output block.
 ```
 
 ## How phmdoctest identifies code, session, and output blocks
@@ -299,10 +299,10 @@ py3        87  code
            93  output
 pycon     101  skip-session  "LAST"
 ----------------------------------------------------
-5 test cases
-1 skipped code blocks
-1 skipped interactive session blocks
-1 code blocks missing an output block
+5 test cases.
+1 skipped code blocks.
+1 skipped interactive session blocks.
+1 code blocks missing an output block.
 
   skip pattern matches (blank means no match)
 ------------------------------------------------

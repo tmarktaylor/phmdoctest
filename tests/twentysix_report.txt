@@ -30,9 +30,9 @@ pycon      118  skip-session  ">>>"
 py         123  skip-session  ">>>"
 pycon      128  skip-session  ">>>"
 -----------------------------------------------------
-0 test cases
-26 skipped interactive session blocks
-0 code blocks missing an output block
+0 test cases.
+26 skipped interactive session blocks.
+0 code blocks missing an output block.
 
    skip pattern matches (blank means no match)
 --------------------------------------------------
