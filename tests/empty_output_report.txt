@@ -8,3 +8,4 @@ python       8  code
 ---------------------------------------------------
 1 test cases.
 1 code blocks missing an output block.
+1 blocks marked "del-". They are not tested.
