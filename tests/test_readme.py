@@ -40,7 +40,7 @@ def setup_module():
 def test_raw_example1_md():
     """README raw markdown is same as file doc/example1.md."""
     want = next(readme_blocks)
-    with open('doc/example1.md') as fp:
+    with open('doc/example1.md', 'r', encoding='utf-8') as fp:
         got = fp.read()
         verify.a_and_b_are_the_same(want, got)
 
@@ -60,7 +60,7 @@ def test_example1():
     )
     # Make sure the copy of test_example1.py in README.md
     # is the same as the disk file.
-    with open('doc/test_example1.py') as fp:
+    with open('doc/test_example1.py', 'r', encoding='utf-8') as fp:
         got = fp.read()
         verify.a_and_b_are_the_same(want, got)
 
@@ -115,7 +115,7 @@ def test_outfile_to_stdout():
         want_file_name=None,
         pytest_options=None
     )
-    with open('doc/test_example2.py') as fp:
+    with open('doc/test_example2.py', 'r', encoding='utf-8') as fp:
         want = fp.read()
     got1 = simulator_status.runner_status.stdout
     verify.a_and_b_are_the_same(want, got1)

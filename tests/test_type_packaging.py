@@ -16,7 +16,7 @@ import phmdoctest.tool
 
 def test_fenced_block_dunder_str() -> None:
     """Check result from FencedBlock.__str__()."""
-    with open('doc/example1.md', encoding='utf-8') as fp:
+    with open('doc/example1.md', 'r', encoding='utf-8') as fp:
         blocks = phmdoctest.fenced.convert_nodes(
             phmdoctest.tool.fenced_block_nodes(fp))
         assert str(blocks[0]) == 'FencedBlock(role=--, line=6)'
@@ -40,6 +40,6 @@ def test_mypy_likes_fenced_code_blocks() -> None:
 
 def test_mypy_likes_fenced_block_nodes() -> None:
     """Compile time use of fenced_block_nodes() to be type checked by mypy."""
-    with open('doc/example1.md', encoding='utf-8') as fp:
+    with open('doc/example1.md', 'r', encoding='utf-8') as fp:
         nodes = phmdoctest.tool.fenced_block_nodes(fp)    # type: List[commonmark.node.Node]    # noqa: E501
         assert len(nodes) > 0
