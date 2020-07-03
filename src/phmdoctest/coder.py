@@ -1,4 +1,4 @@
-"""pytest test case file code generator."""
+"""Return pieces of code as strings for a pytest test file."""
 
 import inspect
 import textwrap
@@ -63,19 +63,19 @@ def interactive_session(
     return text + '    """\n'
 
 
-_match1 = (
+_session_globals_match = (
     '    # <variable to hold copies for testing sessions>\n'
     '    _session_globals = dict()\n\n'
 )
 
-
-_match2 = (
-    '        # <make copies for testing sessions>\n'
-    '        # This code is included only if phmdoctest option --setup-doctest.\n'
-    '        # assign the local variables to _session_globals.\n'
-    '        if k != "_session_globals":\n'
-    '            _session_globals[k] = v\n\n'
+_needs_indent = (
+    '# <make copies for testing sessions>\n'
+    '# This code is included only if phmdoctest option --setup-doctest.\n'
+    '# assign the local variables to _session_globals.\n'
+    'if k != "_session_globals":\n'
+    '    _session_globals[k] = v\n\n'
 )
+_make_copies_match = textwrap.indent(_needs_indent, '        ')
 
 
 def setup(identifier: str, code: str, setup_doctest: bool) -> str:
@@ -112,8 +112,8 @@ def setup(identifier: str, code: str, setup_doctest: bool) -> str:
         text += src3
     else:
         # remove code to save session globals
-        src = src.replace(_match1, '')
-        src = src.replace(_match2, '')
+        src = src.replace(_session_globals_match, '')
+        src = src.replace(_make_copies_match, '')
         text += src
     return text
 
