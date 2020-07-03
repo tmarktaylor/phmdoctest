@@ -8,11 +8,13 @@ from phmdoctest import functions
 
 def docstring_and_helpers(description: str = '') -> str:
     """Initial few lines of the test file."""
-    text = '"""' + description + '"""\n'
-    text += 'from itertools import zip_longest\n'
-    text += '\n'
-    text += '\n'
-    return text + inspect.getsource(functions.line_by_line_compare_exact)
+    text = [
+        '"""', description, '"""\n',
+        'from itertools import zip_longest\n',
+        '\n\n',
+        inspect.getsource(functions.line_by_line_compare_exact)
+    ]
+    return ''.join(text)
 
 
 def _remove_output_check(source: str) -> str:
@@ -55,12 +57,15 @@ def interactive_session(
     """
     sequence_string = format(sequence_number, '05d')
     indented_session = textwrap.indent(session, '    ')
-    text = '\n'
-    text += 'def session_{}_line_{}():\n'.format(
-        sequence_string, line_number)
-    text += '    r"""\n'
-    text += indented_session
-    return text + '    """\n'
+    text = [
+        '\n',
+        'def session_{}_line_{}():\n'.format(
+            sequence_string, line_number),
+        '    r"""\n',
+        indented_session,
+        '    """\n'
+    ]
+    return ''.join(text)
 
 
 _session_globals_match = (
@@ -88,43 +93,41 @@ def setup(identifier: str, code: str, setup_doctest: bool) -> str:
     are wanted in doctest namespace.
     The namespace is created when pytest is running with --doctest-modules.
     """
-    text = '\n'
+    text = ['\n']
     src = inspect.getsource(functions.setup_module)
     src = src.replace('<put docstring here>', identifier)
     indented_code = textwrap.indent(code, '    ')
     src = src.replace('    # <put code block here>\n', indented_code)
-    text += src
-    text += '\n'
-
+    text.append(src)
+    text.append('\n')
     if setup_doctest:
         # Keep track of code's variable assignments and add
         # elements to inject them into pytest's doctest namespace
         # that is created when pytest is  running with --doctest-modules.
         # add the fixture to inject values into the doctest namespace
-        text += '\n'
-        src2 = inspect.getsource(functions.populate_doctest_namespace)
-        text += src2
-        text += '\n'
+        text.append('\n')
+        text.append(inspect.getsource(functions.populate_doctest_namespace))
+        text.append('\n')
 
         # add a session that invokes the fixture above
-        text += '\n'
-        src3 = inspect.getsource(functions.session_00000)
-        text += src3
+        text.append('\n')
+        text.append(inspect.getsource(functions.session_00000))
+        text.append('\n')
     else:
         # remove code to save session globals
         src = src.replace(_session_globals_match, '')
         src = src.replace(_make_copies_match, '')
-        text += src
-    return text
+        text.append(src)
+    return ''.join(text)
 
 
 def teardown(identifier: str, code: str) -> str:
     """Generate the function body for pytest fixture teardown_module."""
-    text = '\n'
+    text = ['\n']
     src = inspect.getsource(functions.teardown_module)
     src = src.replace('    pass\n', '')
     src = src.replace('<put docstring here>', identifier)
     src = src.replace('    # <put code block here>\n', '')
-    text += src
-    indented_code = textwrap.indent(code, '    ')
-    return text + indented_code
+    text.append(src)
+    text.append(textwrap.indent(code, '    '))
+    return ''.join(text)

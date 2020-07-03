@@ -14,10 +14,11 @@ examples in Markdown.
 - No extra tags or html comments needed in the Markdown. No Markdown edits at all.
 - The test cases are run later by calling pytest.  
 - Get code coverage by running pytest with [coverage][6]. 
-- An included Python library: [Development tools API][10].
+- An included Python library: [Latest Development tools API][10].
   - runs phmdoctest and can run pytest too. *(simulator.py)*
   - functions to read fenced code blocks from Markdown. *(tool.py)*
 
+# TODO- add setup and teardown
 phmdoctest does **not** do setup and teardown. Each test case runs
 independently. 
 
@@ -481,7 +482,7 @@ It simulates running phmdoctest from the command line.
 - creates the --outfile in a temporary directory
 - optionally runs pytest on the outfile 
 
-Please see the [Development tools API section][10] or
+Please see the [Latest Development tools API section][10] or
 the docstring of the function `run_and_pytest()` in the file `simulator.py.` 
 pytest_options are passed as a list of strings as shown below.
 
