@@ -32,17 +32,20 @@ def print_report(args: Args, blocks: List[FencedBlock]) -> None:
             counts['SKIP_SESSION']
         ))
 
-    # Assumes session blocks can never be designated setup or teardown.
-    num_code_blocks = sum(
-        [counts['CODE'], counts['SETUP'], counts['TEARDOWN']]
-    )
-    num_missing_output = num_code_blocks - counts['OUTPUT']
+    num_missing_output = counts['CODE'] - counts['OUTPUT']
     assert num_missing_output >= 0, 'sanity check'
-    report.append(
-        '{} code blocks missing an output block.'.format(
-            num_missing_output
+    if num_missing_output:
+        report.append(
+            '{} code blocks missing an output block.'.format(
+                num_missing_output
+            )
         )
-    )
+
+    # del blocks are blocks that will be ignored.
+    num_del = counts['DEL_CODE'] + counts['DEL_OUTPUT'] + counts['DEL_SESSION']
+    if num_del:
+        report.append(
+            '{} blocks marked "del-". They are not tested.'.format(num_del))
 
     # Note if caller wanted --setup and its not happening.
     # Note if caller wanted --setup-doctest and its not happening.
@@ -52,6 +55,13 @@ def print_report(args: Args, blocks: List[FencedBlock]) -> None:
     #     setup block was skipped
     if args.setup_doctest and not counts['SETUP']:
         report.append('No setup block found, not honoring --setup-doctest.')
+    else:
+        if args.setup and not counts['SETUP']:
+            report.append('No setup block found.')
+
+    # Note if caller wanted --teardown and its not happening.
+    if args.teardown and not counts['TEARDOWN']:
+        report.append('No teardown block found.')
     else:
         if args.setup and not counts['SETUP']:
             report.append('No setup block found.')
@@ -85,10 +95,6 @@ def fenced_block_report(blocks: List[FencedBlock], title: str = '') -> str:
     formats = ['', '', '', '(width=30)']
     text = table.table(headings, formats, cell_grid, title)    # type: str
     return text
-
-
-# todo- need to list any del- counts in the report <------------------------------------
-# todo- need to list any del- counts in the report <------------------------------------
 
 
 def skips_report(
