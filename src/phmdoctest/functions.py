@@ -35,6 +35,17 @@ def test_identifier(capsys):
     line_by_line_compare_exact(a=expected_str, b=capsys.readouterr().out)
 
 
+def test_nothing_fails():
+    """Fail if no Python code blocks or sessions were processed."""
+    assert False, 'nothing to test'
+
+
+def test_nothing_passes():
+    """Succeed  if no Python code blocks or sessions were processed."""
+    # nothing to test
+    pass
+
+
 # todo- explain why do k, v not show up in locals()
 # This template will be customized by:
 # 1. adding a function docstring.

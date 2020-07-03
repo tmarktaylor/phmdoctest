@@ -9,17 +9,11 @@ import click
 from phmdoctest.entryargs import Args
 from phmdoctest.fenced import Role, FencedBlock
 from phmdoctest import coder
+from phmdoctest import functions
 
 
-def test_nothing_fails() -> None:
-    """Fail if no Python code blocks or sessions were processed."""
-    assert False, 'nothing to test'
-
-
-def test_nothing_passes() -> None:
-    """Succeed  if no Python code blocks or sessions were processed."""
-    # nothing to test
-    pass
+put_imports_here = '\ndef line_by_line_compare_exact(a, b):'
+"""Find match pattern to locate where to insert an import statement."""
 
 
 def build_test_cases(args: Args, blocks: List[FencedBlock]) -> str:
@@ -66,10 +60,15 @@ def build_test_cases(args: Args, blocks: List[FencedBlock]) -> str:
                 code=block.contents,
                 setup_doctest=args.setup_doctest
             )
+
             # insert the setup code near the top of the test file
             top_part = generated[:setup_insertion_point]
             rest = generated[setup_insertion_point:]
             generated = top_part + setup_text + rest
+            if args.setup_doctest:
+                # insert an import pytest statement
+                generated = generated.replace(
+                    put_imports_here, 'import pytest\n\n' + put_imports_here)
 
         elif block.role == Role.TEARDOWN:
             generated += '\n'
@@ -80,9 +79,9 @@ def build_test_cases(args: Args, blocks: List[FencedBlock]) -> str:
 
     if number_of_test_cases == 0:
         if args.fail_nocode:
-            nocode_func = test_nothing_fails
+            nocode_func = functions.test_nothing_fails
         else:
-            nocode_func = test_nothing_passes
+            nocode_func = functions.test_nothing_passes
         generated += '\n'
         generated += inspect.getsource(nocode_func)
     return generated
