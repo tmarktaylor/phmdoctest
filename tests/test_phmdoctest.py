@@ -112,12 +112,12 @@ class TestDocBuildVersions:
 def test_def_test_nothing_fails():
     """This is done for code coverage of the function."""
     with pytest.raises(AssertionError):
-        phmdoctest.cases.test_nothing_fails()
+        phmdoctest.functions.test_nothing_fails()
 
 
 def test_def_test_nothing_passes():
     """This is done for code coverage of the function."""
-    phmdoctest.cases.test_nothing_passes()
+    phmdoctest.functions.test_nothing_passes()
 
 
 def test_empty_output_block_fails():
