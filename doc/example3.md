@@ -1,45 +1,86 @@
 # This is Markdown file example3.md
-#### This is the setup code.
-The code creates mylist.
-The setup logic makes it global to the test module.
+
+#### This will be the setup code.
+The setup logic makes the names assigned here global to the test module.
+The code assigns the names tau, mylist, a, b, and the function doubler().
+Use phmdoctest --setup FIRST to select it.
+Setup code does not have an output block. 
 ```py3
-mylist = [5, 6, 7]
-assert mylist, 'mylist is not properly initialized'
+import math
+mylist = [1, 2, 3]
+a, b = 10, 11
+def doubler(x):
+    return x * 2
 ```
 
-# todo- test case to assign to a tuple: a, b = 3, 4
+#### This test case shows the setup names are visible
+```py3
+print('math.tau=', round(math.tau, 3))
+print(mylist)
+print(a, b)
+print('doubler(16)=', doubler(16))
+```
+expected output:
+```
+math.tau= 6.283
+[1, 2, 3]
+10 11
+doubler(16)= 32
+```
 
 #### This test case modifies mylist.
+The objects created by the --setup code can be modified
+and blocks run afterward will see the changes.  
 ```py3
-mylist.append(8)
+mylist.append(4)
 print(mylist)
 ```
 expected output:
 ```
-[5, 6, 7, 8]
+[1, 2, 3, 4]
 ```
 
 #### The next test case sees the modified mylist.
 ```py3
-print(mylist == [5, 6, 7, 8])
+print(mylist == [1, 2, 3, 4])
 ```
 expected output:
 ```
 True
 ```
 
-#### The session can't access mylist.
-Sessions cannot access the global variables created
-by the setup code.  Sessions run in an isolated context.
+#### The names created by the setup code are optionally visible to sessions.
+When running phmdoctest setup names are made visible to sessions 
+by using these options:
+- --setup specifies a code block that initializes variables. 
+- --setup-doctest injects the setup variables into the doctest namespace. 
+
+Run the generated test file with pytest.
+- Specify --doctest-modules to run the sessions.
+- Sessions are run in a separate context from the Python code/output block
+  pairs.  The setup and teardown is repeated.
+  
+55 is appended to mylist. Note that the 4 appended by the
+test case above is not there.  This is because the sessions are
+run in a separate context.
 ```py
->>> mylist.append(9)    #doctest:+IGNORE_EXCEPTION_DETAIL
-Traceback (most recent call last):
-    ...
-NameError:
+>>> mylist.append(55)
+>>> mylist
+[1, 2, 3, 55]
 ```
 
-#### The teardown code is here.
+The change to mylist made in the session above is visible.
+```py
+>>> mylist
+[1, 2, 3, 55]
+>>> round(math.tau, 3)
+6.283
+```
+
+#### This will be specified as the teardown code.
+Use phmdoctest --teardown LAST to select it.
+Teardown code does not have an output block. 
 ```py3
 mylist.clear()
-assert not mylist, 'mylist is not properly destroyed'
+assert not mylist, 'mylist was not emptied'
 ```
