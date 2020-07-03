@@ -53,11 +53,24 @@ Since conf.py is at the project root the entire project is
 searched by Sphinx for document source files.  Additional
 ``exclude_patterns`` keep out unwanted document source files.
 
-These files are not part of the documentation.
-They are expected values used by the regression test suite.
+The files below are not part of the documentation:
 
-- doc/test_example1.py
-- doc/test_example2.py
+- Expected values used by the regression test suite.
+
+  - doc/test_example1.py
+  - doc/test_example2.py
+  - doc/test_example3.py
+
+- Development tools to generate Markdown text.
+
+  - doc/make_wrapped_examples.py
+  - doc/quick_links.py
+
+- Run during CI to show pytest Live Log output
+
+  - doc/livelog.py
+  - doc/livelog_test_assertion.py
+  - doc/livelog_bad_session.py
 
 Read the Docs hosting
 ~~~~~~~~~~~~~~~~~~~~~
