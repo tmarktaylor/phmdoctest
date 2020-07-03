@@ -40,12 +40,14 @@ def make_quick_links(filename):
             title = line.replace(paragraph_level, '')
             label = '[' + title + ']'
             link = title.lower()
-            link = link.replace(',', '')
-            # remove runs of - occurring after a space
-            link = re.sub(' -[-]+', ' ', link)
+            # remove some punctuation chars
+            some_punctuation = ','
+            link = re.sub('[' + some_punctuation + ']', '', link)
+            link = link.replace('-', ' ')
+            # convert runs of space to single dash
+            link = re.sub('[ ]+', '-', link)
             # remove runs of - at the start of a line
             link = re.sub('^[-]+', '', link)
-            link = link.replace(' ', '-')
             link = '(#' + link + ')'
             links.append(label + link)
     text = ' |\n'.join(links)
