@@ -1,4 +1,4 @@
-##### test_example2.py
+#### test_example2.py
 ```python3
 """pytest file built from doc/example2.md"""
 from itertools import zip_longest
@@ -68,5 +68,3 @@ def test_code_87_output_93(capsys):
 This page is created from a Markdown file that contains the contents
 of a python source file in a syntax highlighted fenced code block.
 It is included in the documentation as an example python file.
-
-
