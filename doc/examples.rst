@@ -11,3 +11,4 @@ These pages are referenced by relative links in README.md.
    test_example2_py.md
    ../project
    example3.md
+   test_example3_py.md
