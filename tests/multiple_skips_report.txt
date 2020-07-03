@@ -19,7 +19,6 @@ py3        72  skip-code    "print"
 ---------------------------------------------------
 0 test cases.
 5 skipped code blocks.
-0 code blocks missing an output block.
 
   skip pattern matches (blank means no match)
 ------------------------------------------------
