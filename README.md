@@ -36,7 +36,25 @@ independently.
 [Codecov](https://codecov.io/gh/tmarktaylor/phmdoctest?branch=master) |
 [License](https://github.com/tmarktaylor/phmdoctest/blob/master/LICENSE.txt)
 
+[Introduction](#introduction) |
+[Installation](#installation) |
+[Sample usage](#sample-usage) |
+[--report option](#report-option) |
+[Identifying blocks](#identifying-blocks) |
+[skipping blocks](#skipping-blocks) |
+[--skip example](#skip-example) |
+[-s short form of --skip](#s-short-form-of-skip) |
+[--fail-nocode](#fail-nocode) |
+[Send outfile to stdout](#send-outfile-to-stdout) |
+[Usage](#usage) |
+[Run on Travis CI](#run-on-travis-ci) |
+[Run as a Python module](#run-as-a-python-module) |
+[Call from Python](#call-from-python) |
+[Execution context](#execution-context) |
+[Hints](#hints) |
+[Related projects](#related-projects)
 
+ 
 ## Installation
 It is advisable to install in a virtual environment.
 
@@ -148,13 +166,13 @@ line number of the first line
 of python code. `27` shows the line number of the expected 
 terminal output.
 
-phmdoctest tries to generate one test case function for each: 
+One test case function is generated for each: 
 
 - Markdown fenced code block interactive session 
 - Python-code/expected-output Markdown fenced code block pair
 
 The `--report` option below shows the blocks discovered and
-how phmdoctest will test them.
+how they are tested.
    
 ## --report option
 
@@ -167,8 +185,7 @@ phmdoctest doc/example2.md --report
 
 which lists the fenced code blocks it found in
 the file [example2.md](doc/example2.md).
-The `test role` column shows how phmdoctest 
-will test each fenced code block.  
+The `test role` column shows how each fenced code block is tested.  
 
 ```
          doc/example2.md fenced blocks
@@ -195,10 +212,12 @@ pycon     101  session
 1 code blocks missing an output block.
 ```
 
-## How phmdoctest identifies code, session, and output blocks
+## Identifying blocks
 
-phmdoctest uses the PYPI [commonmark][7] project to extract fenced code
+The PYPI [commonmark][7] project provides code to extract fenced code
 blocks from Markdown. Specification [CommonMark Spec][8] and website [CommonMark][9].
+
+Python code, expected output, and Python interactive session are extracted.
 
 Only [GFM fenced code blocks][3] are considered.
 
@@ -218,7 +237,7 @@ and the block contents can't start with `'>>> '`.
 [project.md](project.md) has more examples of code and session blocks.
 
 It is ok if the [info string][11]
-is laden with additional text, phmdoctest will ignore it.  The
+is laden with additional text, it will be ignored.  The
 entire info string will be shown in the block type column of the
 report.
 
@@ -235,10 +254,10 @@ if it is followed by any of:
 - Python session block
 - a fenced code block with a non-empty info string
   
-phmdoctest will still generate test code for it, but there will be no
+Test code is generated for it, but there will be no
 assertion statement.
 
-## Skipping Python blocks with the --skip option
+## skipping blocks
 
 If you don't want to generate test cases for Python
 blocks use the `--skip TEXT` option. More than one `--skip TEXT` 
@@ -270,7 +289,7 @@ Only Python blocks are counted.
 - `--skip SECOND` skips the second Python block
 - `--skip LAST` skips the final Python block
 
-## --skip Example
+## --skip example
 
 This command
 ```
@@ -316,7 +335,7 @@ LAST          101
 and creates the output file [test_example2.py](doc/test_example2_py.md)
 
 
-## -s short option form of --skip
+## -s short form of --skip
 
 This is the same command as above using the short `-s` form of the --skip option
 in two places.
@@ -330,19 +349,19 @@ phmdoctest doc/example2.md -s "Python 3.7" -sLAST --report --outfile test_exampl
 This option produces a pytest file that will always
 fail when no Python code or session blocks are found.
 
-If phmdoctest doesn't find any Python code or session blocks in the
+If no Python code or session blocks are found in the
 Markdown file a pytest file is still generated.
 This also happens when `--skip` eliminates all the
 Python code blocks. 
 The generated pytest file will have the function
 `def test_nothing_passes()`.
 
-If the option `--fail-nocode` is passed to phmdoctest the
+If the option `--fail-nocode` is passed the
 function is `def test_nothing_fails()` which raises an
 assertion.
  
 
-## Send outfile to standard output
+## Send outfile to stdout
 To redirect the above outfile to the standard output stream use one
 of these two commands.
 
@@ -418,7 +437,7 @@ Options:
   --help               Show this message and exit.
 ```
 
-## Running on Travis CI  
+## Run on Travis CI  
 
 The partial script shown below is for Python 3.5 on [Travis CI][5].
 The script steps are:
@@ -447,16 +466,17 @@ matrix:
         - pytest --strict --doctest-modules -vv tests
 ```
 
-## Running phmdoctest from the command line as a Python module
+## Run as a Python module
 
-Here is an example:
+To run phmdoctest from the command line a Python module:
 
 `python -m phmdoctest doc/example2.md --report`
 
-## Testing phmdoctest from within a Python script
+## Call from Python
 
-`phmdoctest.simulator` offers the function `run_and_pytest()`
-which simulates running phmdoctest from the command line.
+To call phmdoctest from within a Python script
+`phmdoctest.simulator` offers the function `run_and_pytest()`.
+It simulates running phmdoctest from the command line.
 - useful during development
 - creates the --outfile in a temporary directory
 - optionally runs pytest on the outfile 
@@ -476,7 +496,7 @@ assert simulator_status.runner_status.exit_code == 0
 assert simulator_status.pytest_exit_code == 0
 ```
 
-## Execution Context
+## Execution context
 - Interactive sessions run in the doctest execution context.
 - Code/expected output run within a function body of a pytest test case.
 - Pytest and doctest determine the order of test case execution.
@@ -484,14 +504,14 @@ assert simulator_status.pytest_exit_code == 0
 
 ## Hints
 
-- phmdoctest can read the Markdown file from the standard input stream.
+- To read the Markdown file from the standard input stream.
   Use `-` for MARKDOWN_FILE.
 - Write the test file to a temporary directory so that
   it is always up to date.
 - Its easy to use --output by mistake instead of `--outfile`.
 - If Python code block has no output, put assert statements in the code.
 - Use pytest option --doctest-modules to test the sessions. 
-- phmdoctest ignores Markdown indented code blocks ([Spec][8] section 4.4).
+- Markdown indented code blocks ([Spec][8] section 4.4) are ignored.
 - simulator_status.runner_status.exit_code == 2 is the click 
   command line usage error.
 - Since phmdoctest generates code, the input file should be from a trusted
