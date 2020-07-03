@@ -61,7 +61,9 @@ exclude_patterns = [
     'tests', 'src',
     '.tox',
     '.pytest_cache',
-    '_build', 'Thumbs.db', '.DS_Store'
+    '_build', 'Thumbs.db', '.DS_Store',
+    # for personal dev environments
+    '.export*'
 ]
 
 master_doc = 'index'
