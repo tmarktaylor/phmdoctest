@@ -46,11 +46,17 @@ def test_nothing_passes():
     pass
 
 
-# todo- explain why do k, v not show up in locals()
 # This template will be customized by:
 # 1. adding a function docstring.
 # 2. adding the callers code block.
 # 3. optionally removing the _session_globals logic.
+#
+# By observation:
+# k, v would be present in a locals() call after the for loop exits.
+# k, v do not show up in the locals() call below which is part of the
+# for statement because they are assigned within the scope of the
+# for loop.  The Python Language Reference hints that this is the
+# way it works, but didn't seem very explicit.
 def setup_module(thismodulebypytest):
     """<put docstring here>"""
     # <put code block here>
