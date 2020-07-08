@@ -44,7 +44,7 @@ def setup_module(thismodulebypytest):
 
 @pytest.fixture()
 def populate_doctest_namespace(doctest_namespace):
-    for k, v in _session_globals.items():   # noqa: F821
+    for k, v in _session_globals.items():
         doctest_namespace[k] = v
 
 
@@ -52,7 +52,6 @@ def session_00000():
     r"""
     >>> getfixture('populate_doctest_namespace')
     """
-
 
 
 def test_code_18_output_25(capsys):

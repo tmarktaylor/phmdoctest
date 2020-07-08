@@ -85,10 +85,12 @@ def setup_module(thismodulebypytest):
 # into the pytest namespace supplied to doctests when
 # doing pytest --doctest-modules.
 # This code is included only if phmdoctest option --setup-doctest.
+populate_doctest_namespace_str = """\
 @pytest.fixture()
 def populate_doctest_namespace(doctest_namespace):
-    for k, v in _session_globals.items():   # noqa: F821
+    for k, v in _session_globals.items():
         doctest_namespace[k] = v
+"""
 
 
 # This part is only needed for testing sessions.

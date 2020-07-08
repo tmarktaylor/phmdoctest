@@ -106,13 +106,12 @@ def setup(identifier: str, code: str, setup_doctest: bool) -> str:
         # that is created when pytest is  running with --doctest-modules.
         # add the fixture to inject values into the doctest namespace
         text.append('\n')
-        text.append(inspect.getsource(functions.populate_doctest_namespace))
+        text.append(functions.populate_doctest_namespace_str)
         text.append('\n')
 
         # add a session that invokes the fixture above
         text.append('\n')
         text.append(inspect.getsource(functions.session_00000))
-        text.append('\n')
     else:
         # remove code to save session globals
         src = src.replace(_session_globals_match, '')
