@@ -68,7 +68,7 @@ import phmdoctest.tool
     nargs=1,
     help=(
             'The Python code block that contains the substring TEXT'
-            ' is run at test module setup time.  Variables assigned'
+            ' is run at test module setup time. Variables assigned'
             ' at the outer level are visible as globals to the other'
             ' Python code blocks.'
             ' TEXT should match exactly one code block.'
@@ -101,10 +101,8 @@ import phmdoctest.tool
     help=(
             'Make globals created by the --setup Python code block visible to'
             ' session blocks and only when they are tested with the pytest'
-            ' --doctest-modules option.  Please note that pytest runs '
+            ' --doctest-modules option.  Please note that pytest runs'
             ' doctests in a separate context that only runs doctests.'
-            ' If this option is specified, the sessions in the generated test'
-            ' file cannot be tested with Python Standard Library doctest.'
             ' This option is ignored if there is no --setup option.'
     )
 )
