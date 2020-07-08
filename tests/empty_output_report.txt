@@ -3,9 +3,11 @@
 block     line  test        matching TEXT pattern
 type    number  role        quoted and one per line
 ---------------------------------------------------
-python       8  code
-            14  del-output
+python      10  code
+            16  del-output
+python      22  code
+            29  output
 ---------------------------------------------------
-1 test cases.
+2 test cases.
 1 code blocks missing an output block.
 1 blocks marked "del-". They are not tested.

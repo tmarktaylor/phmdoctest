@@ -88,6 +88,22 @@ def test_setup_is_not_skipped_block():
     assert 'No setup block found.' in stdout
 
 
+def test_setup_has_output_block():
+    """The --setup block has an output block which gets role del-output."""
+    command = (
+        'phmdoctest tests/empty_output_block.md --setup 19 --report'
+    )
+    simulator_status = phmdoctest.simulator.run_and_pytest(
+        well_formed_command=command,
+        pytest_options=None
+    )
+    assert simulator_status.runner_status.exit_code == 0
+    stdout = simulator_status.runner_status.stdout
+    assert 'python      22  setup       "19"' in stdout
+    assert '            29  del-output' in stdout
+    assert '2 blocks marked "del-". They are not tested.' in stdout
+
+
 def test_no_match_for_teardown():
     """Caller specifies --teardown TEXT, but no block matches TEXT."""
     command = (
@@ -145,7 +161,7 @@ def test_run_setup_example():
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
-        pytest_options=['--strict', '-v']
+        pytest_options=['--strict', '--doctest-modules', '-v']
     )
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
@@ -252,8 +268,8 @@ def test_bad_usage_option():
         well_formed_command=command,
         pytest_options=['--strict', '--doctest-modules', '-v']
     )
-    assert (
-            simulator_status.runner_status.exit_code == click.UsageError.exit_code
-    )
+    want = click.UsageError.exit_code
+    got = simulator_status.runner_status.exit_code
+    assert got == want
     assert simulator_status.outfile is None
     assert simulator_status.pytest_exit_code is None
