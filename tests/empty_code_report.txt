@@ -1,0 +1,12 @@
+      tests/empty_code_block.md fenced blocks
+---------------------------------------------------
+block     line  test        matching TEXT pattern
+type    number  role        quoted and one per line
+---------------------------------------------------
+python       6  del-code
+            11  del-output
+python      18  del-code
+text        23  --
+---------------------------------------------------
+0 test cases.
+3 blocks marked "del-". They are not tested.
