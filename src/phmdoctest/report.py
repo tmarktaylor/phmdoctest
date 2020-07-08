@@ -42,11 +42,12 @@ def print_report(args: Args, blocks: List[FencedBlock]) -> None:
         )
 
     # del blocks are blocks that will be ignored.
-    num_del = counts['DEL_CODE'] + counts['DEL_OUTPUT'] + counts['DEL_SESSION']
+    num_del = counts['DEL_CODE'] + counts['DEL_OUTPUT']
     if num_del:
         report.append(
             '{} blocks marked "del-". They are not tested.'.format(num_del))
 
+    # todo- add test cases <-------------------------------------------------------------------------
     # Note if caller wanted --setup and its not happening.
     # Note if caller wanted --setup-doctest and its not happening.
     # This occurs if:

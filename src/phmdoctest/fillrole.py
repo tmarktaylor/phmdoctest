@@ -58,8 +58,6 @@ def del_problem_blocks(blocks: List[FencedBlock]) -> None:
             block.set(Role.DEL_CODE)
         elif block.role == Role.OUTPUT:
             block.set(Role.DEL_OUTPUT)
-        elif block.role == Role.SESSION:
-            block.set(Role.DEL_SESSION)
 
 
 def apply_skips(args: Args, blocks: List[FencedBlock]) -> None:

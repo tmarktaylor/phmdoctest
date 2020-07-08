@@ -20,7 +20,6 @@ class Role(Enum):
     TEARDOWN = 'teardown'
     DEL_CODE = 'del-code'
     DEL_OUTPUT = 'del-output'
-    DEL_SESSION = 'del-session'
 
 
 class FencedBlock:
