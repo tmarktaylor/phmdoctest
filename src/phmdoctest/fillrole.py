@@ -114,7 +114,8 @@ def find_and_designate_setup_or_teardown(
             description = ''    # avoid inspection nag
             if role == Role.SETUP:
                 description = '--setup {0} (or -u{0})'.format(pattern)
-            elif role == Role.TEARDOWN:
+            else:
+                # can only be teardown because of aseert above
                 description = '--teardown {0} (or -d{0})'.format(pattern)
             line_numbers = [str(b.line) for b in matches]
             message = (
