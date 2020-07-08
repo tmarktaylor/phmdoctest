@@ -18,9 +18,6 @@ def setup_module(thismodulebypytest):
     def doubler(x):
         return x * 2
 
-    # <variable to hold copies for testing sessions>
-    _session_globals = dict()
-
     # assign the local variables created so far to the module and
     # optionally save copies for testing sessions.
     for k, v in locals().items():
@@ -30,36 +27,6 @@ def setup_module(thismodulebypytest):
         if k == "thismodulebypytest":
             continue
         setattr(thismodulebypytest, k, v)
-
-        # <make copies for testing sessions>
-        # Included only if making --setup vars visible to sessions.
-        # assign the local variables to _session_globals.
-        if k != "_session_globals":
-            _session_globals[k] = v
-
-def setup_module(thismodulebypytest):
-    """code line 9"""
-    import math
-    mylist = [1, 2, 3]
-    a, b = 10, 11
-    def doubler(x):
-        return x * 2
-
-    # assign the local variables created so far to the module and
-    # optionally save copies for testing sessions.
-    for k, v in locals().items():
-        # The value thismodulebypytest passed by pytest is the module
-        # object that contains this function.
-        # It shows up in locals(), so just ignore it.
-        if k == "thismodulebypytest":
-            continue
-        setattr(thismodulebypytest, k, v)
-
-        # <make copies for testing sessions>
-        # Included only if making --setup vars visible to sessions.
-        # assign the local variables to _session_globals.
-        if k != "_session_globals":
-            _session_globals[k] = v
 
 
 def test_code_18_output_25(capsys):

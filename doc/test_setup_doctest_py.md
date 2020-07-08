@@ -22,7 +22,7 @@ def setup_module(thismodulebypytest):
     def doubler(x):
         return x * 2
 
-    # <variable to hold copies for testing sessions>
+    # variable to hold copies for testing sessions
     _session_globals = dict()
 
     # assign the local variables created so far to the module and
@@ -35,8 +35,7 @@ def setup_module(thismodulebypytest):
             continue
         setattr(thismodulebypytest, k, v)
 
-        # <make copies for testing sessions>
-        # Included only if making --setup vars visible to sessions.
+        # make copies for testing sessions
         # assign the local variables to _session_globals.
         if k != "_session_globals":
             _session_globals[k] = v

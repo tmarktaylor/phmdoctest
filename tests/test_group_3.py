@@ -38,8 +38,54 @@ def test_no_match_for_setup():
     stdout = simulator_status.runner_status.stdout
     # no blocks set to role setup
     assert not ('  setup' in stdout)
-    want2 = 'No setup block found.'
-    assert want2 in stdout
+    assert 'No setup block found.' in stdout
+
+
+def test_too_many_matches_for_setup():
+    """Caller specifies --setup TEXT, but no block matches TEXT."""
+    command = (
+        'phmdoctest doc/setup_doctest.md --setup print --report'
+    )
+    simulator_status = phmdoctest.simulator.run_and_pytest(
+        well_formed_command=command,
+        pytest_options=None
+    )
+    assert simulator_status.runner_status.exit_code == 1
+    stdout = simulator_status.runner_status.stdout
+    assert 'Error: More than one block matched command line' in stdout
+    assert '--setup print (or -uprint).' in stdout
+    assert 'Only one match is allowed.' in stdout
+    assert 'The matching blocks are at line numbers 18, 35, 45' in stdout
+
+
+def test_setup_is_not_code_block():
+    """Caller --setup matches, but it is not a code block."""
+    command = (
+        'phmdoctest doc/setup_doctest.md --setup="mylist.append(55)" --report'
+    )
+    simulator_status = phmdoctest.simulator.run_and_pytest(
+        well_formed_command=command,
+        pytest_options=None
+    )
+    assert simulator_status.runner_status.exit_code == 0
+    stdout = simulator_status.runner_status.stdout
+    assert not ('  setup' in stdout)
+    assert 'No setup block found.' in stdout
+
+
+def test_setup_is_not_skipped_block():
+    """Caller --setup matches, but the block is skipped."""
+    command = (
+        'phmdoctest doc/setup_doctest.md --skip FIRST --setup FIRST` --report'
+    )
+    simulator_status = phmdoctest.simulator.run_and_pytest(
+        well_formed_command=command,
+        pytest_options=None
+    )
+    assert simulator_status.runner_status.exit_code == 0
+    stdout = simulator_status.runner_status.stdout
+    assert not ('  setup' in stdout)
+    assert 'No setup block found.' in stdout
 
 
 def test_no_match_for_teardown():
@@ -57,6 +103,72 @@ def test_no_match_for_teardown():
     assert not ('  teardown' in stdout)
     want2 = 'No teardown block found.'
     assert want2 in stdout
+
+
+def test_too_many_matches_for_teardown():
+    """Caller specifies --teardown TEXT, but no block matches TEXT."""
+    command = (
+        'phmdoctest doc/setup_doctest.md --teardown round --report'
+    )
+    simulator_status = phmdoctest.simulator.run_and_pytest(
+        well_formed_command=command,
+        pytest_options=None
+    )
+    assert simulator_status.runner_status.exit_code == 1
+    stdout = simulator_status.runner_status.stdout
+    assert 'Error: More than one block matched command line' in stdout
+    assert '--teardown round (or -dround).' in stdout
+    assert 'Only one match is allowed.' in stdout
+    assert 'The matching blocks are at line numbers 18, 74' in stdout
+
+
+def test_teardown_is_not_code_block():
+    """Caller --teardown matches, but it is not a code block."""
+    command = (
+        'phmdoctest doc/setup_doctest.md --teardown True --report'
+    )
+    simulator_status = phmdoctest.simulator.run_and_pytest(
+        well_formed_command=command,
+        pytest_options=None
+    )
+    assert simulator_status.runner_status.exit_code == 0
+    stdout = simulator_status.runner_status.stdout
+    assert not ('  teardown' in stdout)
+    assert 'No teardown block found.' in stdout
+
+
+def test_run_setup_example():
+    """Verify the setup example passes pytest."""
+    command = (
+        'phmdoctest doc/setup.md --setup FIRST --teardown LAST'
+        ' --report --outfile discarded.py'
+    )
+    simulator_status = phmdoctest.simulator.run_and_pytest(
+        well_formed_command=command,
+        pytest_options=['--strict', '-v']
+    )
+    assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code == 0
+    stdout = simulator_status.runner_status.stdout
+    assert 'py3         9  setup     "FIRST"' in stdout
+    assert 'py3        56  teardown  "LAST"' in stdout
+
+
+def test_run_setup_doctest_example():
+    """Verify the --setup-doctest example passes pytest."""
+    command = (
+        'phmdoctest doc/setup_doctest.md --setup FIRST --teardown LAST'
+        ' --setup-doctest --report --outfile discarded.py'
+    )
+    simulator_status = phmdoctest.simulator.run_and_pytest(
+        well_formed_command=command,
+        pytest_options=['--strict', '--doctest-modules', '-v']
+    )
+    assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code == 0
+    stdout = simulator_status.runner_status.stdout
+    assert 'py3         9  setup     "FIRST"' in stdout
+    assert 'py3        84  teardown  "LAST"' in stdout
 
 
 def test_no_blocks_left_to_test_passing():
@@ -135,7 +247,7 @@ def test_missing_markdown_file():
 
 def test_bad_usage_option():
     """Usage error for misspelled option."""
-    command = 'phmdoctest doc/example1.md --troper --outfile discarded.py'
+    command = 'phmdoctest doc/example1.md --misspelled --outfile discarded.py'
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
         pytest_options=['--strict', '--doctest-modules', '-v']

@@ -69,18 +69,17 @@ def interactive_session(
 
 
 _session_globals_match = (
-    '    # <variable to hold copies for testing sessions>\n'
+    '    # variable to hold copies for testing sessions\n'
     '    _session_globals = dict()\n\n'
 )
 
-_needs_indent = (
-    '# <make copies for testing sessions>\n'
-    '# This code is included only if phmdoctest option --setup-doctest.\n'
-    '# assign the local variables to _session_globals.\n'
-    'if k != "_session_globals":\n'
-    '    _session_globals[k] = v\n\n'
-)
-_make_copies_match = textwrap.indent(_needs_indent, '        ')
+# note leading and trailing newlines
+_make_copies_match = """
+        # make copies for testing sessions
+        # assign the local variables to _session_globals.
+        if k != "_session_globals":
+            _session_globals[k] = v
+"""
 
 
 def setup(identifier: str, code: str, setup_doctest: bool) -> str:
@@ -93,31 +92,32 @@ def setup(identifier: str, code: str, setup_doctest: bool) -> str:
     are wanted in doctest namespace.
     The namespace is created when pytest is running with --doctest-modules.
     """
-    text = ['\n']
-    src = inspect.getsource(functions.setup_module)
+    src = '\n'
+    src += inspect.getsource(functions.setup_module)
     src = src.replace('<put docstring here>', identifier)
     indented_code = textwrap.indent(code, '    ')
     src = src.replace('    # <put code block here>\n', indented_code)
-    text.append(src)
-    text.append('\n')
-    if setup_doctest:
-        # Keep track of code's variable assignments and add
-        # elements to inject them into pytest's doctest namespace
-        # that is created when pytest is  running with --doctest-modules.
-        # add the fixture to inject values into the doctest namespace
-        text.append('\n')
-        text.append(functions.populate_doctest_namespace_str)
-        text.append('\n')
-
-        # add a session that invokes the fixture above
-        text.append('\n')
-        text.append(inspect.getsource(functions.session_00000))
-    else:
+    if not setup_doctest:
         # remove code to save session globals
         src = src.replace(_session_globals_match, '')
         src = src.replace(_make_copies_match, '')
-        text.append(src)
-    return ''.join(text)
+        return src
+    else:
+        text = [
+            src,
+            '\n',
+            '\n',
+            # Keep track of code's variable assignments and add
+            # elements to inject them into pytest's doctest namespace
+            # that is created when pytest is  running with --doctest-modules.
+            # add the fixture to inject values into the doctest namespace
+            functions.populate_doctest_namespace_str,
+            '\n',
+            '\n',
+            # add a session that invokes the fixture above
+            inspect.getsource(functions.session_00000)
+        ]
+        return ''.join(text)
 
 
 def teardown(identifier: str, code: str) -> str:
