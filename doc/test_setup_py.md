@@ -32,13 +32,13 @@ def setup_module(thismodulebypytest):
 
 
 def test_code_18_output_25(capsys):
-    print('math.tau=', round(math.tau, 3))
+    print('math.pi=', round(math.pi, 3))
     print(mylist)
     print(a, b)
     print('doubler(16)=', doubler(16))
 
     expected_str = """\
-math.tau= 6.283
+math.pi= 3.142
 [1, 2, 3]
 10 11
 doubler(16)= 32

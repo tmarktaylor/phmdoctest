@@ -15,14 +15,14 @@ def doubler(x):
 
 #### This test case shows the setup names are visible
 ```py3
-print('math.tau=', round(math.tau, 3))
+print('math.pi=', round(math.pi, 3))
 print(mylist)
 print(a, b)
 print('doubler(16)=', doubler(16))
 ```
 expected output:
 ```
-math.tau= 6.283
+math.pi= 3.142
 [1, 2, 3]
 10 11
 doubler(16)= 32
@@ -73,8 +73,8 @@ The change to mylist made in the session above is visible.
 ```py
 >>> mylist
 [1, 2, 3, 55]
->>> round(math.tau, 3)
-6.283
+>>> round(math.pi, 3)
+3.142
 ```
 
 #### This will be specified as the teardown code.
