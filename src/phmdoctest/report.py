@@ -47,7 +47,6 @@ def print_report(args: Args, blocks: List[FencedBlock]) -> None:
         report.append(
             '{} blocks marked "del-". They are not tested.'.format(num_del))
 
-    # todo- add test cases <-------------------------------------------------------------------------
     # Note if caller wanted --setup and its not happening.
     # Note if caller wanted --setup-doctest and its not happening.
     # This occurs if:
@@ -63,9 +62,6 @@ def print_report(args: Args, blocks: List[FencedBlock]) -> None:
     # Note if caller wanted --teardown and its not happening.
     if args.teardown and not counts['TEARDOWN']:
         report.append('No teardown block found.')
-    else:
-        if args.setup and not counts['SETUP']:
-            report.append('No setup block found.')
 
     if args.skips:
         report.append('')
