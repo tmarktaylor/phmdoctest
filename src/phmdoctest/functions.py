@@ -2,8 +2,6 @@
 
 from itertools import zip_longest
 
-import pytest
-
 
 # mypy: ignore_errors
 
