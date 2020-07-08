@@ -109,17 +109,6 @@ class TestDocBuildVersions:
         assert self.setup.count(expected) == 1
 
 
-def test_def_test_nothing_fails():
-    """This is done for code coverage of the function."""
-    with pytest.raises(AssertionError):
-        phmdoctest.functions.test_nothing_fails()
-
-
-def test_def_test_nothing_passes():
-    """This is done for code coverage of the function."""
-    phmdoctest.functions.test_nothing_passes()
-
-
 def test_empty_output_block_fails():
     """Empty output block get del'd."""
     simulator_status = verify.one_example(
@@ -238,28 +227,6 @@ def test_example2_report():
     with open('tests/example2_report.txt', 'r', encoding='utf-8') as f:
         want = f.read()
     verify.a_and_b_are_the_same(a=want, b=stdout)
-
-
-def test_def_test_identifier():
-    """Painful way to eliminate 2 coverage missed statements."""
-    # The function coder.test_identifier() is used as
-    # a template to generate Python code.
-    # It accepts the pytest fixture called capsys when the
-    # generated pytest is run.
-    # phmodctest doesn't call this function so it shows up
-    # in the coverage report as a missed statement.
-    # Here a test mock up of the fixture is created that
-    # provides the expected value as its out attribute.
-    class MockReadouterr:
-        def __init__(self):
-            self.out = '<<<replaced>>>'
-
-    class MockCapsys:
-        @staticmethod
-        def readouterr():
-            return MockReadouterr()
-
-    phmdoctest.functions.test_identifier(MockCapsys())
 
 
 def test_blanklines_in_output():
