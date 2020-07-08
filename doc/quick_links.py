@@ -22,10 +22,7 @@ paragraph_level = '## '    # note trailing space
 
 
 def make_quick_links(filename):
-    """"Generate links for a quick links section.
-
-    quicklinks_section_heading is case significant
-    """
+    """"Generate links for a quick links section."""
     with open(filename, encoding='utf-8') as f:
         lines = f.readlines()
     lines = [line.rstrip() for line in lines]    # lose newlines
