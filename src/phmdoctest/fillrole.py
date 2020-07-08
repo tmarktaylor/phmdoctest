@@ -46,7 +46,6 @@ def identify_code_output_session_blocks(blocks: List[FencedBlock]) -> None:
     # be added to the code block.
 
 
-# todo- need test cases for empty code, session, output blocks <-----------------------------
 def del_problem_blocks(blocks: List[FencedBlock]) -> None:
     """Re-designate blocks that can't be used."""
     # Rather than asserting and blowing up the caller, just set the
@@ -56,6 +55,8 @@ def del_problem_blocks(blocks: List[FencedBlock]) -> None:
     for block in empty_blocks:
         if block.role == Role.CODE:
             block.set(Role.DEL_CODE)
+            if block.output:
+                block.output.set(Role.DEL_OUTPUT)
         elif block.role == Role.OUTPUT:
             block.set(Role.DEL_OUTPUT)
 
@@ -84,8 +85,6 @@ def findall(pattern: str, blocks: List[FencedBlock]) -> List[FencedBlock]:
     return found
 
 
-# todo- test cases for the new ClickException <--------------------------------------
-# todo- create special role type that has two values setup, teardown
 def find_and_designate_setup_or_teardown(
         role: Role, pattern: str, blocks: List[FencedBlock]) -> None:
     """Find and designate Python code block as setup or teardown.
