@@ -1,9 +1,7 @@
-#### test_example3.py
+#### doc/test_setup.py
 ```python3
-"""pytest file built from doc\\example3.md"""
+"""pytest file built from doc/setup.md"""
 from itertools import zip_longest
-
-import pytest
 
 
 def line_by_line_compare_exact(a, b):
@@ -16,7 +14,7 @@ def line_by_line_compare_exact(a, b):
 
 def setup_module(thismodulebypytest):
     """code line 9"""
-    from math import tau
+    import math
     mylist = [1, 2, 3]
     a, b = 10, 11
     def doubler(x):
@@ -41,30 +39,42 @@ def setup_module(thismodulebypytest):
         if k != "_session_globals":
             _session_globals[k] = v
 
+def setup_module(thismodulebypytest):
+    """code line 9"""
+    import math
+    mylist = [1, 2, 3]
+    a, b = 10, 11
+    def doubler(x):
+        return x * 2
 
-@pytest.fixture()
-def populate_doctest_namespace(doctest_namespace):
-    for k, v in _session_globals.items():   # noqa: F821
-        doctest_namespace[k] = v
+    # assign the local variables created so far to the module and
+    # optionally save copies for testing sessions.
+    for k, v in locals().items():
+        # The value thismodulebypytest passed by pytest is the module
+        # object that contains this function.
+        # It shows up in locals(), so just ignore it.
+        if k == "thismodulebypytest":
+            continue
+        setattr(thismodulebypytest, k, v)
 
-
-def session_00000():
-    r"""
-    >>> getfixture('populate_doctest_namespace')
-    """
+        # <make copies for testing sessions>
+        # Included only if making --setup vars visible to sessions.
+        # assign the local variables to _session_globals.
+        if k != "_session_globals":
+            _session_globals[k] = v
 
 
 def test_code_18_output_25(capsys):
-    print('tau=', round(tau, 3))
+    print('math.tau=', round(math.tau, 3))
+    print(mylist)
     print(a, b)
     print('doubler(16)=', doubler(16))
-    print(mylist)
 
     expected_str = """\
-tau= 6.283
+math.tau= 6.283
+[1, 2, 3]
 10 11
 doubler(16)= 32
-[1, 2, 3]
 """
     line_by_line_compare_exact(a=expected_str, b=capsys.readouterr().out)
 
@@ -88,23 +98,8 @@ True
     line_by_line_compare_exact(a=expected_str, b=capsys.readouterr().out)
 
 
-def session_00001_line_67():
-    r"""
-    >>> mylist.append(55)
-    >>> mylist
-    [1, 2, 3, 55]
-    """
-
-
-def session_00002_line_74():
-    r"""
-    >>> mylist
-    [1, 2, 3, 55]
-    """
-
-
 def teardown_module():
-    """code line 82"""
+    """code line 56"""
     mylist.clear()
     assert not mylist, 'mylist was not emptied'
 ```

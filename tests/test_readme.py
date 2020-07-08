@@ -106,6 +106,47 @@ def test_skip_example():
     verify.a_and_b_are_the_same(want, got2)
 
 
+def test_setup_first_fcb():
+    """Make sure example setup fenced code block same as in the file."""
+    want = next(readme_blocks)    # get the setup block example
+    blocks = phmdoctest.tool.fenced_code_blocks('doc/setup.md')
+    got = blocks[0]
+    verify.a_and_b_are_the_same(want, got)
+
+
+def test_setup_report_example():
+    """Make sure report in README is correct."""
+    command = next(readme_blocks)
+    want = next(readme_blocks)    # get the report
+    simulator_status = verify.one_example(
+        command,
+        want_file_name=None,
+        pytest_options=None
+    )
+    got1 = simulator_status.runner_status.stdout
+    verify.a_and_b_are_the_same(want, got1)
+
+
+def test_setup():
+    """Make sure --setup --outfile is correct."""
+    command = next(readme_blocks)
+    _ = verify.one_example(
+        command,
+        want_file_name='doc/test_setup.py',
+        pytest_options=None
+    )
+
+
+def test_setup_doctest():
+    """Make sure --setup-doctest --outfile is correct."""
+    command = next(readme_blocks)
+    _ = verify.one_example(
+        command,
+        want_file_name='doc/test_setup_doctest.py',
+        pytest_options=None
+    )
+
+
 def test_outfile_to_stdout():
     """Make sure generated --outfile and --report are as expected."""
     outfile_command1 = next(readme_blocks)

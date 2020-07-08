@@ -1,4 +1,6 @@
-"""pytest file built from doc\\example3.md"""
+#### doc/test_setup_doctest.py
+```python3
+"""pytest file built from doc/setup_doctest.md"""
 from itertools import zip_longest
 
 import pytest
@@ -14,7 +16,7 @@ def line_by_line_compare_exact(a, b):
 
 def setup_module(thismodulebypytest):
     """code line 9"""
-    from math import tau
+    import math
     mylist = [1, 2, 3]
     a, b = 10, 11
     def doubler(x):
@@ -52,17 +54,18 @@ def session_00000():
     """
 
 
+
 def test_code_18_output_25(capsys):
-    print('tau=', round(tau, 3))
+    print('math.tau=', round(math.tau, 3))
+    print(mylist)
     print(a, b)
     print('doubler(16)=', doubler(16))
-    print(mylist)
 
     expected_str = """\
-tau= 6.283
+math.tau= 6.283
+[1, 2, 3]
 10 11
 doubler(16)= 32
-[1, 2, 3]
 """
     line_by_line_compare_exact(a=expected_str, b=capsys.readouterr().out)
 
@@ -98,10 +101,16 @@ def session_00002_line_74():
     r"""
     >>> mylist
     [1, 2, 3, 55]
+    >>> round(math.tau, 3)
+    6.283
     """
 
 
 def teardown_module():
-    """code line 82"""
+    """code line 84"""
     mylist.clear()
     assert not mylist, 'mylist was not emptied'
+```
+This page is created from a Markdown file that contains the contents
+of a python source file in a syntax highlighted fenced code block.
+It is included in the documentation as an example python file.

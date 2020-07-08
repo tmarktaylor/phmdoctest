@@ -13,10 +13,20 @@ def test_test_example2_py_md():
     verify.a_and_b_are_the_same(a=want, b=got)
 
 
-def test_test_example3_py_md():
+def test_test_setup_py_md():
     """The copy of .py file in fenced code block is the same as the file."""
-    with open('doc/test_example3.py', 'r', encoding='utf-8') as f:
+    with open('doc/test_setup.py', 'r', encoding='utf-8') as f:
         want = f.read()
-    blocks = phmdoctest.tool.fenced_code_blocks('doc/test_example3_py.md')
+    blocks = phmdoctest.tool.fenced_code_blocks('doc/test_setup_py.md')
+    got = blocks[0]
+    verify.a_and_b_are_the_same(a=want, b=got)
+
+
+def test_test_setup_doctest_py_md():
+    """The copy of .py file in fenced code block is the same as the file."""
+    with open('doc/test_setup_doctest.py', 'r', encoding='utf-8') as f:
+        want = f.read()
+    blocks = phmdoctest.tool.fenced_code_blocks(
+        'doc/test_setup_doctest_py.md')
     got = blocks[0]
     verify.a_and_b_are_the_same(a=want, b=got)

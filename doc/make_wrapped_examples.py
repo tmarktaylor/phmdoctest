@@ -23,8 +23,9 @@ def wrap_one_file(name):
 
 def main():
     # also add a test case to test_wrapped_examples.py.
-    wrap_one_file('test_example2.py')
-    wrap_one_file('test_example3.py')
+    wrap_one_file('doc/test_example2.py')
+    wrap_one_file('doc/test_setup.py')
+    wrap_one_file('doc/test_setup_doctest.py')
 
 
 if __name__ == '__main__':

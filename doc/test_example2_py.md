@@ -1,4 +1,4 @@
-#### test_example2.py
+#### doc/test_example2.py
 ```python3
 """pytest file built from doc/example2.md"""
 from itertools import zip_longest

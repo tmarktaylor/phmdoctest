@@ -1,4 +1,4 @@
-# This is Markdown file example3.md
+# This is Markdown file setup.md
 
 #### This will be the setup code.
 The setup logic makes the names assigned here global to the test module.
@@ -40,41 +40,13 @@ expected output:
 [1, 2, 3, 4]
 ```
 
-#### The next test case sees the modified mylist.
+#### This test case sees the modified mylist.
 ```py3
 print(mylist == [1, 2, 3, 4])
 ```
 expected output:
 ```
 True
-```
-
-#### The names created by the setup code are optionally visible to sessions.
-When running phmdoctest setup names are made visible to sessions 
-by using these options:
-- --setup specifies a code block that initializes variables. 
-- --setup-doctest injects the setup variables into the doctest namespace. 
-
-Run the generated test file with pytest.
-- Specify --doctest-modules to run the sessions.
-- Sessions are run in a separate context from the Python code/output block
-  pairs.  The setup and teardown is repeated.
-  
-55 is appended to mylist. Note that the 4 appended by the
-test case above is not there.  This is because the sessions are
-run in a separate context.
-```py
->>> mylist.append(55)
->>> mylist
-[1, 2, 3, 55]
-```
-
-The change to mylist made in the session above is visible.
-```py
->>> mylist
-[1, 2, 3, 55]
->>> round(math.tau, 3)
-6.283
 ```
 
 #### This will be specified as the teardown code.

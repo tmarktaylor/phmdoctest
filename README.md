@@ -11,16 +11,15 @@ examples in Markdown.
 - Reads these from Markdown fenced code blocks:
   - Python interactive sessions described by [doctest][4].
   - Python source code and expected terminal output.
+- Designate Python source code blocks as setup and teardown code.
+- Setup applies to code blocks and optionally session blocks.
 - No extra tags or html comments needed in the Markdown. No Markdown edits at all.
 - The test cases are run later by calling pytest.  
-- Get code coverage by running pytest with [coverage][6]. 
+- Get code coverage by running pytest with [coverage][6].
 - An included Python library: [Latest Development tools API][10].
   - runs phmdoctest and can run pytest too. *(simulator.py)*
   - functions to read fenced code blocks from Markdown. *(tool.py)*
-
-# TODO- add setup and teardown
-phmdoctest does **not** do setup and teardown. Each test case runs
-independently. 
+ 
 
 ##### master branch status
 [![](https://img.shields.io/pypi/l/phmdoctest.svg)](https://github.com/tmarktaylor/phmdoctest/blob/master/LICENSE.txt)
@@ -33,28 +32,31 @@ independently.
 
 [Documentation](https://phmdoctest.readthedocs.io/en/latest/) |
 [Homepage](https://github.com/tmarktaylor/phmdoctest) |
-[Build](https://travis-ci.org/tmarktaylor/phmdoctest) |
+[Build][12] |
 [Codecov](https://codecov.io/gh/tmarktaylor/phmdoctest?branch=master) |
 [License](https://github.com/tmarktaylor/phmdoctest/blob/master/LICENSE.txt)
 
 [Introduction](#introduction) |
 [Installation](#installation) |
 [Sample usage](#sample-usage) |
-[--report option](#report-option) |
+[--report](#report) |
 [Identifying blocks](#identifying-blocks) |
 [skipping blocks](#skipping-blocks) |
-[--skip example](#skip-example) |
+[--skip](#skip) |
 [-s short form of --skip](#s-short-form-of-skip) |
 [--fail-nocode](#fail-nocode) |
+[--setup](#setup) |
+[--teardown](#teardown) |
+[Setup example](#setup-example) |
+[Setup for sessions](#setup-for-sessions) |
+[Execution context](#execution-context) |
 [Send outfile to stdout](#send-outfile-to-stdout) |
 [Usage](#usage) |
 [Run on Travis CI](#run-on-travis-ci) |
 [Run as a Python module](#run-as-a-python-module) |
 [Call from Python](#call-from-python) |
-[Execution context](#execution-context) |
 [Hints](#hints) |
 [Related projects](#related-projects)
-
  
 ## Installation
 It is advisable to install in a virtual environment.
@@ -175,10 +177,10 @@ One test case function is generated for each:
 The `--report` option below shows the blocks discovered and
 how they are tested.
    
-## --report option
+## --report
 
 To see the [GFM fenced code blocks][3] in the MARKDOWN_FILE use the 
---report option like this:
+`--report` option like this:
 
 ```
 phmdoctest doc/example2.md --report
@@ -286,11 +288,11 @@ generated, the option `--fail-nocode` described below is useful.
 Three special `--skip TEXT` strings work a little differently.
 They select one of the first, second, or last of the Python blocks.
 Only Python blocks are counted.
-- `--skip FIRST` skips the first Python block
-- `--skip SECOND` skips the second Python block
-- `--skip LAST` skips the final Python block
+- `--skip FIRST` skips the first Python block.
+- `--skip SECOND` skips the second Python block.
+- `--skip LAST` skips the final Python block.
 
-## --skip example
+## --skip
 
 This command
 ```
@@ -359,8 +361,148 @@ The generated pytest file will have the function
 
 If the option `--fail-nocode` is passed the
 function is `def test_nothing_fails()` which raises an
-assertion.
- 
+assertion. 
+
+## --setup
+
+A single Python code block can assign names visible to
+other code blocks by giving the `--setup TEXT` option.
+The rules for `TEXT` are the same as for `--skip TEXT` plus...
+
+- Only one block can match `TEXT`.
+- The block cannot match a block that is skipped.
+- The block cannot be a session block even though session
+  blocks are searched for `TEXT`.
+- It is ok if the block has an output block. It will be ignored.
+
+The setup block is run by the pytest `setup_module()` fixture
+in the generated test file.
+
+Here is an example setup block from 
+[setup.md](doc/setup.md):
+```py3
+import math
+mylist = [1, 2, 3]
+a, b = 10, 11
+def doubler(x):
+    return x * 2
+```
+
+The `--setup` option modifies the execution context of the
+Python code blocks in the Markdown file.
+The names `math`, `mylist`, `a`, `b`, and `doubler` are visible
+to the other Python code blocks and can be modified.
+
+## --teardown
+
+A single Python code block can supply code run by the pytest
+`teardown_module()` fixture. Use the `--teardown TEXT` option.
+The rules for `TEXT` are the same as for `--setup` above except
+`TEXT` won't match a setup block. 
+
+## Setup example
+
+For the Markdown file [setup.md](doc/setup.md)
+run this command to see how the blocks are tested. 
+
+```
+phmdoctest doc/setup.md --setup FIRST --teardown LAST --report
+```
+
+```
+           doc/setup.md fenced blocks
+------------------------------------------------
+block    line  test      matching TEXT pattern
+type   number  role      quoted and one per line
+------------------------------------------------
+py3         9  setup     "FIRST"
+py3        18  code
+           25  output
+py3        35  code
+           40  output
+py3        45  code
+           49  output
+py3        56  teardown  "LAST"
+------------------------------------------------
+3 test cases.
+```
+
+This command
+```
+phmdoctest doc/setup.md --setup FIRST --teardown LAST --outfile test_setup.py
+```
+creates the test file
+[test_setup.py](doc/test_setup_py.md)
+
+## Setup for sessions
+The pytest option `--doctest-modules` is required to 
+run doctest on sessions.  Pytest runs doctests in
+a separate context.
+For more on this see [Execution context](#execution-context) below.
+
+To allow sessions to see the variables assigned by the `--setup`
+code block, add the option `--setup-doctest`
+
+Here is an example with setup code and sessions
+[setup_doctest.md](doc/setup_doctest.md). The first part
+ of this file is a copy of setup.md.
+
+This command  uses the short form of setup and teardown. -u for up and -d for down.
+```
+phmdoctest doc/setup_doctest.md -u FIRST -d LAST --setup-doctest --outfile test_setup_doctest.py
+```
+It creates the test file
+[test_setup_doctest.py](doc/test_setup_doctest_py.md)
+Since the sessions are tested in a separate context from the 
+code blocks they are placed together at the end of the file.
+
+## Execution context
+
+When run without `--setup`
+
+- pytest and doctest determine the order of test case execution.
+- phmdoctest assumes test code and session execution is in file order.
+- Test case order is not significant.
+- Code/expected output run within a function body of a pytest test case.
+- If pytest is invoked with `--doctest-modules`: 
+  - Sessions are run in a separate doctest execution context.
+  - Otherwise sessions are not run.
+
+#### With `--setup`
+
+- names assigned by setup code are visible to code blocks.
+- code blocks can modify the objects created by the setup code. 
+- code block test case order is significant.
+- session order is not significant.
+- If pytest is run with `--doctest-modules`:
+  - pytest runs two separate contexts: one for sessions, one for code blocks.
+  - setup code is run twice, once by each context.
+  - the names assigned by the setup code block 
+    are `are not` visible to the sessions.
+
+#### With `--setup` and `--setup-doctest`
+Same as previous section plus:
+- the names assigned by the setup code block 
+  are visible to the sessions.
+- sessions can modify the objects created by the setup code. 
+- session order is significant.
+- Sessions and code blocks are still running in separate contexts
+  isolated from each other.
+- A session can't affect a code block and a code block can't affect
+  a session.
+
+#### Pytest live logging demos
+The live logging demos reveal pytest execution contexts. 
+Pytest Live Logs show the
+execution order of setup_module(), test cases, sessions, and
+teardown_module().
+The demos are in one of the Travis CI builds.
+- Look for the build log here [Build][12].
+- Go to the Python 3.7 build which runs tox.
+- Go to the Job Log tab.
+- Look for the tox demo environment commands near the end.
+
+
 
 ## Send outfile to stdout
 To redirect the above outfile to the standard output stream use one
@@ -406,8 +548,8 @@ Options:
                        fail.
 
   -u, --setup TEXT     The Python code block that contains the substring TEXT
-                       is run at test module setup time.  Variables assigned
-                       at the outer level are visible as globals to the other
+                       is run at test module setup time. Variables assigned at
+                       the outer level are visible as globals to the other
                        Python code blocks. TEXT should match exactly one code
                        block. If TEXT is one of the 3 capitalized strings
                        FIRST SECOND LAST the first, second, or last Python
@@ -428,11 +570,9 @@ Options:
   --setup-doctest      Make globals created by the --setup Python code block
                        visible to session blocks and only when they are tested
                        with the pytest --doctest-modules option.  Please note
-                       that pytest runs  doctests in a separate context that
-                       only runs doctests. If this option is specified, the
-                       sessions in the generated test file cannot be tested
-                       with Python Standard Library doctest. This option is
-                       ignored if there is no --setup option.
+                       that pytest runs doctests in a separate context that
+                       only runs doctests. This option is ignored if there is
+                       no --setup option.
 
   --version            Show the version and exit.
   --help               Show this message and exit.
@@ -497,12 +637,6 @@ assert simulator_status.runner_status.exit_code == 0
 assert simulator_status.pytest_exit_code == 0
 ```
 
-## Execution context
-- Interactive sessions run in the doctest execution context.
-- Code/expected output run within a function body of a pytest test case.
-- Pytest and doctest determine the order of test case execution.
-
-
 ## Hints
 
 - To read the Markdown file from the standard input stream.
@@ -511,16 +645,20 @@ assert simulator_status.pytest_exit_code == 0
   it is always up to date.
 - Its easy to use --output by mistake instead of `--outfile`.
 - If Python code block has no output, put assert statements in the code.
-- Use pytest option --doctest-modules to test the sessions. 
+- Use pytest option `--doctest-modules` to test the sessions. 
 - Markdown indented code blocks ([Spec][8] section 4.4) are ignored.
 - simulator_status.runner_status.exit_code == 2 is the click 
   command line usage error.
 - Since phmdoctest generates code, the input file should be from a trusted
   source.
+- An empty code block is given the role `del-code`. It is not tested. 
+- Use special TEXT values FIRST, SECOND, LAST for `--setup` 
+  and `--teardown` since they only match one block.
   
 ## Related projects
 - rundoc
 - byexample
+- sphinx.ext.doctest
 - sybil
 - doexec
 - egtest
@@ -536,3 +674,4 @@ assert simulator_status.pytest_exit_code == 0
 [4]: https://docs.python.org/3/library/doctest.html
 [5]: https://docs.travis-ci.com
 [6]: https://pypi.python.org/project/coverage
+[12]: https://travis-ci.org/tmarktaylor/phmdoctest

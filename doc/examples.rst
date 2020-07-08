@@ -10,5 +10,7 @@ These pages are referenced by relative links in README.md.
    example2.md
    test_example2_py.md
    ../project
-   example3.md
-   test_example3_py.md
+   setup.md
+   test_setup_py.md
+   setup_doctest.md
+   test_setup_doctest_py.md
