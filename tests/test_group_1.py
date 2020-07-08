@@ -2,8 +2,6 @@
 
 import re
 
-import click
-
 import phmdoctest
 import phmdoctest.cases
 import phmdoctest.main
