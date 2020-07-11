@@ -138,6 +138,21 @@ def test_too_many_matches_for_teardown():
     assert 'The matching blocks are at line numbers 18, 74' in stdout
 
 
+def test_teardown_is_same_as_setup_block():
+    """Caller --teardown matches, but it matches setup block."""
+    command = (
+        'phmdoctest doc/setup_doctest.md --setup True --teardown True --report'
+    )
+    simulator_status = phmdoctest.simulator.run_and_pytest(
+        well_formed_command=command,
+        pytest_options=None
+    )
+    assert simulator_status.runner_status.exit_code == 0
+    stdout = simulator_status.runner_status.stdout
+    assert not ('  teardown' in stdout)
+    assert 'No teardown block found.' in stdout
+
+
 def test_teardown_is_not_code_block():
     """Caller --teardown matches, but it is not a code block."""
     command = (
