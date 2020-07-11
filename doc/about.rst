@@ -59,7 +59,8 @@ The files below are not part of the documentation:
 
   - doc/test_example1.py
   - doc/test_example2.py
-  - doc/test_example3.py
+  - doc/test_setup.py
+  - doc/test_setup_doctest.py
 
 - Development tools to generate Markdown text.
 

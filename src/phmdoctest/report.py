@@ -33,7 +33,7 @@ def print_report(args: Args, blocks: List[FencedBlock]) -> None:
         ))
 
     num_missing_output = counts['CODE'] - counts['OUTPUT']
-    assert num_missing_output >= 0, 'sanity check'
+    # assert num_missing_output >= 0, 'sanity check'
     if num_missing_output:
         report.append(
             '{} code blocks missing an output block.'.format(

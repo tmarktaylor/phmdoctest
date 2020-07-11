@@ -1,8 +1,4 @@
-"""Test cases for code templates in functions.py
-
-The fixture populate_doctest_namespace() is not tested
-because it cannot be called directly.
-"""
+"""Test cases for code templates in functions.py."""
 import pytest
 
 import phmdoctest.functions

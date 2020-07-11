@@ -49,8 +49,7 @@ def identify_code_output_session_blocks(blocks: List[FencedBlock]) -> None:
 def del_problem_blocks(blocks: List[FencedBlock]) -> None:
     """Re-designate blocks that can't be used."""
     # Rather than asserting and blowing up the caller, just set the
-    # blocks we can't deal with aside for later discovery in
-    # del'd block list section the report.
+    # blocks we can't deal with aside for later discovery in the report.
     empty_blocks = [b for b in blocks if not b.contents]
     for block in empty_blocks:
         if block.role == Role.CODE:

@@ -1,4 +1,8 @@
 ## Recent changes
+0.2.0 - 2020-07-xx
+
+- New feature to do setup and teardown code block.
+
 0.1.0 - 2020-06-14
 
 - New feature to handle Python interactive sessions.

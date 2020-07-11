@@ -11,11 +11,11 @@ examples in Markdown.
 - Reads these from Markdown fenced code blocks:
   - Python interactive sessions described by [doctest][4].
   - Python source code and expected terminal output.
-- Designate Python source code blocks as setup and teardown code.
-- Setup applies to code blocks and optionally session blocks.
 - No extra tags or html comments needed in the Markdown. No Markdown edits at all.
 - The test cases are run later by calling pytest.  
 - Get code coverage by running pytest with [coverage][6].
+- Select Python source code blocks as setup and teardown code.
+- Setup applies to code blocks and optionally to session blocks.
 - An included Python library: [Latest Development tools API][10].
   - runs phmdoctest and can run pytest too. *(simulator.py)*
   - functions to read fenced code blocks from Markdown. *(tool.py)*
@@ -250,7 +250,7 @@ has an empty info string.
 
     ```
 
-If a Python code block has no output
+A Python code block has no output
 if it is followed by any of:
 
 - Python code block
@@ -274,7 +274,7 @@ output file.
 - The Python code in the fenced code block is searched.
 - The info string is **not** searched.
 - Output blocks are **not** searched.
-- Only Python code or session blocks are searched.
+- Both Python code and session blocks are searched.
 - Case is significant.
 
 The report shows which Python blocks are skipped
@@ -463,7 +463,7 @@ When run without `--setup`
 - pytest and doctest determine the order of test case execution.
 - phmdoctest assumes test code and session execution is in file order.
 - Test case order is not significant.
-- Code/expected output run within a function body of a pytest test case.
+- Code and expected output run within a function body of a pytest test case.
 - If pytest is invoked with `--doctest-modules`: 
   - Sessions are run in a separate doctest execution context.
   - Otherwise sessions are not run.
@@ -654,6 +654,8 @@ assert simulator_status.pytest_exit_code == 0
 - An empty code block is given the role `del-code`. It is not tested. 
 - Use special TEXT values FIRST, SECOND, LAST for `--setup` 
   and `--teardown` since they only match one block.
+- The name `_session_globals` is reserved and should not be
+  used in setup blocks.  
   
 ## Related projects
 - rundoc
