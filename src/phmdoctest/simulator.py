@@ -136,7 +136,10 @@ def run_and_pytest(
         #    --skip="Python 3.7"
         #         or
         #    --skip "Python 3.7"
-        command4 = command3.replace('--skip=', '--skip ')
+        command4a = command3.replace('--skip=', '--skip ')
+        command4b = command4a.replace('--setup=', '--setup ')
+        command4 = command4b.replace('--teardown=', '--teardown ')
+
         # get characters between double quotes including the quotes
         # get runs of non-whitespace characters
         args1 = re.findall(pattern=r'("[^"]*"|\S+)', string=command4)

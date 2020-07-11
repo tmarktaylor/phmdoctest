@@ -42,7 +42,7 @@ def test_no_match_for_setup():
 
 
 def test_too_many_matches_for_setup():
-    """Caller specifies --setup TEXT, but no block matches TEXT."""
+    """Caller specifies --setup TEXT, but >1 blocks match TEXT."""
     command = (
         'phmdoctest doc/setup_doctest.md --setup print --report'
     )
@@ -122,7 +122,7 @@ def test_no_match_for_teardown():
 
 
 def test_too_many_matches_for_teardown():
-    """Caller specifies --teardown TEXT, but no block matches TEXT."""
+    """Caller specifies --teardown TEXT, but >1 blocks match TEXT."""
     command = (
         'phmdoctest doc/setup_doctest.md --teardown round --report'
     )
@@ -168,6 +168,70 @@ def test_run_setup_example():
     stdout = simulator_status.runner_status.stdout
     assert 'py3         9  setup     "FIRST"' in stdout
     assert 'py3        56  teardown  "LAST"' in stdout
+
+
+def test_simulator_setup_equals_quoted():
+    """run_and_pytest() parses quoted --setup= argument."""
+    command = (
+        'phmdoctest doc/setup.md --setup="import math" --teardown LAST'
+        ' --report --outfile discarded.py'
+    )
+    simulator_status = phmdoctest.simulator.run_and_pytest(
+        well_formed_command=command,
+        pytest_options=['--strict', '--doctest-modules', '-v']
+    )
+    assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code == 0
+    stdout = simulator_status.runner_status.stdout
+    assert 'py3         9  setup     "import math"' in stdout
+
+
+def test_simulator_setup_space_quoted():
+    """run_and_pytest() parses quoted --setup TEXT argument."""
+    command = (
+        'phmdoctest doc/setup.md --setup "import math" --teardown LAST'
+        ' --report --outfile discarded.py'
+    )
+    simulator_status = phmdoctest.simulator.run_and_pytest(
+        well_formed_command=command,
+        pytest_options=['--strict', '--doctest-modules', '-v']
+    )
+    assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code == 0
+    stdout = simulator_status.runner_status.stdout
+    assert 'py3         9  setup     "import math"' in stdout
+
+
+def test_simulator_teardown_equals_quoted():
+    """run_and_pytest() parses quoted --teardown="TEXT" argument."""
+    command = (
+        'phmdoctest doc/setup.md -uFIRST --teardown="not emptied" --report'
+        ' --report --outfile discarded.py'
+    )
+    simulator_status = phmdoctest.simulator.run_and_pytest(
+        well_formed_command=command,
+        pytest_options=['--strict', '--doctest-modules', '-v']
+    )
+    assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code == 0
+    stdout = simulator_status.runner_status.stdout
+    assert 'py3        56  teardown  "not emptied"' in stdout
+
+
+def test_simulator_teardown_space_quoted():
+    """run_and_pytest() parses quoted --teardown "TEXT" argument."""
+    command = (
+        'phmdoctest doc/setup.md -uFIRST --teardown "not emptied" --report'
+        ' --report --outfile discarded.py'
+    )
+    simulator_status = phmdoctest.simulator.run_and_pytest(
+        well_formed_command=command,
+        pytest_options=['--strict', '--doctest-modules', '-v']
+    )
+    assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code == 0
+    stdout = simulator_status.runner_status.stdout
+    assert 'py3        56  teardown  "not emptied"' in stdout
 
 
 def test_run_setup_doctest_example():
