@@ -84,7 +84,7 @@ _make_copies_match = """
 """
 
 
-def caller_did_not_use_reserved_name(identifier: str, code: str):
+def caller_did_not_use_reserved_name(identifier: str, code: str) -> None:
     """Immediate exit if caller used a reserved name."""
     reserved = '_session_globals'
     if reserved in code:
