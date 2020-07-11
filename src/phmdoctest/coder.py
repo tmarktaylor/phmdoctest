@@ -3,6 +3,8 @@
 import inspect
 import textwrap
 
+import click
+
 from phmdoctest import functions
 
 
@@ -82,6 +84,20 @@ _make_copies_match = """
 """
 
 
+def caller_did_not_use_reserved_name(identifier: str, code: str):
+    """Immediate exit if caller used a reserved name."""
+    reserved = '_session_globals'
+    if reserved in code:
+        message = (
+            'The reserved name {} is used\n'
+            'somewhere in --setup {}.\n'
+            'It is not allowed anywhere in the block although\n'
+            'it only causes problems for doctests\n'
+            'if assigned at the top level.'
+        ).format(reserved, identifier)
+        raise click.ClickException(message)
+
+
 def setup(identifier: str, code: str, setup_doctest: bool) -> str:
     """Add code as part of pytest setup_module fixture.
 
@@ -92,6 +108,7 @@ def setup(identifier: str, code: str, setup_doctest: bool) -> str:
     are wanted in doctest namespace.
     The namespace is created when pytest is running with --doctest-modules.
     """
+    caller_did_not_use_reserved_name(identifier, code)
     src = '\n'
     src += inspect.getsource(functions.setup_module)
     src = src.replace('<put docstring here>', identifier)
