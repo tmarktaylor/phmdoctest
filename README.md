@@ -391,7 +391,7 @@ def doubler(x):
 The `--setup` option modifies the execution context of the
 Python code blocks in the Markdown file.
 The names `math`, `mylist`, `a`, `b`, and `doubler` are visible
-to the other Python code blocks and can be modified.
+to the other Python code blocks and the objects can be modified.
 
 ## --teardown
 
