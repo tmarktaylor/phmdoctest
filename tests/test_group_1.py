@@ -115,6 +115,7 @@ def test_empty_output_block_report():
         pytest_options=['--strict', '--doctest-modules', '-v']
     )
     assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code == 0
     stdout = simulator_status.runner_status.stdout
     with open('tests/empty_output_report.txt', 'r', encoding='utf-8') as f:
         want = f.read()
@@ -130,6 +131,7 @@ def test_empty_code_block_report():
         pytest_options=['--strict', '--doctest-modules', '-v']
     )
     assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code == 0
     stdout = simulator_status.runner_status.stdout
     with open('tests/empty_code_report.txt', 'r', encoding='utf-8') as f:
         want = f.read()
