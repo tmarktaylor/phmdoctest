@@ -39,14 +39,14 @@ examples in Markdown.
 [Introduction](#introduction) |
 [Installation](#installation) |
 [Sample usage](#sample-usage) |
-[--report](#report) |
+[--report](#--report) |
 [Identifying blocks](#identifying-blocks) |
 [skipping blocks](#skipping-blocks) |
-[--skip](#skip) |
-[-s short form of --skip](#s-short-form-of-skip) |
-[--fail-nocode](#fail-nocode) |
-[--setup](#setup) |
-[--teardown](#teardown) |
+[--skip](#--skip) |
+[-s short form of --skip](#-s-short-form-of---skip) |
+[--fail-nocode](#--fail-nocode) |
+[--setup](#--setup) |
+[--teardown](#--teardown) |
 [Setup example](#setup-example) |
 [Setup for sessions](#setup-for-sessions) |
 [Execution context](#execution-context) |

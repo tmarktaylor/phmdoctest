@@ -37,14 +37,19 @@ def make_quick_links(filename):
             title = line.replace(paragraph_level, '')
             label = '[' + title + ']'
             link = title.lower()
+
+            # note- this only worked in the Sphinx docs
+            #       where it isn't needed since there is the sidebar.
             # remove some punctuation chars
             some_punctuation = ','
-            link = re.sub('[' + some_punctuation + ']', '', link)
-            link = link.replace('-', ' ')
+            # link = re.sub('[' + some_punctuation + ']', '', link)
+            # link = link.replace('-', ' ')
             # convert runs of space to single dash
-            link = re.sub('[ ]+', '-', link)
+            # link = re.sub('[ ]+', '-', link)
             # remove runs of - at the start of a line
-            link = re.sub('^[-]+', '', link)
+            # link = re.sub('^[-]+', '', link)
+
+            link = link.replace(' ', '-')
             link = '(#' + link + ')'
             links.append(label + link)
     text = ' |\n'.join(links)
