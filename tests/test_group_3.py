@@ -205,7 +205,7 @@ def test_simulator_setup_space_quoted():
 def test_simulator_teardown_equals_quoted():
     """run_and_pytest() parses quoted --teardown="TEXT" argument."""
     command = (
-        'phmdoctest doc/setup.md -uFIRST --teardown="not emptied" --report'
+        'phmdoctest doc/setup.md -uFIRST --teardown="not emptied"'
         ' --report --outfile discarded.py'
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
@@ -221,7 +221,7 @@ def test_simulator_teardown_equals_quoted():
 def test_simulator_teardown_space_quoted():
     """run_and_pytest() parses quoted --teardown "TEXT" argument."""
     command = (
-        'phmdoctest doc/setup.md -uFIRST --teardown "not emptied" --report'
+        'phmdoctest doc/setup.md -uFIRST --teardown "not emptied"'
         ' --report --outfile discarded.py'
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
@@ -232,6 +232,23 @@ def test_simulator_teardown_space_quoted():
     assert simulator_status.pytest_exit_code == 0
     stdout = simulator_status.runner_status.stdout
     assert 'py3        56  teardown  "not emptied"' in stdout
+
+
+def test_teardown_without_setup():
+    """Just a teardown block which doesn't access any globals"""
+    command = (
+        'phmdoctest doc/example2.md --teardown "import date"'
+        ' --report --outfile discarded.py'
+    )
+    simulator_status = phmdoctest.simulator.run_and_pytest(
+        well_formed_command=command,
+        pytest_options=['--strict', '--doctest-modules', '-v']
+    )
+    assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code == 0
+    stdout = simulator_status.runner_status.stdout
+    assert 'py3        87  teardown    "import date"' in stdout
+    assert '           93  del-output' in stdout
 
 
 def test_run_setup_doctest_example():
