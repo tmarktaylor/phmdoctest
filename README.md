@@ -56,7 +56,7 @@ examples in Markdown.
 [Run as a Python module](#run-as-a-python-module) |
 [Call from Python](#call-from-python) |
 [Hints](#hints) |
-[Related projects](#related-projects)
+[Related projects Recent Changes](#related-projects-recent-changes)
  
 ## Installation
 It is advisable to install in a virtual environment.
@@ -657,7 +657,7 @@ assert simulator_status.pytest_exit_code == 0
 - The name `_session_globals` is reserved and should not be
   used in setup blocks.  
   
-## Related projects
+## Related projects Recent Changes
 - rundoc
 - byexample
 - sphinx.ext.doctest
