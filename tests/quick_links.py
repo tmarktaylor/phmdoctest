@@ -54,15 +54,15 @@ def make_quick_links(filename, style=None):
     return ' |\n'.join(links)
 
 
-def make_sphinx_readme(readme_filename, sphinx_readme_filename):
-    """Write a copy README.md with new quick links for Sphinx on RTD."""
-    with open(readme_filename, 'r', encoding='utf-8') as f1:
-        readme = f1.read()
-        github_links = make_quick_links(readme_filename, style='github')
-        sphinx_links = make_quick_links(readme_filename)
-        sphinx_readme = readme.replace(github_links, sphinx_links)
-    with open(sphinx_readme_filename, 'w', encoding='utf-8') as f2:
-        f2.write(sphinx_readme)
+# def make_sphinx_readme(readme_filename, sphinx_readme_filename):
+#     """Write a copy README.md with new quick links for Sphinx on RTD."""
+#     with open(readme_filename, 'r', encoding='utf-8') as f1:
+#         readme = f1.read()
+#         github_links = make_quick_links(readme_filename, style='github')
+#         sphinx_links = make_quick_links(readme_filename)
+#         sphinx_readme = readme.replace(github_links, sphinx_links)
+#     with open(sphinx_readme_filename, 'w', encoding='utf-8') as f2:
+#         f2.write(sphinx_readme)
 
 
 if __name__ == '__main__':
@@ -72,6 +72,5 @@ if __name__ == '__main__':
     num_links = text.count('\n') + 1
     print('created {} links, {} characters'.format(
         num_links, len(text)))
-
-    print('making README_sphinx.md...')
-    make_sphinx_readme('../README.md', '../README_sphinx.md')
+    # print('making README_sphinx.md...')
+    # make_sphinx_readme('../README.md', '../README_sphinx.md')

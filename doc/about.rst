@@ -79,3 +79,10 @@ Read the Docs hosting
 The Sphinx documentation is hosted by readthedocs.org.
 The documentation build dependencies ``doc/requirements.txt`` are
 pinned to what is currently available.
+
+The links that start with '-' in the links section after the
+license badge don't work in the developers build of Sphinx html
+docs.  There is commented out code in tests/quick_links.py
+to create the same links as Sphinx html suggests.  It is
+not likely that code will be deployed. These links might
+get renamed in a future version of phmdoctest.
