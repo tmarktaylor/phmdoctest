@@ -221,7 +221,7 @@ pycon     101  session
 The PYPI [commonmark][7] project provides code to extract fenced code
 blocks from Markdown. Specification [CommonMark Spec][8] and website [CommonMark][9].
 
-Python code, expected output, and Python interactive session are extracted.
+Python code, expected output, and Python interactive sessions are extracted.
 
 Only [GFM fenced code blocks][3] are considered.
 
@@ -446,7 +446,9 @@ code block, add the option `--setup-doctest`
 
 Here is an example with setup code and sessions
 [setup_doctest.md](doc/setup_doctest.md). The first part
- of this file is a copy of setup.md.
+of this file is a copy of setup.md.
+Since the sessions are tested in a separate context from the 
+code blocks they are placed together at the end of the file.
 
 This command  uses the short form of setup and teardown. -u for up and -d for down.
 ```
@@ -454,8 +456,6 @@ phmdoctest doc/setup_doctest.md -u FIRST -d LAST --setup-doctest --outfile test_
 ```
 It creates the test file
 [test_setup_doctest.py](doc/test_setup_doctest_py.md)
-Since the sessions are tested in a separate context from the 
-code blocks they are placed together at the end of the file.
 
 ## Execution context
 
@@ -477,7 +477,7 @@ When run without `--setup`
 - session order is not significant.
 - If pytest is run with `--doctest-modules`:
   - pytest runs two separate contexts: one for sessions, one for code blocks.
-  - setup code is run twice, once by each context.
+  - setup and teardown code is run twice, once by each context.
   - the names assigned by the setup code block 
     are `are not` visible to the sessions.
 

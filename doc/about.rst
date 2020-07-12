@@ -55,20 +55,7 @@ searched by Sphinx for document source files.  Additional
 
 The files below are not part of the documentation:
 
-- Expected values used by the regression test suite.
-
-  - doc/test_example1.py
-  - doc/test_example2.py
-  - doc/test_setup.py
-  - doc/test_setup_doctest.py
-
-- Development tools to generate Markdown text.
-
   - doc/make_wrapped_examples.py
-  - doc/quick_links.py
-
-- Run during CI to show pytest Live Log output
-
   - doc/livelog.py
   - doc/livelog_test_assertion.py
   - doc/livelog_bad_session.py
