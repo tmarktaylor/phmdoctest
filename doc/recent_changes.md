@@ -1,5 +1,5 @@
 ## Recent changes
-0.2.0 - 2020-07-12
+1.0.0 - 2020-07-12
 
 - New feature to do setup and teardown code block.
 
