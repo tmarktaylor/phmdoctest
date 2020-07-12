@@ -56,7 +56,8 @@ examples in Markdown.
 [Run as a Python module](#run-as-a-python-module) |
 [Call from Python](#call-from-python) |
 [Hints](#hints) |
-[Related projects Recent Changes](#related-projects-recent-changes)
+[Related projects](#related-projects) |
+[Recent changes](#recent-changes)
  
 ## Installation
 It is advisable to install in a virtual environment.
@@ -657,7 +658,7 @@ assert simulator_status.pytest_exit_code == 0
 - The name `_session_globals` is reserved and should not be
   used in setup blocks.  
   
-## Related projects Recent Changes
+## Related projects
 - rundoc
 - byexample
 - sphinx.ext.doctest
@@ -665,7 +666,8 @@ assert simulator_status.pytest_exit_code == 0
 - doexec
 - egtest
 
-[Recent Changes](doc/recent_changes.md)
+## Recent changes 
+[Recent changes](doc/recent_changes.md)
 
 [3]: https://github.github.com/gfm/#fenced-code-blocks
 [11]: https://github.github.com/gfm/#info-string

@@ -6,6 +6,7 @@ import phmdoctest
 import phmdoctest.cases
 import phmdoctest.main
 import phmdoctest.simulator
+import quick_links
 import verify
 
 
@@ -104,6 +105,15 @@ class TestDocBuildVersions:
         assert self.monotable_version in self.doc_requirements, 'sanity check'
         expected = self.to_setup_style(self.monotable_version)
         assert self.setup.count(expected) == 1
+
+
+def test_quick_links():
+    """Make sure the README.md quick links are up to date."""
+    filename = 'README.md'
+    with open(filename, 'r', encoding='utf-8') as f:
+        readme = f.read()
+        github_links = quick_links.make_quick_links(filename, style='github')
+        assert github_links in readme
 
 
 def test_empty_output_block_report():
