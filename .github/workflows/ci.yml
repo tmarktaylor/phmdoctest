@@ -37,13 +37,13 @@ jobs:
         pip install "commonmark>=0.9.1,<1"
         pip install "monotable>=2.1.1,<4"
         pip freeze
-      env:
-        PYTHONPATH: ${{ github.workspace }}/src
     - name: Tests, coverage report
       run: |
         coverage run --branch --source=src -m pytest --strict -vv tests
         coverage run --append -m phmdoctest --help
         coverage report --missed
+      env:
+        PYTHONPATH: ${{ github.workspace }}/src
 
   inspect:
     needs: tests
