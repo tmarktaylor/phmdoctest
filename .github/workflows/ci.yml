@@ -1,4 +1,4 @@
-name: Cover, Inspect, Docs
+name: Code Coverage, Inspections, Docs
 
 # Note: Only inspect and docs jobs install phmdoctest and only to Python 3.x.
 #       None of the jobs run tests on the installed module.
