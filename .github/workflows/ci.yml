@@ -4,10 +4,7 @@ name: Code Coverage, Inspections, Docs
 #       None of the jobs run tests on the installed module.
 #       Tests import phmdoctest from the checked out root/src folder
 #       via $PYTHONPATH.
-on:
-  workflow_dispatch:
-  #push:
-  #pull_request:
+on: [push]
 
 jobs:
   tests:

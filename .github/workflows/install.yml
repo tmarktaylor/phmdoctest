@@ -4,22 +4,7 @@
 # Let Travis CI handle events on the master branch.
 name: Test pip install via setup.py
 
-on:
-  workflow_dispatch:
-  #push:
-  #  branches-ignore:
-  #    - master
-  #  paths:
-  #    &install_paths
-  #    - pyproject.toml
-  #    - setup.cfg
-  #    - setup.py
-  #    - src/phmdoctest/main.py
-  #pull_request:
-  #  branches-ignore:
-  #    - master
-  #  paths:
-  #    *install_paths
+on: [push]
 
 jobs:
   installtest:
