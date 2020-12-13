@@ -20,23 +20,33 @@ def setup_module(thismodulebypytest):
     def doubler(x):
         return x * 2
 
-    # variable to hold copies for testing sessions
-    _session_globals = dict()
+    set_as_module_attributes(thismodulebypytest, locals())
+    set_as_session_globals(thismodulebypytest, locals())
 
-    # assign the local variables created so far to the module and
-    # optionally save copies for testing sessions.
-    for k, v in locals().items():
+
+def set_as_module_attributes(m, mapping):
+    """Assign items in mapping as names in object m."""
+    for k, v in mapping.items():
+        # The value thismodulebypytest passed by pytest
+        # shows up in locals() but is not part of the callers
+        # code block so don't copy it to the module namespace.
+        if k == "thismodulebypytest":
+            continue
+        setattr(m, k, v)
+
+
+def set_as_session_globals(m, mapping):
+    """Create a dict in the module m's namespace to hold globals."""
+    # The globals later get copied to the session namespace.
+    setattr(m, "_session_globals", dict())
+
+    for k, v in mapping.items():
         # The value thismodulebypytest passed by pytest is the module
         # object that contains this function.
         # It shows up in locals(), so just ignore it.
         if k == "thismodulebypytest":
             continue
-        setattr(thismodulebypytest, k, v)
-
-        # make copies for testing sessions
-        # assign the local variables to _session_globals.
-        if k != "_session_globals":
-            _session_globals[k] = v
+        m._session_globals[k] = v
 
 
 @pytest.fixture()

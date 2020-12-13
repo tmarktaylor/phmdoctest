@@ -1,4 +1,4 @@
-#### doc/test_setup.py
+"""pytest file built from doc/setup.md"""
 ```python3
 """pytest file built from doc/setup.md"""
 from itertools import zip_longest
@@ -20,15 +20,18 @@ def setup_module(thismodulebypytest):
     def doubler(x):
         return x * 2
 
-    # assign the local variables created so far to the module and
-    # optionally save copies for testing sessions.
-    for k, v in locals().items():
-        # The value thismodulebypytest passed by pytest is the module
-        # object that contains this function.
-        # It shows up in locals(), so just ignore it.
+    set_as_module_attributes(thismodulebypytest, locals())
+
+
+def set_as_module_attributes(m, mapping):
+    """Assign items in mapping as names in object m."""
+    for k, v in mapping.items():
+        # The value thismodulebypytest passed by pytest
+        # shows up in locals() but is not part of the callers
+        # code block so don't copy it to the module namespace.
         if k == "thismodulebypytest":
             continue
-        setattr(thismodulebypytest, k, v)
+        setattr(m, k, v)
 
 
 def test_code_18_output_25(capsys):
@@ -73,3 +76,5 @@ def teardown_module():
 This page is created from a Markdown file that contains the contents
 of a python source file in a syntax highlighted fenced code block.
 It is included in the documentation as an example python file.
+#### doc/test_setup.py
+```python3

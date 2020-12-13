@@ -44,38 +44,36 @@ def test_nothing_passes():
     pass
 
 
-# This template will be customized by:
-# 1. adding a function docstring.
-# 2. adding the callers code block.
-# 3. optionally removing the _session_globals logic.
-#
-# By observation:
-# k, v would be present in a locals() call after the for loop exits.
-# k, v do not show up in the locals() call below which is part of the
-# for statement because they are assigned within the scope of the
-# for loop.  The Python Language Reference hints that this is the
-# way it works, but didn't seem very explicit.
 def setup_module(thismodulebypytest):
     """<put docstring here>"""
     # <put code block here>
 
-    # variable to hold copies for testing sessions
-    _session_globals = dict()
+    set_as_module_attributes(thismodulebypytest, locals())
 
-    # assign the local variables created so far to the module and
-    # optionally save copies for testing sessions.
-    for k, v in locals().items():
+
+def set_as_module_attributes(m, mapping):
+    """Assign items in mapping as names in object m."""
+    for k, v in mapping.items():
+        # The value thismodulebypytest passed by pytest
+        # shows up in locals() but is not part of the callers
+        # code block so don't copy it to the module namespace.
+        if k == "thismodulebypytest":
+            continue
+        setattr(m, k, v)
+
+
+def set_as_session_globals(m, mapping):
+    """Create a dict in the module m's namespace to hold globals."""
+    # The globals later get copied to the session namespace.
+    setattr(m, "_session_globals", dict())
+
+    for k, v in mapping.items():
         # The value thismodulebypytest passed by pytest is the module
         # object that contains this function.
         # It shows up in locals(), so just ignore it.
         if k == "thismodulebypytest":
             continue
-        setattr(thismodulebypytest, k, v)
-
-        # make copies for testing sessions
-        # assign the local variables to _session_globals.
-        if k != "_session_globals":
-            _session_globals[k] = v
+        m._session_globals[k] = v
 
 
 # The fixture copies globals created by the --setup code
