@@ -1,4 +1,8 @@
 ## Recent changes
+1.0.1 - 2020-12-14
+
+- Bugfix- Issue #4- pytest fails in pypy3 if using --setup, --setup-doctest.
+
 1.0.0 - 2020-07-12
 
 - New feature to do setup and teardown code block.
