@@ -26,6 +26,6 @@ jobs:
           pip freeze
       - name: Tests
         run: |
-          pytest --strict -vv tests
+          pytest -vv tests
           # invoke the installed script
           phmdoctest --help

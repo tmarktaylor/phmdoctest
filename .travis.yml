@@ -10,7 +10,7 @@ matrix:
       script:
         - mkdir tests/tmp
         - phmdoctest project.md --report --outfile tests/tmp/test_project.py
-        - pytest --strict --doctest-modules -vv tests
+        - pytest --doctest-modules -vv tests
 
     - python: 3.6
       install:
@@ -26,7 +26,7 @@ matrix:
         - phmdoctest doc/setup.md --setup FIRST --teardown LAST --report --outfile tests/tmp/test_setup.py
         - phmdoctest doc/setup_doctest.md -u FIRST -d LAST --setup-doctest --report --outfile tests/tmp/test_setup_doctest.py
         # run the project test suite including the generated tests
-        - pytest --strict --doctest-modules -vv tests
+        - pytest --doctest-modules -vv tests
 
         # These steps are specific to testing phmdoctest and are not
         # useful to developers using phmdoctest for other projects.

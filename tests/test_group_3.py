@@ -176,7 +176,7 @@ def test_run_setup_example():
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
-        pytest_options=['--strict', '--doctest-modules', '-v']
+        pytest_options=['--doctest-modules', '-v']
     )
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
@@ -193,7 +193,7 @@ def test_k_and_v_ok_in_setup_block():
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
-        pytest_options=['--strict', '--doctest-modules', '-v']
+        pytest_options=['--doctest-modules', '-v']
     )
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
@@ -230,7 +230,7 @@ def test_simulator_setup_equals_quoted():
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
-        pytest_options=['--strict', '--doctest-modules', '-v']
+        pytest_options=['--doctest-modules', '-v']
     )
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
@@ -246,7 +246,7 @@ def test_simulator_setup_space_quoted():
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
-        pytest_options=['--strict', '--doctest-modules', '-v']
+        pytest_options=['--doctest-modules', '-v']
     )
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
@@ -262,7 +262,7 @@ def test_simulator_teardown_equals_quoted():
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
-        pytest_options=['--strict', '--doctest-modules', '-v']
+        pytest_options=['--doctest-modules', '-v']
     )
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
@@ -278,7 +278,7 @@ def test_simulator_teardown_space_quoted():
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
-        pytest_options=['--strict', '--doctest-modules', '-v']
+        pytest_options=['--doctest-modules', '-v']
     )
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
@@ -294,7 +294,7 @@ def test_teardown_without_setup():
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
-        pytest_options=['--strict', '--doctest-modules', '-v']
+        pytest_options=['--doctest-modules', '-v']
     )
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
@@ -311,7 +311,7 @@ def test_run_setup_doctest_example():
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
-        pytest_options=['--strict', '--doctest-modules', '-v']
+        pytest_options=['--doctest-modules', '-v']
     )
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
@@ -328,7 +328,7 @@ def test_no_blocks_left_to_test_passing():
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
-        pytest_options=['--strict', '--doctest-modules', '-v']
+        pytest_options=['--doctest-modules', '-v']
     )
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
@@ -343,7 +343,7 @@ def test_no_blocks_left_to_test_fails():
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
-        pytest_options=['--strict', '--doctest-modules', '-v']
+        pytest_options=['--doctest-modules', '-v']
     )
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 1    # pytest failed
@@ -358,7 +358,7 @@ def test_no_code_blocks():
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
-        pytest_options=['--strict', '--doctest-modules', '-v']
+        pytest_options=['--doctest-modules', '-v']
     )
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
@@ -384,7 +384,7 @@ def test_missing_markdown_file():
     command = 'phmdoctest tests/bogus.md --outfile discarded.py'
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
-        pytest_options=['--strict', '--doctest-modules', '-v']
+        pytest_options=['--doctest-modules', '-v']
     )
     assert (
             simulator_status.runner_status.exit_code ==
@@ -399,7 +399,7 @@ def test_bad_usage_option():
     command = 'phmdoctest doc/example1.md --misspelled --outfile discarded.py'
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
-        pytest_options=['--strict', '--doctest-modules', '-v']
+        pytest_options=['--doctest-modules', '-v']
     )
     want = click.UsageError.exit_code
     got = simulator_status.runner_status.exit_code

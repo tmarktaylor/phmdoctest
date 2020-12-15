@@ -153,11 +153,11 @@ Floats.ADUCK
 Then run a pytest command something like this in your terminal
 to test the Markdown session, code, and expected output blocks.
 
-    pytest --strict --doctest-modules
+    pytest --doctest-modules
     
 Or these two commands:
 
-    pytest --strict
+    pytest
     python -m doctest test_example1.py
 
 The `line_6` in the function name `session_00001_line_6` is the 
@@ -605,7 +605,7 @@ matrix:
       script:
         - mkdir tests/tmp
         - phmdoctest project.md --report --outfile tests/tmp/test_project.py
-        - pytest --strict --doctest-modules -vv tests
+        - pytest --doctest-modules -vv tests
 ```
 
 ## Run as a Python module
@@ -632,7 +632,7 @@ import phmdoctest.simulator
 command = 'phmdoctest doc/example1.md --report --outfile test_me.py'
 simulator_status = phmdoctest.simulator.run_and_pytest(
     well_formed_command=command,
-    pytest_options=['--strict', '--doctest-modules', '-v']
+    pytest_options=['--doctest-modules', '-v']
 )
 assert simulator_status.runner_status.exit_code == 0
 assert simulator_status.pytest_exit_code == 0
