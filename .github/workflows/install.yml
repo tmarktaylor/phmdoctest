@@ -26,7 +26,7 @@ jobs:
           pip freeze
       - name: Test suite
         run: |
-          pytest --strict -vv tests
+          pytest -vv tests
       - name: Usage tests
         run: |
           phmdoctest --help
@@ -38,7 +38,7 @@ jobs:
           phmdoctest doc/setup.md --setup FIRST --teardown LAST --report --outfile tests/tmp/test_setup.py
           phmdoctest doc/setup_doctest.md -u FIRST -d LAST --setup-doctest --report --outfile tests/tmp/test_setup_doctest.py
           # run the project test suite including the generated tests
-          pytest --strict --doctest-modules -vv tests
+          pytest --doctest-modules -vv tests
           # Check the generated test file against the expected file in doc folder
           cmp doc/test_example1.py tests/tmp/test_example1.py
           cmp doc/test_example2.py tests/tmp/test_example2.py

@@ -1,7 +1,8 @@
 ## Recent changes
-1.0.1 - 2020-12-15
+1.0.1 - 2020-12-16
 
 - Bugfix- Issue #4- pytest fails in pypy3 if using --setup, --setup-doctest.
+- Removed pytest --strict option since not needed.
 
 1.0.0 - 2020-07-12
 

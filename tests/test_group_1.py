@@ -122,7 +122,7 @@ def test_empty_output_block_report():
         'phmdoctest tests/empty_output_block.md'
         ' --report --outfile discarded.py',
         want_file_name=None,
-        pytest_options=['--strict', '--doctest-modules', '-v']
+        pytest_options=['--doctest-modules', '-v']
     )
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
@@ -138,7 +138,7 @@ def test_empty_code_block_report():
         'phmdoctest tests/empty_code_block.md'
         ' --report --outfile discarded.py',
         want_file_name=None,
-        pytest_options=['--strict', '--doctest-modules', '-v']
+        pytest_options=['--doctest-modules', '-v']
     )
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
@@ -155,7 +155,7 @@ def test_code_does_not_print_fails():
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
-        pytest_options=['--strict', '--doctest-modules', '-v']
+        pytest_options=['--doctest-modules', '-v']
     )
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 1
@@ -168,7 +168,7 @@ def test_more_printed_than_expected_fails():
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
-        pytest_options=['--strict', '--doctest-modules', '-v']
+        pytest_options=['--doctest-modules', '-v']
     )
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 1
@@ -181,7 +181,7 @@ def test_more_expected_than_printed_fails():
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
-        pytest_options=['--strict', '--doctest-modules', '-v']
+        pytest_options=['--doctest-modules', '-v']
     )
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 1
@@ -195,7 +195,7 @@ def test_skip_same_block_twice():
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
-        pytest_options=['--strict', '--doctest-modules', '-v']
+        pytest_options=['--doctest-modules', '-v']
     )
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
@@ -209,7 +209,7 @@ def test_pytest_really_fails():
     simulator_status = verify.one_example(
         'phmdoctest tests/unexpected_output.md --outfile discarded.py',
         want_file_name=None,
-        pytest_options=['--strict', '--doctest-modules', '-v']
+        pytest_options=['--doctest-modules', '-v']
     )
     assert simulator_status.pytest_exit_code == 1
 
@@ -222,7 +222,7 @@ def test_pytest_session_fails():
     simulator_status = verify.one_example(
         'phmdoctest tests/bad_session_output.md --outfile discarded.py',
         want_file_name=None,
-        pytest_options=['--strict', '--doctest-modules', '-v']
+        pytest_options=['--doctest-modules', '-v']
     )
     assert simulator_status.pytest_exit_code == 1
 
@@ -232,7 +232,7 @@ def test_project_md():
     simulator_status = verify.one_example(
         'phmdoctest project.md --outfile discarded.py',
         want_file_name=None,
-        pytest_options=['--strict', '--doctest-modules', '-v']
+        pytest_options=['--doctest-modules', '-v']
     )
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
@@ -260,7 +260,7 @@ def test_blanklines_in_output():
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
-        pytest_options=['--strict', '--doctest-modules', '-v']
+        pytest_options=['--doctest-modules', '-v']
     )
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0

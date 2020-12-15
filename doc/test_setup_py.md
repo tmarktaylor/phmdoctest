@@ -76,5 +76,3 @@ def teardown_module():
 This page is created from a Markdown file that contains the contents
 of a python source file in a syntax highlighted fenced code block.
 It is included in the documentation as an example python file.
-#### doc/test_setup.py
-```python3
