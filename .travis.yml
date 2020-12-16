@@ -54,4 +54,3 @@ matrix:
 branches:
   only:
   - master
-  - proto
