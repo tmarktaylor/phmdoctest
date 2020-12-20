@@ -1,5 +1,4 @@
-About the documentation
------------------------
+## About the documentation
 
 The documentation is built around README.md at the project root.
 README.md serves as the:
@@ -18,8 +17,7 @@ The documentation is constructed to achieve:
 - Building a static copy of the documentation for offline use.
 - No visible raw ReStructured text in the README rendered by Github.
 
-Implementation
-~~~~~~~~~~~~~~
+### Implementation
 
 - Github hosts the repository and renders README.md.
 - readthedocs.org hosts the HTML and creates the PDF for offline use.
@@ -31,16 +29,14 @@ Implementation
     Sphinx autodoc and napoleon.
   - recent_changes.md
 
-Tools
-~~~~~
+### Tools
 
 - Sphinx
 - recommonmark
 
 recommonmark enables Sphinx to parse Markdown files.
 
-Files
-~~~~~
+### Files
 
 These files are at the project root:
 
@@ -51,20 +47,19 @@ These files are at the project root:
 
 Since conf.py is at the project root the entire project is
 searched by Sphinx for document source files.  Additional
-``exclude_patterns`` keep out unwanted document source files.
+**exclude_patterns** keep out unwanted document source files.
 
-The files below are not part of the documentation:
+The files below in the doc folder are not part of the documentation:
 
-  - doc/make_wrapped_examples.py
-  - doc/livelog.py
-  - doc/livelog_test_assertion.py
-  - doc/livelog_bad_session.py
+  - make_wrapped_examples.py
+  - livelog.py
+  - livelog_test_assertion.py
+  - livelog_bad_session.py
 
-Read the Docs hosting
-~~~~~~~~~~~~~~~~~~~~~
+### Read the Docs hosting
 
 The Sphinx documentation is hosted by readthedocs.org.
-The documentation build dependencies ``doc/requirements.txt`` are
+The documentation build dependencies **doc/requirements.txt** are
 pinned to what is currently available.
 
 The links that start with '-' in the links section after the
