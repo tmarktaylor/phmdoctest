@@ -6,7 +6,6 @@ import phmdoctest
 import phmdoctest.cases
 import phmdoctest.main
 import phmdoctest.simulator
-import quick_links
 import verify
 
 
@@ -107,15 +106,6 @@ class TestDocBuildVersions:
         assert self.setup.count(expected) == 1
 
 
-def test_quick_links():
-    """Make sure the README.md quick links are up to date."""
-    filename = 'README.md'
-    with open(filename, 'r', encoding='utf-8') as f:
-        readme = f.read()
-        github_links = quick_links.make_quick_links(filename, style='github')
-        assert github_links in readme
-
-
 def test_empty_output_block_report():
     """Empty output block get del'd."""
     simulator_status = verify.one_example(
@@ -209,9 +199,18 @@ def test_pytest_really_fails():
     simulator_status = verify.one_example(
         'phmdoctest tests/unexpected_output.md --outfile discarded.py',
         want_file_name=None,
-        pytest_options=['--doctest-modules', '-v']
+        pytest_options=['--doctest-modules', '-v'],
+        junit_family=verify.JUNIT_FAMILY
     )
     assert simulator_status.pytest_exit_code == 1
+    # Look at the returned JUnit XML to see that the test failed at the
+    # point and for the reason we expected.
+    # Note that the parsed XML values are all strings.
+    suite, fails = verify.extract_testsuite(simulator_status.junit_xml)
+    assert suite.attrib['tests'] == '1'
+    assert suite.attrib['errors'] == '0'
+    assert suite.attrib['failures'] == '1'
+    assert fails[0].attrib['name'] == 'test_code_4_output_16'
 
 
 def test_pytest_session_fails():
@@ -260,7 +259,8 @@ def test_blanklines_in_output():
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
-        pytest_options=['--doctest-modules', '-v']
+        pytest_options=['--doctest-modules', '-v'],
+        junit_family=verify.JUNIT_FAMILY
     )
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0

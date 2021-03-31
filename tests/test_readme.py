@@ -10,6 +10,7 @@ import phmdoctest.main
 import phmdoctest.simulator
 import phmdoctest.tool
 import verify
+import quick_links
 
 # Caution:
 # This test file is run by pytest.
@@ -244,3 +245,12 @@ def test_consumed_all_fenced_code_blocks():
     """Verify no left over fenced code blocks from README.md"""
     with pytest.raises(StopIteration):
         _ = next(readme_blocks)
+
+
+def test_quick_links():
+    """Make sure the README.md quick links are up to date."""
+    filename = 'README.md'
+    with open(filename, 'r', encoding='utf-8') as f:
+        readme = f.read()
+        github_links = quick_links.make_quick_links(filename, style='github')
+        assert github_links + '\n\n## ' in readme

@@ -58,7 +58,7 @@ examples in Markdown.
 [Hints](#hints) |
 [Related projects](#related-projects) |
 [Recent changes](#recent-changes)
- 
+
 ## Installation
 It is advisable to install in a virtual environment.
 

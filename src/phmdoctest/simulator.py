@@ -7,7 +7,7 @@ temporary directory.
 Optionally run pytest on the temporary file.
 """
 
-import os.path
+from pathlib import Path
 import re
 import subprocess
 from tempfile import TemporaryDirectory
@@ -22,14 +22,16 @@ SimulatorStatus = NamedTuple(
     'SimulatorStatus',
     [('runner_status', click.testing.Result),
      ('outfile', Optional[str]),
-     ('pytest_exit_code', Optional[int])
+     ('pytest_exit_code', Optional[int]),
+     ('junit_xml', Optional[str])
      ])
 """run_and_pytest() return value."""
 
 
 def run_and_pytest(
         well_formed_command: str,
-        pytest_options: Optional[List[str]] = None) -> SimulatorStatus:
+        pytest_options: Optional[List[str]] = None,
+        junit_family: Optional[str] = None) -> SimulatorStatus:
     """
     Simulate a phmdoctest command, optionally run pytest.
 
@@ -77,9 +79,15 @@ def run_and_pytest(
             Set to empty list to run pytest with no options.
             Set to None to skip pytest.
 
+        junit_family
+            Configures the format of the Pytest generated JUnit XML string
+            returned in SimulatorStatus.  The value is used for the
+            Pytest configuration option of the same name.
+            Set to None or the empty string to skip XML generation.
+
     Returns:
         SimulatorStatus containing runner_status, outfile,
-        and pytest_exit_code.
+        pytest_exit_code, and generate JUnit XML.
     """
     assert well_formed_command.startswith('phmdoctest ')
     # trim off any trailing whitespace
@@ -99,7 +107,8 @@ def run_and_pytest(
         return SimulatorStatus(
             runner_status=runner.invoke(cli=entry_point, args=command1),
             outfile=None,
-            pytest_exit_code=None
+            pytest_exit_code=None,
+            junit_xml=''
         )
 
     # Simulate commands that write an OUTFILE.
@@ -107,7 +116,7 @@ def run_and_pytest(
     # Chop out the path to the markdown file.
     # Drop the rest of the command starting at --outfile and the
     # outfile path since we rename the outfile in the invoked command.
-    with TemporaryDirectory() as tmpdirname:
+    with TemporaryDirectory() as tmpdir:
         # Create a filename in the temporary directory to
         # receive the OUTFILE.
         # Rewrite the command to use the new OUTFILE path and
@@ -116,10 +125,11 @@ def run_and_pytest(
         # rewritten command fails to find the outfile.
         # This might be because it is now an absolute path
         # to the tmpdir.
-        outfile_path = os.path.join(tmpdirname, 'test_sim_tmpdir.py')
         markdown_path, command2 = command1.split(maxsplit=1)
+        markdown_name = Path(markdown_path).name
+        outfile_name = 'test_' + markdown_name.replace('.md', '.py')
+        outfile_path = Path(tmpdir) / outfile_name
         command3 = command2[:command2.find('--outfile')].strip()
-        phm_args = [markdown_path]
 
         # Split up the rest of the command into pieces to pass to
         # runner.invoke().
@@ -144,6 +154,7 @@ def run_and_pytest(
         args1 = re.findall(pattern=r'("[^"]*"|\S+)', string=command4)
         # If both leading and trailing double quotes, remove them.
         args2 = [re.sub('^"([^"]*)"$', r'\1', arg) for arg in args1]
+        phm_args = [markdown_path]
         phm_args.extend(args2)
         phm_args.extend(['--outfile', outfile_path])
         runner_status = runner.invoke(cli=entry_point, args=phm_args)
@@ -153,22 +164,34 @@ def run_and_pytest(
             return SimulatorStatus(
                 runner_status=runner_status,
                 outfile=None,
-                pytest_exit_code=None
+                pytest_exit_code=None,
+                junit_xml=''
             )
 
         # Copy the generated pytest file from the temporary directory.
         with open(outfile_path, 'r', encoding='utf-8') as fp:
             outfile_text = fp.read()
 
-        pytest_exit_code = None
-        if pytest_options is not None:
-            completed = subprocess.run(
-                ['python', '-m', 'pytest'] + pytest_options + [tmpdirname],
-            )
-            pytest_exit_code = completed.returncode
+        commandline = ['python', '-m', 'pytest']
+        if pytest_options:
+            commandline.extend(pytest_options)
+        if junit_family:
+            junit_name = outfile_name.replace('.py', '.xml')
+            junit_path = Path(tmpdir) / junit_name
+            commandline.append('--junitxml=' + str(junit_path))
+            commandline.append('-o junit_family=' + junit_family)
+        commandline.append(tmpdir)
+        completed = subprocess.run(commandline)
+        pytest_exit_code = completed.returncode
+
+        xml = ''
+        if junit_family:
+            with open(junit_path, 'r', encoding='utf-8') as fp1:
+                xml = fp1.read()
 
         return SimulatorStatus(
             runner_status=runner_status,
             outfile=outfile_text,
-            pytest_exit_code=pytest_exit_code
+            pytest_exit_code=pytest_exit_code,
+            junit_xml=xml
         )

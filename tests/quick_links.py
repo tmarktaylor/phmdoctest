@@ -18,7 +18,7 @@ def remove_fenced_code_blocks(lines, fence='```'):
             yield line
 
 
-paragraph_level = '## '    # note trailing space
+heading_level = '## '    # note trailing space
 
 
 def make_quick_links(filename, style=None):
@@ -33,8 +33,8 @@ def make_quick_links(filename, style=None):
     lines = remove_fenced_code_blocks(lines)
     links = []
     for line in lines:
-        if line.startswith(paragraph_level):
-            title = line.replace(paragraph_level, '')
+        if line.startswith(heading_level):
+            title = line.replace(heading_level, '')
             label = '[' + title + ']'
             link = title.lower()
             if style == 'github':
