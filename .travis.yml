@@ -47,6 +47,10 @@ matrix:
       install: *utest_install
       script: *utest_run
 
+    - python: 3.9
+      install: *utest_install
+      script: *utest_run
+
     - python: pypy3
       install: *utest_install
       script: *utest_run
