@@ -1,4 +1,9 @@
 ## Recent changes
+1.1.0 - 2021-TBV
+
+- Use difflib.ndiff to show unexpected output.
+- Add a feature to return JUnitXML from pytest.
+
 1.0.1 - 2020-12-16
 
 - Bugfix- Issue #4- pytest fails in pypy3 if using --setup, --setup-doctest.

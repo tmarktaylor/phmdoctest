@@ -22,7 +22,7 @@ sys.path.insert(0, py_sources_path)
 # Configuration for Sphinx 1.8.5
 
 project = 'phmdoctest'
-copyright = '2020, Mark Taylor'
+copyright = '2021, Mark Taylor'
 author = 'Mark Taylor'
 
 # The full version, including alpha/beta/rc tags
