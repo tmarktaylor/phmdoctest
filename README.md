@@ -670,6 +670,7 @@ assert simulator_status.pytest_exit_code == 0
 - sybil
 - doxec
 - egtest
+- exdown
 
 ## Recent changes 
 [Recent changes](doc/recent_changes.md)
