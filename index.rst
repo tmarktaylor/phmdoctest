@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-phmdoctest 1.0.1
+phmdoctest 1.1.0
 ================
 
 .. toctree::
