@@ -1,6 +1,7 @@
 #### doc/test_setup.py
 ```python3
 """pytest file built from doc/setup.md"""
+import difflib
 from itertools import zip_longest
 
 
@@ -9,7 +10,11 @@ def line_by_line_compare_exact(a, b):
     a_lines = a.splitlines()
     b_lines = b.splitlines()
     for a_line, b_line in zip_longest(a_lines, b_lines):
-        assert a_line == b_line
+        if a_line != b_line:
+            diffs = difflib.ndiff(a_lines, b_lines)
+            for line in diffs:
+                print(line)
+            assert False
 
 
 def setup_module(thismodulebypytest):

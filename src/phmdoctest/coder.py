@@ -12,6 +12,7 @@ def docstring_and_helpers(description: str = '') -> str:
     """Initial few lines of the test file."""
     text = [
         '"""', description, '"""\n',
+        'import difflib\n',
         'from itertools import zip_longest\n',
         '\n\n',
         inspect.getsource(functions.line_by_line_compare_exact)

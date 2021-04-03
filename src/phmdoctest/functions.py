@@ -1,5 +1,5 @@
 """Functions customized and copied into generated code."""
-
+import difflib
 from itertools import zip_longest
 
 
@@ -12,7 +12,11 @@ def line_by_line_compare_exact(a, b):
     a_lines = a.splitlines()
     b_lines = b.splitlines()
     for a_line, b_line in zip_longest(a_lines, b_lines):
-        assert a_line == b_line
+        if a_line != b_line:
+            diffs = difflib.ndiff(a_lines, b_lines)
+            for line in diffs:
+                print(line)
+            assert False
 
 
 # The function below is used as a template to generate python source
