@@ -38,9 +38,9 @@ def test_case(name: str, code: str, expected_output: str) -> str:
     src = inspect.getsource(functions.test_code_and_output)
     src = src.replace('code_and_output', name, 1)
 
-    # indent contents of code block and place after '(capysy):\n'
+    # indent contents of code block and place at <put code here>.
     indented_code = textwrap.indent(code, '    ')
-    src = src.replace('(capsys):', '(capsys):\n' + indented_code, 1)
+    src = src.replace('    # <put code here>\n', indented_code, 1)
 
     if expected_output:
         src = src.replace('<<<replaced>>>', expected_output, 1)
