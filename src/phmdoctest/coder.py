@@ -27,16 +27,16 @@ def _remove_output_check(source: str) -> str:
     return source
 
 
-def test_case(identifier: str, code: str, expected_output: str) -> str:
+def test_case(name: str, code: str, expected_output: str) -> str:
     """Add a def test_ function with code and comparison logic.
 
     Generate a function that has code as its body and
     includes logic to capture and compare the printed output.
     The function is named to be collected by pytest as a test case.
     """
-    assert identifier.isidentifier(), 'must be a valid python identifier'
-    src = inspect.getsource(functions.test_identifier)
-    src = src.replace('identifier', identifier, 1)
+    assert name.isidentifier(), 'must be a valid python identifier'
+    src = inspect.getsource(functions.test_code_and_output)
+    src = src.replace('code_and_output', name, 1)
 
     # indent contents of code block and place after '(capysy):\n'
     indented_code = textwrap.indent(code, '    ')
@@ -71,7 +71,7 @@ def interactive_session(
     return ''.join(text)
 
 
-def caller_did_not_use_reserved_name(identifier: str, code: str) -> None:
+def caller_did_not_use_reserved_name(name: str, code: str) -> None:
     """Immediate exit if caller used a reserved name."""
     reserved = '_session_globals'
     if reserved in code:
@@ -81,11 +81,11 @@ def caller_did_not_use_reserved_name(identifier: str, code: str) -> None:
             'It is not allowed anywhere in the block although\n'
             'it only causes problems for doctests\n'
             'if assigned at the top level.'
-        ).format(reserved, identifier)
+        ).format(reserved, name)
         raise click.ClickException(message)
 
 
-def setup(identifier: str, code: str, setup_doctest: bool) -> str:
+def setup(name: str, code: str, setup_doctest: bool) -> str:
     """Add code as part of pytest setup_module fixture.
 
     Generate the function body for pytest fixture setup_module.
@@ -95,10 +95,10 @@ def setup(identifier: str, code: str, setup_doctest: bool) -> str:
     are wanted in doctest namespace.
     The namespace is created when pytest is running with --doctest-modules.
     """
-    caller_did_not_use_reserved_name(identifier, code)
+    caller_did_not_use_reserved_name(name, code)
     src = '\n'
     src += inspect.getsource(functions.setup_module)
-    src = src.replace('<put docstring here>', identifier)
+    src = src.replace('<put docstring here>', name)
     indented_code = textwrap.indent(code, '    ')
     src = src.replace('    # <put code block here>\n', indented_code)
     if setup_doctest:
@@ -134,12 +134,12 @@ def setup(identifier: str, code: str, setup_doctest: bool) -> str:
         return ''.join(text)
 
 
-def teardown(identifier: str, code: str) -> str:
+def teardown(name: str, code: str) -> str:
     """Generate the function body for pytest fixture teardown_module."""
     text = ['\n']
     src = inspect.getsource(functions.teardown_module)
     src = src.replace('    pass\n', '')
-    src = src.replace('<put docstring here>', identifier)
+    src = src.replace('<put docstring here>', name)
     src = src.replace('    # <put code block here>\n', '')
     text.append(src)
     text.append(textwrap.indent(code, '    '))

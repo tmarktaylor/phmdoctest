@@ -39,7 +39,7 @@ def build_test_cases(args: Args, blocks: List[FencedBlock]) -> str:
             whole_identifier = code_identifier + output_identifier
             generated += '\n'
             generated += coder.test_case(
-                identifier=whole_identifier,
+                name=whole_identifier,
                 code=block.contents,
                 expected_output=block.get_output_contents()
             )
@@ -56,7 +56,7 @@ def build_test_cases(args: Args, blocks: List[FencedBlock]) -> str:
         elif block.role == Role.SETUP:
             setup_text = '\n'
             setup_text += coder.setup(
-                identifier='code line ' + str(block.line),
+                name='code line ' + str(block.line),
                 code=block.contents,
                 setup_doctest=args.setup_doctest
             )
@@ -73,7 +73,7 @@ def build_test_cases(args: Args, blocks: List[FencedBlock]) -> str:
         elif block.role == Role.TEARDOWN:
             generated += '\n'
             generated += coder.teardown(
-                identifier='code line ' + str(block.line),
+                name='code line ' + str(block.line),
                 code=block.contents
             )
 

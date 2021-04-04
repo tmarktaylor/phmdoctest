@@ -27,11 +27,11 @@ def line_by_line_compare_exact(a, b):
 # source code as a string.
 #
 # This template will be customized by replacing:
-# - The _identifier substring of the function name.
+# - The _code_and_output substring of the function name.
 # - Insert example code indented 4 spaces on a new line
 #   after the def statement.
 # - Triple quoted string contents with the expected output.
-def test_identifier(capsys):
+def test_code_and_output(capsys):
     expected_str = """\
 <<<replaced>>>"""
     line_by_line_compare_exact(a=expected_str, b=capsys.readouterr().out)

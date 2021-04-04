@@ -6,9 +6,9 @@ import pytest
 import phmdoctest.functions
 
 
-def test_def_test_identifier():
+def test_def_test_code_and_output():
     """Painful way to eliminate 2 coverage missed statements."""
-    # The function coder.test_identifier() is used as
+    # The function coder.test_code_and_output() is used as
     # a template to generate Python code.
     # It accepts the pytest fixture called capsys when the
     # generated pytest is run.
@@ -25,7 +25,7 @@ def test_def_test_identifier():
         def readouterr():
             return MockReadouterr()
 
-    phmdoctest.functions.test_identifier(MockCapsys())
+    phmdoctest.functions.test_code_and_output(MockCapsys())
 
 
 def test_def_test_nothing_fails():
