@@ -20,13 +20,6 @@ def docstring_and_helpers(description: str = '') -> str:
     return ''.join(text)
 
 
-def _remove_output_check(source: str) -> str:
-    """Replace the expected output with a Caution message."""
-    ix = source.index('    expected_str = """')
-    source = source[:ix] + '    # Caution- no assertions.\n'
-    return source
-
-
 def test_case(name: str, code: str, expected_output: str) -> str:
     """Add a def test_ function with code and comparison logic.
 
@@ -35,17 +28,23 @@ def test_case(name: str, code: str, expected_output: str) -> str:
     The function is named to be collected by pytest as a test case.
     """
     assert name.isidentifier(), 'must be a valid python identifier'
-    src = inspect.getsource(functions.test_code_and_output)
-    src = src.replace('code_and_output', name, 1)
-
-    # indent contents of code block and place at <put code here>.
-    indented_code = textwrap.indent(code, '    ')
-    src = src.replace('    # <put code here>\n', indented_code, 1)
-
     if expected_output:
+        src = inspect.getsource(functions.test_code_and_output)
+        src = src.replace('code_and_output', name, 1)
+
+        # indent contents of code block and place at <put code here>.
+        indented_code = textwrap.indent(code, '    ')
+        src = src.replace('    # <put code here>\n', indented_code, 1)
         src = src.replace('<<<replaced>>>', expected_output, 1)
     else:
-        src = _remove_output_check(src)
+        src = inspect.getsource(functions.test_code_only)
+        src = src.replace('code_only', name, 1)
+        src = src.replace('    pass\n', '\n    # Caution- no assertions.\n')
+
+        # indent contents of code block and place at <put code here>.
+        indented_code = textwrap.indent(code, '    ')
+        src = src.replace('    # <put code here>\n', indented_code, 1)
+
     return '\n' + src
 
 

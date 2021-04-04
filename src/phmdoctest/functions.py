@@ -39,6 +39,15 @@ def test_code_and_output(capsys):
     line_by_line_compare_exact(a=expected_str, b=capsys.readouterr().out)
 
 
+# This template will be customized by replacing:
+# - The _code_only substring of the function name.
+# - Insert example code indented 4 spaces at the
+#   <put code here> placeholder.
+def test_code_only():
+    # <put code here>
+    pass
+
+
 def test_nothing_fails():
     """Fail if no Python code blocks or sessions were processed."""
     assert False, 'nothing to test'

@@ -27,7 +27,7 @@ def test_code_9_output_14(capsys):
     line_by_line_compare_exact(a=expected_str, b=capsys.readouterr().out)
 
 
-def test_code_37(capsys):
+def test_code_37():
     a, b = 0, 1
     while a < 1000:
         print(a, end=',')
