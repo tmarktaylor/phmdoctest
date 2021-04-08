@@ -1,6 +1,6 @@
 """Assign role in test file generation to fenced code blocks."""
 
-from typing import List
+from typing import List, Optional
 
 import click
 
@@ -84,42 +84,65 @@ def findall(pattern: str, blocks: List[FencedBlock]) -> List[FencedBlock]:
     return found
 
 
-def find_and_designate_setup_or_teardown(
-        role: Role, pattern: str, blocks: List[FencedBlock]) -> None:
-    """Find and designate Python code block as setup or teardown.
+def find_only_one_by_pattern(
+        pattern: str,
+        blocks: List[FencedBlock],
+        command_line_option_name: str
+) -> Optional[FencedBlock]:
+    """Find a single block containing pattern, die if more matches."""
+    matches = findall(pattern, blocks)
+    if not matches:
+        return None
+    if len(matches) == 1:
+        return matches[0]
+    # More than one block matched the search pattern provided
+    # by a command line option.  Raise an exception.
+    line_numbers = [str(b.line) for b in matches]
+    message = (
+        'More than one block matched command line {}.\n'
+        'Only one match is allowed.\n'
+        'The matching blocks are at line numbers {}.'
+    ).format(command_line_option_name, ', '.join(line_numbers))
+    raise click.ClickException(message)
+
+
+def find_and_designate_setup(
+        pattern: str, blocks: List[FencedBlock]) -> None:
+    """Find and designate Python code block as setup.
 
     Search the contents of each block for the pattern.
-    Report an error if more than one block matches the search.
+    Raise an exception if more than one block matches the search.
     If exactly one code block contains pattern and it
-    has not been changed from Role.CODE set it to the caller's role.
-    Setup and teardown code can't have an output block since there is
+    has not been changed from Role.CODE set it to the Role.SETUP.
+    Setup code can't have an output block since there is
     no way to generate code for it.
     If there is one, change its role to DEL_OUTPUT so it will show up
     in the report.
     """
-    assert role in [Role.SETUP, Role.TEARDOWN], 'only these roles please'
-    matches = findall(pattern, blocks)
-    if matches:
-        if len(matches) == 1:
-            first_match = matches[0]
-            if first_match.role == Role.CODE:
-                first_match.set(role)
-                first_match.add_pattern(pattern)
-                if first_match.output is not None:
-                    first_match.output.set(Role.DEL_OUTPUT)
-        else:
-            # More than one block matched the search pattern.
-            # The logic here can only get code from a single block.
-            description = ''    # avoid inspection nag
-            if role == Role.SETUP:
-                description = '--setup {0} (or -u{0})'.format(pattern)
-            else:
-                # can only be teardown because of aseert above
-                description = '--teardown {0} (or -d{0})'.format(pattern)
-            line_numbers = [str(b.line) for b in matches]
-            message = (
-                'More than one block matched command line {}.\n'
-                'Only one match is allowed.\n'
-                'The matching blocks are at line numbers {}.'
-            ).format(description, ', '.join(line_numbers))
-            raise click.ClickException(message)
+    match = find_only_one_by_pattern(pattern, blocks, '--setup or -u')
+    if match and match.role == Role.CODE:
+        match.set(Role.SETUP)
+        match.add_pattern(pattern)
+        if match.output is not None:
+            match.output.set(Role.DEL_OUTPUT)
+
+
+def find_and_designate_teardown(
+        pattern: str, blocks: List[FencedBlock]) -> None:
+    """Find and designate Python code block as teardown.
+
+    Search the contents of each block for the pattern.
+    Raise an exception if more than one block matches the search.
+    If exactly one code block contains pattern and it
+    has not been changed from Role.CODE set it to the Role.TEARDOWN.
+    Setup code can't have an output block since there is
+    no way to generate code for it.
+    If there is one, change its role to DEL_OUTPUT so it will show up
+    in the report.
+    """
+    match = find_only_one_by_pattern(pattern, blocks, '--teardown or -d')
+    if match and match.role == Role.CODE:
+        match.set(Role.TEARDOWN)
+        match.add_pattern(pattern)
+        if match.output is not None:
+            match.output.set(Role.DEL_OUTPUT)

@@ -133,11 +133,11 @@ def entry_point(
     ]
     phmdoctest.fillrole.apply_skips(args, code_and_session_blocks)
     if args.setup:
-        phmdoctest.fillrole.find_and_designate_setup_or_teardown(
-            Role.SETUP, args.setup, code_and_session_blocks)
+        phmdoctest.fillrole.find_and_designate_setup(
+            args.setup, code_and_session_blocks)
     if args.teardown:
-        phmdoctest.fillrole.find_and_designate_setup_or_teardown(
-            Role.TEARDOWN, args.teardown, code_and_session_blocks)
+        phmdoctest.fillrole.find_and_designate_teardown(
+            args.teardown, code_and_session_blocks)
     if args.is_report:
         phmdoctest.report.print_report(args, blocks)
 

@@ -53,7 +53,7 @@ def test_too_many_matches_for_setup():
     assert simulator_status.runner_status.exit_code == 1
     stdout = simulator_status.runner_status.stdout
     assert 'Error: More than one block matched command line' in stdout
-    assert '--setup print (or -uprint).' in stdout
+    assert '--setup or -u.' in stdout
     assert 'Only one match is allowed.' in stdout
     assert 'The matching blocks are at line numbers 18, 35, 45' in stdout
 
@@ -133,7 +133,7 @@ def test_too_many_matches_for_teardown():
     assert simulator_status.runner_status.exit_code == 1
     stdout = simulator_status.runner_status.stdout
     assert 'Error: More than one block matched command line' in stdout
-    assert '--teardown round (or -dround).' in stdout
+    assert '--teardown or -d.' in stdout
     assert 'Only one match is allowed.' in stdout
     assert 'The matching blocks are at line numbers 18, 74' in stdout
 
