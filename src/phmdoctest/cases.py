@@ -20,14 +20,15 @@ def build_test_cases(args: Args, blocks: List[FencedBlock]) -> str:
     """Generate test code from the Python fenced code blocks."""
     session_counter = itertools.count(1)
 
+    # collect the generated code in a single string
+    #
     # repr escapes back slashes from win filesystem paths
     # so it can be part of the generated test module docstring.
     quoted_markdown_path = repr(click.format_filename(args.markdown_file))
     markdown_path = quoted_markdown_path[1:-1]
     docstring_text = 'pytest file built from {}'.format(markdown_path)
-
-    # collect the generated code in a single string
-    generated = coder.docstring_and_helpers(docstring_text)
+    generated = '"""' + docstring_text + '"""\n'
+    generated += coder.imports_and_helpers()
     setup_insertion_point = len(generated)
     number_of_test_cases = 0
     for block in blocks:

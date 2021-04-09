@@ -8,10 +8,9 @@ import click
 from phmdoctest import functions
 
 
-def docstring_and_helpers(description: str = '') -> str:
+def imports_and_helpers() -> str:
     """Initial few lines of the test file."""
     text = [
-        '"""', description, '"""\n',
         'import difflib\n',
         'from itertools import zip_longest\n',
         '\n\n',
@@ -100,9 +99,11 @@ def setup(name: str, code: str, setup_doctest: bool) -> str:
     src = src.replace('<put docstring here>', name)
     indented_code = textwrap.indent(code, '    ')
     src = src.replace('    # <put code block here>\n', indented_code)
+
     if setup_doctest:
-        # add call to set_as_session_globals()
+        # add call to save values needed for pytest doctest namespace
         src += '    set_as_session_globals(thismodulebypytest, locals())\n'
+
     src += '\n'
     src += '\n'
     src += inspect.getsource(functions.set_as_module_attributes)
@@ -110,6 +111,7 @@ def setup(name: str, code: str, setup_doctest: bool) -> str:
     if not setup_doctest:
         return src
     else:
+        # Add code to finish setting up pytest doctest namespace
         text = [
             src,
             '\n',
