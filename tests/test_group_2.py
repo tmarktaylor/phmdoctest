@@ -171,3 +171,19 @@ def test_one_skip_many_matches():
     with open('tests/twentysix_report.txt', 'r', encoding='utf-8') as f:
         want = f.read()
     verify.a_and_b_are_the_same(want, stdout)
+
+
+def test_no_output_blocks():
+    """Generate test with no expected output comparison."""
+    command = (
+        'phmdoctest tests/twentysix_session_blocks.md'
+        ' --outfile discarded.py'
+    )
+    simulator_status = phmdoctest.simulator.run_and_pytest(
+        well_formed_command=command,
+        pytest_options=None
+    )
+    assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.outfile
+    assert 'phm_compare_exact' not in simulator_status.outfile
+    assert 'expected_str' not in simulator_status.outfile

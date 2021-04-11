@@ -203,25 +203,6 @@ def test_k_and_v_ok_in_setup_block():
     assert '           16  output' in stdout
 
 
-def test_session_globals_not_allowed():
-    """Verify _session_globals is not allowed in setup block."""
-    command = (
-        'phmdoctest tests/session_globals_in_setup.md --setup FIRST'
-        ' --setup-doctest --report --outfile discarded.py'
-    )
-    simulator_status = phmdoctest.simulator.run_and_pytest(
-        well_formed_command=command,
-        pytest_options=None
-    )
-    assert simulator_status.runner_status.exit_code == 1
-    stdout = simulator_status.runner_status.stdout
-    assert 'Error: The reserved name _session_globals is used' in stdout
-    assert 'somewhere in --setup code line 6.' in stdout
-    assert 'It is not allowed anywhere in the block although' in stdout
-    assert 'it only causes problems for doctests' in stdout
-    assert 'if assigned at the top level.' in stdout
-
-
 def test_simulator_setup_equals_quoted():
     """run_and_pytest() parses quoted --setup= argument."""
     command = (
