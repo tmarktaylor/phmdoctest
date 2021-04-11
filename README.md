@@ -19,6 +19,7 @@ examples in Markdown.
 - An included Python library: [Latest Development tools API][10].
   - runs phmdoctest and can run pytest too. *(simulator.py)*
   - functions to read fenced code blocks from Markdown. *(tool.py)*
+  - pytest fixture to manage test module global variables. *(fixture.py)*
  
 
 ##### master branch status
@@ -112,20 +113,7 @@ creates the python source code file `test_example1.py` shown here...
 
 ```python
 """pytest file built from doc/example1.md"""
-import difflib
-from itertools import zip_longest
-
-
-def line_by_line_compare_exact(a, b):
-    """Line by line helper compare function with assertion for pytest."""
-    a_lines = a.splitlines()
-    b_lines = b.splitlines()
-    for a_line, b_line in zip_longest(a_lines, b_lines):
-        if a_line != b_line:
-            diffs = difflib.ndiff(a_lines, b_lines)
-            for line in diffs:
-                print(line)
-            assert False
+from phmdoctest.functions import _phm_compare_exact
 
 
 def session_00001_line_6():
@@ -152,7 +140,7 @@ Floats.CIDER
 Floats.CHERRIES
 Floats.ADUCK
 """
-    line_by_line_compare_exact(a=expected_str, b=capsys.readouterr().out)
+    _phm_compare_exact(a=expected_str, b=capsys.readouterr().out)
 ```
 
 Then run a pytest command something like this in your terminal
@@ -660,8 +648,6 @@ assert simulator_status.pytest_exit_code == 0
 - An empty code block is given the role `del-code`. It is not tested. 
 - Use special TEXT values FIRST, SECOND, LAST for `--setup` 
   and `--teardown` since they only match one block.
-- The name `_session_globals` is reserved and should not be
-  used in setup blocks.  
   
 ## Related projects
 - rundoc

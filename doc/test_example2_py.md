@@ -1,20 +1,7 @@
 #### doc/test_example2.py
 ```python3
 """pytest file built from doc/example2.md"""
-import difflib
-from itertools import zip_longest
-
-
-def line_by_line_compare_exact(a, b):
-    """Line by line helper compare function with assertion for pytest."""
-    a_lines = a.splitlines()
-    b_lines = b.splitlines()
-    for a_line, b_line in zip_longest(a_lines, b_lines):
-        if a_line != b_line:
-            diffs = difflib.ndiff(a_lines, b_lines)
-            for line in diffs:
-                print(line)
-            assert False
+from phmdoctest.functions import _phm_compare_exact
 
 
 def test_code_9_output_14(capsys):
@@ -24,7 +11,7 @@ def test_code_9_output_14(capsys):
     expected_str = """\
 [1, 4, 9, 16, 25]
 """
-    line_by_line_compare_exact(a=expected_str, b=capsys.readouterr().out)
+    _phm_compare_exact(a=expected_str, b=capsys.readouterr().out)
 
 
 def test_code_37():
@@ -46,7 +33,7 @@ cat 3
 window 6
 defenestrate 12
 """
-    line_by_line_compare_exact(a=expected_str, b=capsys.readouterr().out)
+    _phm_compare_exact(a=expected_str, b=capsys.readouterr().out)
 
 
 def session_00001_line_75():
@@ -68,7 +55,7 @@ def test_code_87_output_93(capsys):
     expected_str = """\
 2002-03-11
 """
-    line_by_line_compare_exact(a=expected_str, b=capsys.readouterr().out)
+    _phm_compare_exact(a=expected_str, b=capsys.readouterr().out)
 ```
 This page is created from a Markdown file that contains the contents
 of a python source file in a syntax highlighted fenced code block.

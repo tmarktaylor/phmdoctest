@@ -1,6 +1,7 @@
 ## Recent changes
 1.1.0 - 2021-TBV
 
+- Implement setup/teardown with Pytest fixtures. 
 - Use difflib.ndiff to show unexpected output.
 - Add a feature to return JUnitXML from pytest.
 

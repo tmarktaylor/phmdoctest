@@ -19,3 +19,10 @@ Read Markdown fenced code blocks
 .. autofunction:: fenced_code_blocks
 
 .. autofunction:: fenced_block_nodes
+
+Pytest fixture to manage test module global variables.
+======================================================
+
+.. module:: phmdoctest.fixture
+
+.. autofunction:: managenamespace

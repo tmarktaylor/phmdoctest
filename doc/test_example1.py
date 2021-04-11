@@ -1,18 +1,5 @@
 """pytest file built from doc/example1.md"""
-import difflib
-from itertools import zip_longest
-
-
-def line_by_line_compare_exact(a, b):
-    """Line by line helper compare function with assertion for pytest."""
-    a_lines = a.splitlines()
-    b_lines = b.splitlines()
-    for a_line, b_line in zip_longest(a_lines, b_lines):
-        if a_line != b_line:
-            diffs = difflib.ndiff(a_lines, b_lines)
-            for line in diffs:
-                print(line)
-            assert False
+from phmdoctest.functions import _phm_compare_exact
 
 
 def session_00001_line_6():
@@ -39,4 +26,4 @@ Floats.CIDER
 Floats.CHERRIES
 Floats.ADUCK
 """
-    line_by_line_compare_exact(a=expected_str, b=capsys.readouterr().out)
+    _phm_compare_exact(a=expected_str, b=capsys.readouterr().out)
