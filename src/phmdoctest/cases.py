@@ -1,8 +1,9 @@
 """Top level assembly of the pytest test case file."""
 
 import inspect
+from io import StringIO
 import itertools
-from typing import List
+from typing import List, Optional
 
 import click
 
@@ -12,8 +13,12 @@ from phmdoctest import coder
 from phmdoctest import functions
 
 
-put_imports_here = '\ndef line_by_line_compare_exact(a, b):'
-"""Find match pattern to locate where to insert an import statement."""
+def get_block(blocks: List[FencedBlock], role: Role) -> Optional[FencedBlock]:
+    """Get first occurrence of block with the caller's role."""
+    for block in blocks:
+        if block.role == role:
+            return block
+    return None
 
 
 def build_test_cases(args: Args, blocks: List[FencedBlock]) -> str:
@@ -27,9 +32,23 @@ def build_test_cases(args: Args, blocks: List[FencedBlock]) -> str:
     quoted_markdown_path = repr(click.format_filename(args.markdown_file))
     markdown_path = quoted_markdown_path[1:-1]
     docstring_text = 'pytest file built from {}'.format(markdown_path)
-    generated = '"""' + docstring_text + '"""\n'
-    generated += coder.imports_and_helpers()
-    setup_insertion_point = len(generated)
+    generated = StringIO()
+    generated.write('"""' + docstring_text + '"""\n')
+
+    setup_block = get_block(blocks, Role.SETUP)
+    teardown_block = get_block(blocks, Role.TEARDOWN)
+    needs_fixture = (setup_block is not None) or (teardown_block is not None)
+    needs_checking = get_block(blocks, Role.OUTPUT) is not None
+    generated.write(coder.compose_import_lines(needs_fixture, needs_checking))
+
+    # fixture to handle setup and/or teardown and code for setup doctest
+    if needs_fixture:
+        generated.write(coder.setup_and_teardown_fixture(
+            setup_block=setup_block,
+            teardown_block=teardown_block,
+            setup_doctest=args.setup_doctest
+        ))
+
     number_of_test_cases = 0
     for block in blocks:
         if block.role == Role.CODE:
@@ -38,51 +57,27 @@ def build_test_cases(args: Args, blocks: List[FencedBlock]) -> str:
             if block.output:
                 output_identifier = '_output_' + str(block.output.line)
             whole_identifier = code_identifier + output_identifier
-            generated += '\n'
-            generated += coder.test_case(
+            generated.write('\n')
+            generated.write(coder.test_case(
                 name=whole_identifier,
                 code=block.contents,
                 expected_output=block.get_output_contents()
-            )
+            ))
             number_of_test_cases += 1
 
         elif block.role == Role.SESSION:
             session = block.contents
             sequence_number = next(session_counter)
-            generated += '\n'
-            generated += coder.interactive_session(
-                sequence_number, block.line, session)
+            generated.write('\n')
+            generated.write(coder.interactive_session(
+                sequence_number, block.line, session))
             number_of_test_cases += 1
-
-        elif block.role == Role.SETUP:
-            setup_text = '\n'
-            setup_text += coder.setup(
-                name='code line ' + str(block.line),
-                code=block.contents,
-                setup_doctest=args.setup_doctest
-            )
-
-            # insert the setup code near the top of the test file
-            top_part = generated[:setup_insertion_point]
-            rest = generated[setup_insertion_point:]
-            generated = top_part + setup_text + rest
-            if args.setup_doctest:
-                # insert an import pytest statement
-                generated = generated.replace(
-                    put_imports_here, 'import pytest\n\n' + put_imports_here)
-
-        elif block.role == Role.TEARDOWN:
-            generated += '\n'
-            generated += coder.teardown(
-                name='code line ' + str(block.line),
-                code=block.contents
-            )
 
     if number_of_test_cases == 0:
         if args.fail_nocode:
             nocode_func = functions.test_nothing_fails
         else:
             nocode_func = functions.test_nothing_passes
-        generated += '\n'
-        generated += inspect.getsource(nocode_func)
-    return generated
+        generated.write('\n')
+        generated.write(inspect.getsource(nocode_func))
+    return generated.getvalue()

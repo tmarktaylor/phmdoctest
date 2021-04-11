@@ -2,12 +2,13 @@
 import difflib
 from itertools import zip_longest
 
+import pytest
 
 # mypy: ignore_errors
 
 
 # The function below is copied into the generated python source
-def line_by_line_compare_exact(a, b):
+def _phm_compare_exact(a, b):
     """Line by line helper compare function with assertion for pytest."""
     a_lines = a.splitlines()
     b_lines = b.splitlines()
@@ -17,6 +18,32 @@ def line_by_line_compare_exact(a, b):
             for line in diffs:
                 print(line)
             assert False
+
+
+@pytest.fixture(scope="module")
+def _phm_setup_teardown(managenamespace):
+    # <setup code here>
+
+    managenamespace(operation='update', additions=locals())
+    yield
+    # <teardown code here>
+
+    managenamespace(operation='clear')
+
+
+@pytest.fixture(scope="module")
+def _phm_setup_doctest_teardown(managenamespace, doctest_namespace):
+    # <setup code here>
+
+    managenamespace(operation='update', additions=locals())
+    # update doctest namespace
+    additions = managenamespace(operation='copy')
+    for k, v in additions.items():
+        doctest_namespace[k] = v
+    yield
+    # <teardown code here>
+
+    managenamespace(operation='clear')
 
 
 # The function below is used as a template to generate python source
@@ -36,7 +63,7 @@ def test_code_and_output(capsys):
 
     expected_str = """\
 <<<replaced>>>"""
-    line_by_line_compare_exact(a=expected_str, b=capsys.readouterr().out)
+    _phm_compare_exact(a=expected_str, b=capsys.readouterr().out)
 
 
 # This template will be customized by replacing:
@@ -59,64 +86,22 @@ def test_nothing_passes():
     pass
 
 
-def setup_module(thismodulebypytest):
-    """<put docstring here>"""
-    # <put code block here>
-
-    set_as_module_attributes(thismodulebypytest, locals())
-
-
-def set_as_module_attributes(m, mapping):
-    """Assign items in mapping as names in object m."""
-    for k, v in mapping.items():
-        # The value thismodulebypytest passed by pytest
-        # shows up in locals() but is not part of the callers
-        # code block so don't copy it to the module namespace.
-        if k == "thismodulebypytest":
-            continue
-        setattr(m, k, v)
-
-
-def set_as_session_globals(m, mapping):
-    """Create a dict in the module m's namespace to hold globals."""
-    # The globals later get copied to the session namespace.
-    setattr(m, "_session_globals", dict())
-
-    for k, v in mapping.items():
-        # The value thismodulebypytest passed by pytest is the module
-        # object that contains this function.
-        # It shows up in locals(), so just ignore it.
-        if k == "thismodulebypytest":
-            continue
-        m._session_globals[k] = v
-
-
 # The fixture copies globals created by the --setup code
 # into the pytest namespace supplied to doctests when
 # doing pytest --doctest-modules.
 # This code is included only if phmdoctest option --setup-doctest.
 populate_doctest_namespace_str = """\
 @pytest.fixture()
-def populate_doctest_namespace(doctest_namespace):
-    for k, v in _session_globals.items():
+def populate_doctest_namespace(doctest_namespace, managenamespace):
+    additions = managenamespace(operation='copy')
+    for k, v in additions.items():
         doctest_namespace[k] = v
 """
 
 
 # This part is only needed for testing sessions.
-# It populates doctest namespace from _session_globals.
+# It populates the doctest namespace.
 def session_00000():
     r"""
     >>> getfixture('populate_doctest_namespace')
     """
-
-
-# This template will be customized by:
-# 1. adding a function docstring.
-# 2. adding the callers code block.
-# 3. remove the line with the pass statement.
-# note- the pass is needed to prevent inspect from dropping the comment.
-def teardown_module():
-    """<put docstring here>"""
-    # <put code block here>
-    pass
