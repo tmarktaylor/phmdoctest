@@ -11,6 +11,10 @@ Test phmdoctest from within a python script
 
 .. autofunction:: run_and_pytest
 
+.. module:: phmdoctest.tool
+
+.. autofunction:: extract_testsuite
+
 Read Markdown fenced code blocks
 ================================
 

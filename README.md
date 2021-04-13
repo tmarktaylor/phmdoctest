@@ -18,6 +18,7 @@ examples in Markdown.
 - Setup applies to code blocks and optionally to session blocks.
 - An included Python library: [Latest Development tools API][10].
   - runs phmdoctest and can run pytest too. *(simulator.py)*
+  - extract testsuite tree and list of failing trees from JUnit XML. *(tool.py)*
   - functions to read fenced code blocks from Markdown. *(tool.py)*
   - pytest fixture to manage test module global variables. *(fixture.py)*
  

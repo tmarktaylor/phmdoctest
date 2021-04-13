@@ -2,7 +2,6 @@
 
 import difflib
 from itertools import zip_longest
-from xml.etree import ElementTree
 
 import phmdoctest.simulator
 
@@ -41,16 +40,3 @@ def one_example(
             want = f.read()
             a_and_b_are_the_same(want, simulator_status.outfile)
     return simulator_status
-
-
-def extract_testsuite(junit_xml_string):
-    """Return testsuite tree and list of failing trees from JUnit XML."""
-    root = ElementTree.fromstring(junit_xml_string)
-    suite = root.find('testsuite')
-    failed_test_cases = []
-    for case in suite:
-        if case.find('failure') is not None:
-            failed_test_cases.append(case)
-    return suite, failed_test_cases
-
-

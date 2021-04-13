@@ -6,6 +6,7 @@ import phmdoctest
 import phmdoctest.cases
 import phmdoctest.main
 import phmdoctest.simulator
+import phmdoctest.tool
 import verify
 
 
@@ -206,7 +207,8 @@ def test_pytest_really_fails():
     # Look at the returned JUnit XML to see that the test failed at the
     # point and for the reason we expected.
     # Note that the parsed XML values are all strings.
-    suite, fails = verify.extract_testsuite(simulator_status.junit_xml)
+    suite, fails = phmdoctest.tool.extract_testsuite(
+        simulator_status.junit_xml)
     assert suite.attrib['tests'] == '1'
     assert suite.attrib['errors'] == '0'
     assert suite.attrib['failures'] == '1'
