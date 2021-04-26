@@ -15,8 +15,9 @@ def print_report(args: Args, blocks: List[FencedBlock]) -> None:
     report = []
     filename = click.format_filename(args.markdown_file)
     title1 = filename + ' fenced blocks'
-    text1 = fenced_block_report(blocks, title=title1)
-    report.append(text1)
+    if blocks:
+        text1 = fenced_block_report(blocks, title=title1)
+        report.append(text1)
 
     roles = [b.role.name for b in blocks]
     counts = Counter(roles)
