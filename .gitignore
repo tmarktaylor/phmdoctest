@@ -18,6 +18,7 @@ MANIFEST
 .coverage
 .pypirc
 htmlcov/
+.mine/
 
 # PyCharm
 .idea/
