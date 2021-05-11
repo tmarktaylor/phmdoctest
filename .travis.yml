@@ -4,7 +4,7 @@ sudo: false
 
 matrix:
   include:
-    - python: 3.5
+    - python: 3.6
       install:
         - pip install "." pytest
       script:
@@ -12,7 +12,7 @@ matrix:
         - phmdoctest project.md --report --outfile tests/tmp/test_project.py
         - pytest --doctest-modules -vv tests
 
-    - python: 3.6
+    - python: 3.7
       install:
         &utest_install
         - pip install "." pytest
@@ -39,13 +39,9 @@ matrix:
         - phmdoctest doc/example2.md --skip "Python 3.7" --skip LAST --report > tests/tmp/example2_report.txt
         - cmp tests/example2_report.txt tests/tmp/example2_report.txt
 
-    - python: 3.7
+    - python: 3.8
       install: pip install tox
       script: tox -e cover,inspect,docs,demo
-
-    - python: 3.8
-      install: *utest_install
-      script: *utest_run
 
     - python: 3.9
       install: *utest_install

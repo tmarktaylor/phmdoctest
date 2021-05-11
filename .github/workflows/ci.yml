@@ -26,9 +26,9 @@ jobs:
         pip install "pytest>=5"
         # if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         # todo- replace 3 lines below with root/requirements.txt
-        pip install "Click>=7.1.1,<8"
-        pip install "commonmark>=0.9.1,<1"
-        pip install "monotable>=2.1.1,<4"
+        pip install "Click>=7.1.1"
+        pip install "commonmark>=0.9.1"
+        pip install "monotable>=2.1.1"
         pip freeze
     - name: Tests, coverage report
       run: |
@@ -46,16 +46,15 @@ jobs:
     - name: Setup Python
       uses: actions/setup-python@v2
       with:
-        # This should be the same as in .readthedocs.yml  
         python-version: 3.7
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         # if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         # todo- replace 3 lines below with root/requirements.txt
-        # pip install "Click>=7.1.1,<8"
-        # pip install "commonmark>=0.9.1,<1"
-        # pip install "monotable>=2.1.1,<4"
+        # pip install "Click>=7.1.1"
+        # pip install "commonmark>=0.9.1"
+        # pip install "monotable>=2.1.1"
         pip install "."
         pip install flake8
         pip install pep8-naming
@@ -85,7 +84,7 @@ jobs:
       uses: actions/setup-python@v2
       with:
         # This should be the same as in .readthedocs.yml  
-        python-version: 3.7
+        python-version: 3.8
     - name: Install Tox
       run: |
         python -m pip install --upgrade pip

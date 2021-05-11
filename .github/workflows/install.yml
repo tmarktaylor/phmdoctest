@@ -1,7 +1,4 @@
-# Run this action if any of the install related files change.
-# If a commit to one of these files breaks the install this action
-# should fail.
-# Let Travis CI handle events on the master branch.
+# Test on pip install of phmdoctest rather than the checked out repository.
 name: Test pip install via setup.py
 
 on: [push]
