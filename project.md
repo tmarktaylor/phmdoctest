@@ -9,9 +9,6 @@ by the .travis.yml example in README.md.
 
 #### An example with a blank line in the output
 
-Here is a Python source code example inspired by type hints in 
-[What’s New In Python 3.5](https://docs/python.org/3/whatsnew/3.5.html#pep-484-type-hints).
-
 No <BLANKLINE> directive is needed in the output block of a Python
 code block output block pair.
  
@@ -21,7 +18,7 @@ def greeting(name: str) -> str:
 print(greeting('World!'))
 ```
 
-And the output it produces.
+Here is the output it produces.
 ```
 Hello
 

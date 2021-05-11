@@ -6,11 +6,14 @@ Checklist
 - update copyright year
 - Run code inspections.
 - Run pytest cases on lowest Py version
-- Run pytest cases with python warnings enabled. 'python -W once -m pytest'
+- Run pytest cases with python warnings enabled.
+  - python -W once -m pytest -vv tests
+  - python -W default -m pytest -vv tests
 - Run check-manifest Verify sdist archive contains at least all the files under version control.
 - git ls-files
 - Run mypy against package sources
 - Run flake8
+- Run flake8 on doc and tests (fixture import and use errors are expected)
 - Build the Sphinx html documents and check/update doc/requirements.txt)
 - Release on GitHub
   - tag= v0.0.0
