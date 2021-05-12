@@ -23,9 +23,9 @@ examples in Markdown.
 - Select Python source code blocks as setup and teardown code.
 - Setup applies to code blocks and optionally to session blocks.
 - An included Python library: [Latest Development tools API][10].
+  - functions to read fenced code blocks from Markdown. *(tool.py)*
   - runs phmdoctest and can run pytest too. *(simulator.py)*
   - extract testsuite tree and list of failing trees from JUnit XML. *(tool.py)*
-  - functions to read fenced code blocks from Markdown. *(tool.py)*
   
 
 ##### master branch status
@@ -59,9 +59,9 @@ examples in Markdown.
 [teardown](#teardown) |
 [share-names](#share-names) |
 [clear-names](#clear-names) |
-[label, skip, and mark example](#label,-skip,-and-mark-example) |
+[label skip and mark example](#label-skip-and-mark-example) |
 [setup and teardown example](#setup-and-teardown-example) |
-[share-names, clear-names example](#share-names,-clear-names-example) |
+[share-names clear-names example](#share-names-clear-names-example) |
 [skipping blocks with --skip](#skipping-blocks-with---skip) |
 [--skip](#--skip) |
 [-s short form of --skip](#-s-short-form-of---skip) |
@@ -324,12 +324,12 @@ The skip directive or `--skip TEXT` command line option
 prevents code generation for the code or session block.
 The skip directive can be placed on an expected output block.
 There it prevents checking expected against actual output.
-[Example.](#label,-skip,-and-mark-example)
+[Example.](#label-skip-and-mark-example)
 
 ## label on code and sessions
 When used on a Python code block or session the label directive
 changes the name of the generated test function.
-[Example.](#label,-skip,-and-mark-example)
+[Example.](#label-skip-and-mark-example)
 Two generated tests, the first without a label,
 shown in pytest -v terminal output:
 
@@ -375,14 +375,14 @@ The label directive can be placed on any fenced code block.
 ## mark.skip
 This directive generates a test case with a `@pytest.mark.skip()`
 decorator. 
-[Example.](#label,-skip,-and-mark-example)
+[Example.](#label-skip-and-mark-example)
 
 
 ## mark.skipif<3.N
 This directive generates a test case with the pytest decorator
 `@pytest.mark.skipif(sys.version_info < (3.N), reason="requires >=py3.N")`.
 N is a Python minor version number.
-[Example.](#label,-skip,-and-mark-example)
+[Example.](#label-skip-and-mark-example)
 
 ## setup
 A single Python code block can assign names visible to
@@ -426,7 +426,7 @@ share-names modifies the execution context as described for
 the setup directive above.
 The share-names directive can be used on more than one
 code block.
-[Example.](#share-names,-clear-names-example)
+[Example.](#share-names-clear-names-example)
 
 This directive effectively joins its Python code block to the
 following Python code blocks in the Markdown file. 
@@ -436,9 +436,9 @@ After the test case generated for the Python code block
 with the clear-names directive runs, all names that were
 created by one or more preceding share-names directives
 are deleted. The names that were shared are no longer visible.
-[Example.](#share-names,-clear-names-example)
+[Example.](#share-names-clear-names-example)
 
-## label, skip, and mark example
+## label skip and mark example
 The file [directive1.md](doc/directive1_raw.md) contains
 example usage of label, skip, and mark directives.
 The command
@@ -472,7 +472,7 @@ produces this
 [report](doc/directive2_report_txt.md).
 
 
-## share-names, clear-names example
+## share-names clear-names example
 The file [directive3.md](doc/directive3_raw.md) contains
 example usage of share-names and clear-names directives. 
 The command   
@@ -710,7 +710,8 @@ When run without `--setup`
 - Shared objects will **not** be visible to sessions 
   if pytest is run with `--doctest-modules`.
 - After running a code block with `clear-names`
-  Shared objects will no longer be visible.
+  - Shared objects will no longer be visible.
+  - Names assigned by setup code will no longer be visible.
   
 #### With `--setup` and `--setup-doctest`
 Same as previous section plus:

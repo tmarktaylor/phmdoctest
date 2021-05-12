@@ -10,12 +10,29 @@ import phmdoctest.direct
 
 
 class FCBChooser:
-    """Select a labeled fenced code block from the Markdown file."""
+    """Select labeled fenced code block from the Markdown file."""
     def __init__(self, markdown_filename: str):
+        """Gather labelled Markdown fenced code blocks in the file.
+
+        Args:
+            markdown_filename:
+                Path to the Markdown file
+        """
         self._blocks = labeled_fenced_code_blocks(markdown_filename)
 
     def contents(self, label: str = '') -> str:
-        """Return contents of the labeled fenced code block with label."""
+        """Return contents of the labeled fenced code block with label.
+
+        Args:
+            label
+                Value of label directive placed on the fenced code block
+                in the Markdown file.
+
+        Returns:
+            Contents of the labeled fenced code block as a string
+            or empty string the label is not found. Fenced code block
+            strings typically end with a newline.
+        """
         for block in self._blocks:
             if block.label == label:
                 return block.contents

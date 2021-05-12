@@ -89,7 +89,7 @@ def run_and_pytest(
 
     Returns:
         SimulatorStatus containing runner_status, outfile,
-        pytest_exit_code, and generate JUnit XML.
+        pytest_exit_code, and generated JUnit XML.
     """
     assert well_formed_command.startswith('phmdoctest ')
     # trim off any trailing whitespace
