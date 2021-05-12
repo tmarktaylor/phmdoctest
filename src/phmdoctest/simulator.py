@@ -20,11 +20,13 @@ from phmdoctest.main import entry_point
 
 SimulatorStatus = NamedTuple(
     'SimulatorStatus',
-    [('runner_status', click.testing.Result),
-     ('outfile', Optional[str]),
-     ('pytest_exit_code', Optional[int]),
-     ('junit_xml', Optional[str])
-     ])
+    [
+        ('runner_status', click.testing.Result),
+        ('outfile', Optional[str]),
+        ('pytest_exit_code', Optional[int]),
+        ('junit_xml', Optional[str])
+     ]
+)
 """run_and_pytest() return value."""
 
 
@@ -135,8 +137,7 @@ def run_and_pytest(
         # runner.invoke().
         #
         # Developers:
-        # Since the --outfile part has already been removed from command3
-        # the only possible option remaining that takes TEXT is --skip.
+        # Note the --outfile part has already been removed from command3.
         # If a new option that takes TEXT is added, add code here
         # to replace its '='.
         #
@@ -156,7 +157,7 @@ def run_and_pytest(
         args2 = [re.sub('^"([^"]*)"$', r'\1', arg) for arg in args1]
         phm_args = [markdown_path]
         phm_args.extend(args2)
-        phm_args.extend(['--outfile', outfile_path])
+        phm_args.extend(['--outfile', str(outfile_path)])
         runner_status = runner.invoke(cli=entry_point, args=phm_args)
 
         # return now if the command failed
