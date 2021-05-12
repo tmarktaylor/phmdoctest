@@ -1,9 +1,12 @@
 """First group of pytest test cases for phmdoctest."""
-
+import copy
 import re
+
+import pytest
 
 import phmdoctest
 import phmdoctest.cases
+from phmdoctest.fenced import Role
 import phmdoctest.main
 import phmdoctest.simulator
 import phmdoctest.tool
@@ -139,6 +142,20 @@ def test_empty_code_block_report():
     verify.a_and_b_are_the_same(a=want, b=stdout)
 
 
+def test_no_markdown_fenced_code_blocks():
+    """Show --report works when there is nothing to report."""
+    simulator_status = verify.one_example(
+        'phmdoctest tests/no_fenced_code_blocks.md'
+        ' --report --outfile discarded.py',
+        want_file_name=None,
+        pytest_options=['--doctest-modules', '-v']
+    )
+    assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code == 0
+    stdout = simulator_status.runner_status.stdout
+    assert '0 test cases.' in stdout
+
+
 def test_code_does_not_print_fails():
     """Show empty stdout mis-compares with non-empty output block."""
     command = (
@@ -266,3 +283,57 @@ def test_blanklines_in_output():
     )
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
+
+
+def test_no_namespace_manager_call_generated():
+    """phmdoctest.cases.call_namespace_manager() returns empty string."""
+    # In cases.py there is never a call to call_namespace_manager()
+    # with neither share-names or clear-names directives.
+    # Coverage reports a missing statement.
+    # Fix by calling with a block that doesn't have those directives.
+    with open('tests/direct.md', encoding='utf-8') as fp:
+        blocks = phmdoctest.fenced.convert_nodes(
+            phmdoctest.tool.fenced_block_nodes(fp))
+    code_line = phmdoctest.cases.call_namespace_manager(blocks[0])
+    assert code_line == ''
+
+
+def test_fenced_role_skipping():
+    """Check FencedBlock.skip() for blocks with different roles."""
+    # Obtain a single FencedBlock instance to try with different roles.
+    # Make a copy of the first block below, modify the role,
+    # and call skip() on it.  The good roles don't raise an assertion,
+    # the bad roles do.
+    with open('tests/direct.md', encoding='utf-8') as fp:
+        blocks = phmdoctest.fenced.convert_nodes(
+            phmdoctest.tool.fenced_block_nodes(fp))
+    good_roles = [
+        Role.CODE,
+        Role.OUTPUT,
+        Role.SESSION,
+        Role.SKIP_CODE,
+        Role.SKIP_OUTPUT,
+        Role.SKIP_SESSION,
+    ]
+    for role in good_roles:
+        block = copy.copy(blocks[0])
+        block.role = role
+        block.skip(pattern='no-assertion-expected')
+
+    bad_roles = [
+        Role.UNKNOWN,
+        Role.SETUP,
+        Role.TEARDOWN,
+        Role.DEL_CODE,
+        Role.DEL_OUTPUT,
+    ]
+    for role in bad_roles:
+        block = copy.copy(blocks[0])
+        block.role = role
+        with pytest.raises(AssertionError) as exc_info:
+            block.skip(pattern='assertion-is-expected')
+        assert 'cannot skip a block with ' + str(role) in str(exc_info.value)
+
+    # Assure that every Role enum value gets tested.
+    number_of_roles_tried = len(set(good_roles + bad_roles))
+    assert len(Role) == number_of_roles_tried, 'missed some roles'
