@@ -32,29 +32,29 @@ def test_code_18_output_25(capsys):
     print(a, b)
     print('doubler(16)=', doubler(16))
 
-    expected_str = """\
+    _phm_expected_str = """\
 math.pi= 3.142
 [1, 2, 3]
 10 11
 doubler(16)= 32
 """
-    _phm_compare_exact(a=expected_str, b=capsys.readouterr().out)
+    _phm_compare_exact(a=_phm_expected_str, b=capsys.readouterr().out)
 
 
 def test_code_35_output_40(capsys):
     mylist.append(4)
     print(mylist)
 
-    expected_str = """\
+    _phm_expected_str = """\
 [1, 2, 3, 4]
 """
-    _phm_compare_exact(a=expected_str, b=capsys.readouterr().out)
+    _phm_compare_exact(a=_phm_expected_str, b=capsys.readouterr().out)
 
 
 def test_code_45_output_49(capsys):
     print(mylist == [1, 2, 3, 4])
 
-    expected_str = """\
+    _phm_expected_str = """\
 True
 """
-    _phm_compare_exact(a=expected_str, b=capsys.readouterr().out)
+    _phm_compare_exact(a=_phm_expected_str, b=capsys.readouterr().out)

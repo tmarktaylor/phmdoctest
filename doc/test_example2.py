@@ -6,10 +6,10 @@ def test_code_9_output_14(capsys):
     squares = [1, 4, 9, 16, 25]
     print(squares)
 
-    expected_str = """\
+    _phm_expected_str = """\
 [1, 4, 9, 16, 25]
 """
-    _phm_compare_exact(a=expected_str, b=capsys.readouterr().out)
+    _phm_compare_exact(a=_phm_expected_str, b=capsys.readouterr().out)
 
 
 def test_code_37():
@@ -26,12 +26,12 @@ def test_code_44_output_51(capsys):
     for w in words:
         print(w, len(w))
 
-    expected_str = """\
+    _phm_expected_str = """\
 cat 3
 window 6
 defenestrate 12
 """
-    _phm_compare_exact(a=expected_str, b=capsys.readouterr().out)
+    _phm_compare_exact(a=_phm_expected_str, b=capsys.readouterr().out)
 
 
 def session_00001_line_75():
@@ -50,7 +50,7 @@ def test_code_87_output_93(capsys):
     d = date.fromordinal(730920)    # 730920th day after 1. 1. 0001
     print(d)
 
-    expected_str = """\
+    _phm_expected_str = """\
 2002-03-11
 """
-    _phm_compare_exact(a=expected_str, b=capsys.readouterr().out)
+    _phm_compare_exact(a=_phm_expected_str, b=capsys.readouterr().out)

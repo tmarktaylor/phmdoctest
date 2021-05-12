@@ -20,10 +20,10 @@ def test_code_14_output_27(capsys):
     for floater in Floats:
         print(floater)
 
-    expected_str = """\
+    _phm_expected_str = """\
 Floats.APPLES
 Floats.CIDER
 Floats.CHERRIES
 Floats.ADUCK
 """
-    _phm_compare_exact(a=expected_str, b=capsys.readouterr().out)
+    _phm_compare_exact(a=_phm_expected_str, b=capsys.readouterr().out)
