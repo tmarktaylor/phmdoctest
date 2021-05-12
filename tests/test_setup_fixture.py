@@ -35,13 +35,13 @@ def test_setup_teardown_fixture(_phm_setup_teardown, managenamespace):
     logging.debug('tests- copy is the same as the update additions.')
 
     # Try an unsupported operation
-    with pytest.raises(AssertionError) as exc_info:
+    with pytest.raises(AssertionError):
         managenamespace(operation='bogus')
 
     # Try update, but no additions
-    with pytest.raises(AssertionError) as exc_info:
+    with pytest.raises(AssertionError):
         managenamespace(operation='update')
 
     # Try update, but additions is not a mapping
-    with pytest.raises(AssertionError) as exc_info:
-        managenamespace(operation='update', additions=set([1,2,3]))
+    with pytest.raises(AssertionError):
+        managenamespace(operation='update', additions=set([1, 2, 3]))
