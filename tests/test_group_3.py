@@ -185,24 +185,6 @@ def test_run_setup_example():
     assert 'py3        56  teardown  "LAST"' in stdout
 
 
-def test_k_and_v_ok_in_setup_block():
-    """Verify caller can assign the names k and v in a setup block."""
-    command = (
-        'phmdoctest tests/k_and_v_setup.md --setup FIRST'
-        ' --report --outfile discarded.py'
-    )
-    simulator_status = phmdoctest.simulator.run_and_pytest(
-        well_formed_command=command,
-        pytest_options=['--doctest-modules', '-v']
-    )
-    assert simulator_status.runner_status.exit_code == 0
-    assert simulator_status.pytest_exit_code == 0
-    stdout = simulator_status.runner_status.stdout
-    assert 'py3         3  setup   "FIRST"' in stdout
-    assert 'py3        12  code' in stdout
-    assert '           16  output' in stdout
-
-
 def test_simulator_setup_equals_quoted():
     """run_and_pytest() parses quoted --setup= argument."""
     command = (
@@ -301,6 +283,23 @@ def test_run_setup_doctest_example():
     assert 'py3        84  teardown  "LAST"' in stdout
 
 
+def test_setup_no_teardown():
+    """setup_only.md has setup, but no teardown directive."""
+    command = (
+        'phmdoctest tests/setup_only.md --report --outfile discarded.py'
+    )
+    simulator_status = phmdoctest.simulator.run_and_pytest(
+        well_formed_command=command,
+        pytest_options=['--doctest-modules', '-v']
+    )
+    assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code == 0
+    stdout = simulator_status.runner_status.stdout
+    assert 'py3         4  setup   -setup' in stdout
+    assert 'py3        12  code' in stdout
+    assert '           19  output' in stdout
+
+
 def test_no_blocks_left_to_test_passing():
     """Generate a pytest file that passes when no blocks to test."""
     command = (
@@ -387,3 +386,108 @@ def test_bad_usage_option():
     assert got == want
     assert simulator_status.outfile is None
     assert simulator_status.pytest_exit_code is None
+
+
+def test_label_is_not_identifier():
+    """Code block has a label directive that is not a Python identifier."""
+    command = 'phmdoctest tests/label_not_identifier.md --outfile discarded.py'
+    simulator_status = phmdoctest.simulator.run_and_pytest(
+        well_formed_command=command,
+        pytest_options=['--doctest-modules', '-v']
+    )
+    assert simulator_status.runner_status.exit_code == 1
+    stdout = simulator_status.runner_status.stdout
+    assert 'line 3 must be a valid python identifier.' in stdout
+
+
+def test_same_label_twice():
+    """Two code block have the same label directive value."""
+    command = 'phmdoctest tests/label_used_twice.md --outfile discarded.py'
+    simulator_status = phmdoctest.simulator.run_and_pytest(
+        well_formed_command=command,
+        pytest_options=['--doctest-modules', '-v']
+    )
+    assert simulator_status.runner_status.exit_code == 0
+    assert 'def k_and_v(capsys)' in simulator_status.outfile
+    assert 'def k_and_v_16(capsys)' in simulator_status.outfile
+
+
+def test_bad_skipif_minor_number():
+    """Skipif directive has non-numeric minor number."""
+    command = 'phmdoctest tests/bad_skipif_number.md --outfile discarded.py'
+    simulator_status = phmdoctest.simulator.run_and_pytest(
+        well_formed_command=command,
+        pytest_options=['--doctest-modules', '-v']
+    )
+    assert simulator_status.runner_status.exit_code == 1
+    stdout = simulator_status.runner_status.stdout
+    assert 'line 4 must be a decimal number and greater than zero.' in stdout
+
+
+def test_extra_setup_block():
+    """Setup directive on first block, --setup SECOND."""
+    command = (
+        'phmdoctest doc/directive2.md --setup SECOND'
+        '--outfile discarded.py'
+    )
+    simulator_status = phmdoctest.simulator.run_and_pytest(
+        well_formed_command=command,
+        pytest_options=['--doctest-modules', '-v']
+    )
+    assert simulator_status.runner_status.exit_code == 1
+    stdout = simulator_status.runner_status.stdout
+    assert 'More than one block is designated as setup' in stdout
+    assert 'The blocks are at line numbers 23, 14' in stdout
+
+
+def test_extra_teardown_block():
+    """Teardown directive on a block, --teardown="round(math.pi, 3)"."""
+    command = (
+        'phmdoctest doc/directive2.md --teardown="round(math.pi, 3)" '
+        '--outfile discarded.py'
+    )
+    simulator_status = phmdoctest.simulator.run_and_pytest(
+        well_formed_command=command,
+        pytest_options=['--doctest-modules', '-v']
+    )
+    assert simulator_status.runner_status.exit_code == 1
+    stdout = simulator_status.runner_status.stdout
+    assert 'More than one block is designated as teardown' in stdout
+    assert 'The blocks are at line numbers 23, 62' in stdout
+
+
+def test_setup_directive_on_2_blocks():
+    """Two blocks have a setup directive. Only 1 is allowed."""
+    command = ('phmdoctest tests/direct.md --outfile discarded.py')
+    simulator_status = phmdoctest.simulator.run_and_pytest(
+        well_formed_command=command,
+        pytest_options=['--doctest-modules', '-v']
+    )
+    assert simulator_status.runner_status.exit_code == 1
+    stdout = simulator_status.runner_status.stdout
+    assert 'More than 1 block has directive <!--phmdoctest-setup-->.' in stdout
+    assert 'The blocks are at line numbers 77, 116.' in stdout
+
+
+def test_ok_same_block_setup_2_ways():
+    """OK if same block designated setup by directive and command line."""
+    command = (
+        'phmdoctest doc/directive2.md --setup FIRST --outfile discarded.py'
+    )
+    simulator_status = phmdoctest.simulator.run_and_pytest(
+        well_formed_command=command,
+        pytest_options=['--doctest-modules', '-v']
+    )
+    assert simulator_status.runner_status.exit_code == 0
+
+
+def test_ok_same_block_teardown_2_ways():
+    """OK if same block designated teardown by directive and command line."""
+    command = (
+        'phmdoctest doc/directive2.md --teardown LAST --outfile discarded.py'
+    )
+    simulator_status = phmdoctest.simulator.run_and_pytest(
+        well_formed_command=command,
+        pytest_options=['--doctest-modules', '-v']
+    )
+    assert simulator_status.runner_status.exit_code == 0
