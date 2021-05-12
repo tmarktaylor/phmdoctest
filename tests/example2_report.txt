@@ -1,6 +1,6 @@
            doc/example2.md fenced blocks
 ----------------------------------------------------
-block    line  test          matching TEXT pattern
+block    line  test          TEXT or directive
 type   number  role          quoted and one per line
 ----------------------------------------------------
 py3         9  code
@@ -21,7 +21,7 @@ pycon     101  skip-session  "LAST"
 5 test cases.
 1 skipped code blocks.
 1 skipped interactive session blocks.
-1 code blocks missing an output block.
+1 code blocks with no output block.
 
   skip pattern matches (blank means no match)
 ------------------------------------------------

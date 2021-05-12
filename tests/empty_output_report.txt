@@ -1,6 +1,6 @@
      tests/empty_output_block.md fenced blocks
 ---------------------------------------------------
-block     line  test        matching TEXT pattern
+block     line  test        TEXT or directive
 type    number  role        quoted and one per line
 ---------------------------------------------------
 python      10  code
@@ -9,5 +9,5 @@ python      22  code
             29  output
 ---------------------------------------------------
 2 test cases.
-1 code blocks missing an output block.
+1 code blocks with no output block.
 1 blocks marked "del-". They are not tested.

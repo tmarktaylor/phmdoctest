@@ -1,6 +1,6 @@
    tests/twentysix_session_blocks.md fenced blocks
 -----------------------------------------------------
-block     line  test          matching TEXT pattern
+block     line  test          TEXT or directive
 type    number  role          quoted and one per line
 -----------------------------------------------------
 pycon        3  skip-session  ">>>"

@@ -1,6 +1,6 @@
       tests/empty_code_block.md fenced blocks
 ---------------------------------------------------
-block     line  test        matching TEXT pattern
+block     line  test        TEXT or directive
 type    number  role        quoted and one per line
 ---------------------------------------------------
 python       6  del-code
