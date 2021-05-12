@@ -1,8 +1,7 @@
 """Test cases for code templates in functions.py."""
-import inspect
-
 import pytest
 
+from phmdoctest.fixture import managenamespace
 import phmdoctest.functions
 
 
@@ -60,31 +59,47 @@ def test_phm_compare_exact_prints(capsys):
     assert expected == got
 
 
+# The fixtures and functions in functions.py are not invoked
+# by phmdoctest.  The source code is read by Python standard
+# library inspect module, modified, and then written to the
+# phmdoctest --outfile.
+#
+# The test cases here that start with test_def get code
+# coverage of functions.py.
+
+
+class MockReadouterr:
+    """Simulate pytest capsys fixture function member readouterr."""
+    def __init__(self):
+        self.out = '<<<replaced>>>'
+
+
+class MockCapsys:
+    """Simulate pytest capsys fixture."""
+    @staticmethod
+    def readouterr():
+        return MockReadouterr()
+
+
 def test_def_test_code_and_output():
     """Painful way to eliminate 2 coverage missed statements."""
-    # The function coder.test_code_and_output() is used as
-    # a template to generate Python code.
-    # It accepts the pytest fixture called capsys when the
-    # generated pytest is run.
-    # phmodctest doesn't call this function so it shows up
-    # in the coverage report as a missed statement.
-    # Here a test mock up of the fixture is created that
-    # provides the expected value as its out attribute.
-    class MockReadouterr:
-        def __init__(self):
-            self.out = '<<<replaced>>>'
-
-    class MockCapsys:
-        @staticmethod
-        def readouterr():
-            return MockReadouterr()
-
     phmdoctest.functions.test_code_and_output(MockCapsys())
 
 
 def test_def_code_only():
     """The only purpose is to get code coverage."""
     phmdoctest.functions.test_code_only()
+
+
+def test_def_test_managed_code_and_output(managenamespace):
+    """The only purpose is to get code coverage."""
+    phmdoctest.functions.test_managed_code_and_output(
+        MockCapsys(), managenamespace)
+
+
+def test_def_test_managed_code_only(managenamespace):
+    """The only purpose is to get code coverage."""
+    phmdoctest.functions.test_managed_code_only(managenamespace)
 
 
 def test_def_test_nothing_fails():
