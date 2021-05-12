@@ -604,7 +604,7 @@ assertion.
 
 A single Python code block can assign names visible to
 other code blocks by giving the `--setup TEXT` option.
-Please see the [setup](setup) directive above.
+Please see the [setup](#setup) directive above.
 The rules for `TEXT` are the same as for `--skip TEXT` plus...
 
 - Only one block can match `TEXT`.
@@ -618,7 +618,7 @@ The rules for `TEXT` are the same as for `--skip TEXT` plus...
 
 A single Python code block can supply code run by the pytest
 `teardown_module()` fixture. Use the `--teardown TEXT` option.
-Please see the [teardown](teardown) directive above.
+Please see the [teardown](#teardown) directive above.
 The rules for `TEXT` are the same as for `--setup` above except
 `TEXT` won't match a setup block. 
 

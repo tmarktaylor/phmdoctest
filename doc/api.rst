@@ -18,8 +18,6 @@ Test phmdoctest from within a python script
 Read Markdown fenced code blocks
 ================================
 
-.. module:: phmdoctest.tool
-
 .. autoclass::  FCBChooser
 
 .. autofunction:: labeled_fenced_code_blocks

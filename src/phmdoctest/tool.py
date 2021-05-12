@@ -55,6 +55,9 @@ def labeled_fenced_code_blocks(
 
     Returns:
         List of LabeledFCB objects.
+
+        LabeledFCB is a NamedTuple with these fields:
+
         - label is the value of a label directive
           placed in a HTML comment before the fenced code block.
         - line is the line number in the Markdown file where the block
