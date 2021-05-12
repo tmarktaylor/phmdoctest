@@ -4,7 +4,7 @@
 The setup logic makes the names assigned here global to the test module.
 The code assigns the names tau, mylist, a, b, and the function doubler().
 Use phmdoctest --setup FIRST to select it.
-Setup code does not have an output block. 
+Setup code does not have an output block.
 ```py3
 import math
 mylist = [1, 2, 3]
@@ -30,7 +30,7 @@ doubler(16)= 32
 
 #### This test case modifies mylist.
 The objects created by the --setup code can be modified
-and blocks run afterward will see the changes.  
+and blocks run afterward will see the changes.
 ```py3
 mylist.append(4)
 print(mylist)
