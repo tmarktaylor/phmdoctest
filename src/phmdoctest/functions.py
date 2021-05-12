@@ -19,6 +19,13 @@ def _phm_compare_exact(a, b):
                 print(line)
             assert False
 
+# The functions below are used as a template to generate python source
+# code to be written to a file.
+# It is coded here as compiled python so the IDE can check for
+# syntax and style.
+# Python introspection of the function's source code provides the
+# source code as a string.
+
 
 @pytest.fixture(scope="module")
 def _phm_setup_teardown(managenamespace):
@@ -32,7 +39,7 @@ def _phm_setup_teardown(managenamespace):
 
 
 @pytest.fixture(scope="module")
-def _phm_setup_doctest_teardown(managenamespace, doctest_namespace):
+def _phm_setup_doctest_teardown(doctest_namespace, managenamespace):
     # <setup code here>
 
     managenamespace(operation='update', additions=locals())
@@ -46,31 +53,28 @@ def _phm_setup_doctest_teardown(managenamespace, doctest_namespace):
     managenamespace(operation='clear')
 
 
-# The function below is used as a template to generate python source
-# code to be written to a file.
-# It is coded here as compiled python so the IDE can check for
-# syntax and style.
-# Python introspection of the function's source code provides the
-# source code as a string.
-#
-# This template will be customized by replacing:
-# - The _code_and_output substring of the function name.
-# - Insert example code indented 4 spaces at the
-#   <put code here> placeholder.
-# - Triple quoted string contents with the expected output.
 def test_code_and_output(capsys):
     # <put code here>
 
-    expected_str = """\
+    _phm_expected_str = """\
 <<<replaced>>>"""
-    _phm_compare_exact(a=expected_str, b=capsys.readouterr().out)
+    _phm_compare_exact(a=_phm_expected_str, b=capsys.readouterr().out)
 
 
-# This template will be customized by replacing:
-# - The _code_only substring of the function name.
-# - Insert example code indented 4 spaces at the
-#   <put code here> placeholder.
 def test_code_only():
+    # <put code here>
+    pass
+
+
+def test_managed_code_and_output(capsys, managenamespace):
+    # <put code here>
+
+    _phm_expected_str = """\
+<<<replaced>>>"""
+    _phm_compare_exact(a=_phm_expected_str, b=capsys.readouterr().out)
+
+
+def test_managed_code_only(managenamespace):
     # <put code here>
     pass
 

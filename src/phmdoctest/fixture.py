@@ -3,6 +3,7 @@ import logging
 
 import pytest
 
+# mypy: ignore_errors
 
 @pytest.fixture(scope="module")
 def managenamespace(request):
@@ -21,7 +22,7 @@ def managenamespace(request):
     def check_attribute_name(name):
         """Check that name was not an attribute of the original test module.
 
-        It is an error to overwrite or delete any of the
+        It is an error to overwrite any of the
         the module attributes present in the source file.
         """
         assert name not in original_attributes, already_exists.format(name)
@@ -41,9 +42,10 @@ def managenamespace(request):
     def manager(operation, additions=None):
         """Maintain namespace with update, copy, and clear operations.
 
-        The namespace for the test cases as attributes assigned to the
+        The namespace for the test cases is attributes assigned to the
         enclosing module object.  The attribute names are stored in the
-        dict namespace_names.
+        set namespace_names. The attribute values are stored in the
+        module that imports this fixture.
 
         Args:
             operation
@@ -73,17 +75,30 @@ def managenamespace(request):
         elif operation == 'update':
             assert additions is not None, 'need additions to do an update'
             assert isinstance(additions, dict), 'must be a mapping'
-            # Remove some items from additions that don't belong in the
-            # namespace.
-            # The operation="update" caller may have passed locals() called
-            # inside a pytest test function.  Ignore the two fixtures:
+            # Remove some items from additions that don't belong or
+            # can't belong in the namespace.
+            # Items that don't belong are the fixtures used by the test
+            # case and the local variable _phm_expected_str.
             #     managenamespace
-            #     doctest_namespace (from pytest)
-            # The code from functions._phm_setup_doctest_teardown is an
-            # example of passing the fixtures into a test function that calls
-            # managenamespace.manager().
-            _ = additions.pop('managenamespace', 1)
-            _ = additions.pop('doctest_namespace', 1)
+            #     capsys
+            #     doctest_namespace
+            #     _phm_expected_str
+            _ = additions.pop('managenamespace', None)
+            _ = additions.pop('doctest_namespace', None)
+            _ = additions.pop('capsys', None)
+            _ = additions.pop('_phm_expected_str', None)
+            #
+            # Items that can't be in the namespace are the imports:
+            #     pytest
+            #     sys
+            # These imports may be at the top level of the generated test
+            # file.  If they are present in additions they will
+            # cause check_attribute_name() to assert.
+            # sys is imported for the phmdoctest-mark.skipif<3. directive.
+            # Users might have one or both of them in their code block.
+            _ = additions.pop('pytest', None)
+            if 'sys' in additions and 'sys' in original_attributes:
+                _ = additions.pop('sys', None)
             added_names = ', '.join(additions.keys())
             if added_names:
                 logging.debug('manager- adding= %s', added_names)
@@ -94,7 +109,7 @@ def managenamespace(request):
             check_integrity()
             show_namespace()
         else:
-            assert False, 'operation={} is not allowed'.format(
-                repr(operation))
+            assert False, 'operation="{}" is not allowed'.format(
+                operation)
 
     return manager

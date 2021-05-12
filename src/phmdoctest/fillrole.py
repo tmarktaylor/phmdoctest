@@ -4,6 +4,7 @@ from typing import List, Optional
 
 import click
 
+from phmdoctest.direct import Marker
 from phmdoctest.entryargs import Args
 from phmdoctest.fenced import Role, FencedBlock
 
@@ -62,10 +63,22 @@ def del_problem_blocks(blocks: List[FencedBlock]) -> None:
 
 def apply_skips(args: Args, blocks: List[FencedBlock]) -> None:
     """Designate Python code/session blocks that are exempt from testing."""
+    # Do skip requests from the command line.
     for pattern in args.skips:
         found = findall(pattern, blocks)
         for block in found:
             block.skip(pattern)
+    # Do skip requests marked as a skip directive on the block.
+    for block in blocks:
+        for directive in block.directives:
+            if directive.type == Marker.SKIP:
+                block.skip()
+        # If the code block has an output block check if it has a skip
+        # directive.
+        if block.output:
+            for directive in block.output.directives:
+                if directive.type == Marker.SKIP:
+                    block.output.skip()
 
 
 def findall(pattern: str, blocks: List[FencedBlock]) -> List[FencedBlock]:
@@ -106,25 +119,72 @@ def find_only_one_by_pattern(
     raise click.ClickException(message)
 
 
+def find_only_one_by_marker(
+        blocks: List[FencedBlock],
+        marker: Marker
+) -> Optional[FencedBlock]:
+    """Find 1 block that has directive indicated by Marker, die if more."""
+    found = []
+    for block in blocks:
+        for directive in block.directives:
+            if directive.type == marker:
+                found.append(block)
+    if not found:
+        return None
+    if len(found) == 1:
+        return found[0]
+    # More than one block has the directive
+    line_numbers = [str(b.line) for b in found]
+    message = (
+        'More than 1 block has directive {}.\n'
+        'The blocks are at line numbers {}.'
+    ).format(marker.value, ', '.join(line_numbers))
+    raise click.ClickException(message)
+
+
+def check_for_error(
+        block1: FencedBlock, block2: FencedBlock, name: str) -> None:
+    """Raise an exception if the two blocks are different."""
+    if block1.line != block2.line:
+        message = (
+            'More than one block is designated as {}.\n'
+            'The blocks are at line numbers {}, {}.'
+        ).format(name, block1.line, block2.line)
+        raise click.ClickException(message)
+
+
 def find_and_designate_setup(
         pattern: str, blocks: List[FencedBlock]) -> None:
     """Find and designate Python code block as setup.
 
     Search the contents of each block for the pattern.
     Raise an exception if more than one block matches the search.
-    If exactly one code block contains pattern and it
+    Repeat the search this time looking for blocks with a
+    SETUP directive.
+    Raise an exception if more than one block has a SETUP directive.
+    If we found a block by both methods (search pattern and directive),
+    we can continue if they are the same block.
+    If exactly one code block is identified and it
     has not been changed from Role.CODE set it to the Role.SETUP.
     Setup code can't have an output block since there is
     no way to generate code for it.
     If there is one, change its role to DEL_OUTPUT so it will show up
     in the report.
     """
-    match = find_only_one_by_pattern(pattern, blocks, '--setup or -u')
-    if match and match.role == Role.CODE:
-        match.set(Role.SETUP)
-        match.add_pattern(pattern)
-        if match.output is not None:
-            match.output.set(Role.DEL_OUTPUT)
+    if pattern is None:
+        match = None
+    else:
+        match = find_only_one_by_pattern(pattern, blocks, '--setup or -u')
+    marked = find_only_one_by_marker(blocks, Marker.SETUP)
+    if match is not None and marked is not None:
+        check_for_error(match, marked, 'setup')
+    block = match or marked
+    if block and block.role == Role.CODE:
+        block.set(Role.SETUP)
+        if pattern is not None:
+            block.add_pattern(pattern)
+        if block.output is not None:
+            block.output.set(Role.DEL_OUTPUT)
 
 
 def find_and_designate_teardown(
@@ -133,16 +193,29 @@ def find_and_designate_teardown(
 
     Search the contents of each block for the pattern.
     Raise an exception if more than one block matches the search.
-    If exactly one code block contains pattern and it
+    Repeat the search this time looking for blocks with a
+    TEARDOWN directive.
+    Raise an exception if more than one block has a TEARDOWN directive.
+    If we found a block by both methods (search pattern and directive),
+    we can continue if they are the same block.
+    If exactly one code block is identified and it
     has not been changed from Role.CODE set it to the Role.TEARDOWN.
-    Setup code can't have an output block since there is
+    Teardown code can't have an output block since there is
     no way to generate code for it.
     If there is one, change its role to DEL_OUTPUT so it will show up
     in the report.
     """
-    match = find_only_one_by_pattern(pattern, blocks, '--teardown or -d')
-    if match and match.role == Role.CODE:
-        match.set(Role.TEARDOWN)
-        match.add_pattern(pattern)
-        if match.output is not None:
-            match.output.set(Role.DEL_OUTPUT)
+    if pattern is None:
+        match = None
+    else:
+        match = find_only_one_by_pattern(pattern, blocks, '--teardown or -d')
+    marked = find_only_one_by_marker(blocks, Marker.TEARDOWN)
+    if match is not None and marked is not None:
+        check_for_error(match, marked, 'teardown')
+    block = match or marked
+    if block and block.role == Role.CODE:
+        if pattern is not None:
+            block.add_pattern(pattern)
+        block.set(Role.TEARDOWN)
+        if block.output is not None:
+            block.output.set(Role.DEL_OUTPUT)

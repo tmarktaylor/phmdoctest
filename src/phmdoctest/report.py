@@ -7,7 +7,7 @@ import click
 import monotable
 
 from phmdoctest.entryargs import Args
-from phmdoctest.fenced import Role, FencedBlock
+from phmdoctest.fenced import FencedBlock
 
 
 def print_report(args: Args, blocks: List[FencedBlock]) -> None:
@@ -34,10 +34,9 @@ def print_report(args: Args, blocks: List[FencedBlock]) -> None:
         ))
 
     num_missing_output = counts['CODE'] - counts['OUTPUT']
-    # assert num_missing_output >= 0, 'sanity check'
     if num_missing_output:
         report.append(
-            '{} code blocks missing an output block.'.format(
+            '{} code blocks with no output block.'.format(
                 num_missing_output
             )
         )
@@ -79,18 +78,21 @@ def fenced_block_report(blocks: List[FencedBlock], title: str = '') -> str:
     table.more_marker = '...'
     cell_grid = []
     for block in blocks:
-        if block.role in [Role.SKIP_CODE, Role.SKIP_SESSION]:
-            quoted_skips = [r.join(['"', '"']) for r in block.patterns]
-            skips = '\n'.join(quoted_skips)
-        elif block.role in [Role.SETUP, Role.TEARDOWN]:
-            skips = '"' + block.patterns[0] + '"'
-        else:
-            skips = ''
-        cell_grid.append([block.type, block.line, block.role.value, skips])
+        # assemble list of matching TEXT search strings from the command line
+        patterns = [r.join(['"', '"']) for r in block.patterns]
+
+        # Add to the patterns list the shortened names of any directives
+        for d in block.directives:
+            name = d.literal.replace('<!--phmdoctest', '')
+            name = name.replace('-->', '')
+            patterns.append(name)
+        cell = '\n'.join(patterns)
+        cell_grid.append(
+            [block.type, block.line, block.role.value, cell])
     headings = [
         'block\ntype', 'line\nnumber', 'test\nrole',
-        'matching TEXT pattern\nquoted and one per line']
-    formats = ['', '', '', '(width=30)']
+        'TEXT or directive\nquoted and one per line']
+    formats = ['', '', '', '(width=40)']
     text = table.table(headings, formats, cell_grid, title)    # type: str
     return text
 

@@ -108,7 +108,7 @@ import phmdoctest.tool
 )
 @click.version_option()
 # Note- docstring for entry point shows up in click's usage text.
-def entry_point(
+def entry_point(    # type: ignore
         markdown_file, outfile, skip, report, fail_nocode,
         setup, teardown, setup_doctest):
     args = Args(
@@ -132,12 +132,10 @@ def entry_point(
         b for b in blocks if b.role in [Role.CODE, Role.SESSION]
     ]
     phmdoctest.fillrole.apply_skips(args, code_and_session_blocks)
-    if args.setup:
-        phmdoctest.fillrole.find_and_designate_setup(
-            args.setup, code_and_session_blocks)
-    if args.teardown:
-        phmdoctest.fillrole.find_and_designate_teardown(
-            args.teardown, code_and_session_blocks)
+    phmdoctest.fillrole.find_and_designate_setup(
+        args.setup, code_and_session_blocks)
+    phmdoctest.fillrole.find_and_designate_teardown(
+        args.teardown, code_and_session_blocks)
     if args.is_report:
         phmdoctest.report.print_report(args, blocks)
 
