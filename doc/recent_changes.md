@@ -1,10 +1,10 @@
 ## Recent changes
-1.1.0 - 2021-05-TBD
+1.1.0 - 2021-05-12
 
 - Add test directives taken from HTML comments in .md.
 - Implement setup/teardown with Pytest fixtures. 
 - Use difflib.ndiff to show unexpected output.
-- Add a feature to return JUnitXML from pytest.
+- Add simulator feature to return JUnitXML from pytest.
 
 1.0.1 - 2020-12-16
 
