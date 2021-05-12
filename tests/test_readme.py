@@ -1,12 +1,9 @@
 """pytest test cases for examples in fenced code blocks in README.md."""
 
-import inspect
 import re
-import textwrap
-
-import pytest
 
 import phmdoctest.main
+import phmdoctest.direct
 import phmdoctest.simulator
 import phmdoctest.tool
 import verify
@@ -18,29 +15,13 @@ import quick_links
 # subprocess.
 # Pytest captures stdout and so does CliRunner.invoke().
 
-
-readme_blocks = []
-
-
-def setup_module():
-    """Collect Markdown fenced code blocks contents from README.md.
-
-    The test cases here must be run in order because they
-    pop items from the list readme_blocks.
-
-    This means using a pytest -k KEY more specific than
-    "-k test_readme" risks taking the wrong block from the
-    iterator readme_blocks causing all subsequent test_readme
-    test case to fail.
-    """
-    # test cases below iterate through the blocks.
-    global readme_blocks
-    readme_blocks = iter(phmdoctest.tool.fenced_code_blocks('README.md'))
+# Fenced code blocks that have the phmdoctest-label directive.
+labeled = phmdoctest.tool.FCBChooser('README.md')
 
 
 def test_raw_example1_md():
     """README raw markdown is same as file doc/example1.md."""
-    want = next(readme_blocks)
+    want = labeled.contents(label='example1-raw')
     with open('doc/example1.md', 'r', encoding='utf-8') as fp:
         got = fp.read()
         verify.a_and_b_are_the_same(want, got)
@@ -52,8 +33,8 @@ def test_example1():
     Check the copy of test_example1.py in the fenced code block.
     """
     # The helper checks the generated --outfile against the disk file.
-    example1_command = next(readme_blocks)
-    want = next(readme_blocks)
+    example1_command = labeled.contents(label='example1-command')
+    want = labeled.contents(label='example1-outfile')
     _ = verify.one_example(
         example1_command,
         want_file_name='doc/test_example1.py',
@@ -76,19 +57,148 @@ def test_example1():
 
 def test_report():
     """README report output is same as produced by the command."""
-    report_command = next(readme_blocks)
-    want = next(readme_blocks)
+    report_command = labeled.contents(label='report-command')
+    want = labeled.contents(label='example2-report')
     simulator_status = phmdoctest.simulator.run_and_pytest(
         report_command, pytest_options=None)
     got = simulator_status.runner_status.stdout
     verify.a_and_b_are_the_same(want, got)
 
 
+def test_intro_to_directives():
+    """Verify correct spelling of the skip directive."""
+    text = labeled.contents(label='intro-to-directives')
+    lines = text.splitlines()
+    assert lines[0] == phmdoctest.direct.Marker.SKIP.value
+    assert lines[1] == '<!--Another HTML comment-->'
+
+
+# Developers: Changes here must be mirrored in a Markdown FCB in README.md.
+# Runnable version of FCBChooser example code in README.md.
+# The guts of this function are an exact copy of example in README.md.
+def chooser_example_code():
+    import phmdoctest.tool
+
+    chooser = phmdoctest.tool.FCBChooser('doc/my_markdown_file.md')
+    text = chooser.contents(label='my-fenced-code-block')
+    print(text)
+
+
+def test_fcb_chooser(capsys):
+    """Check 3 parts of the label on any fenced code block example."""
+    # 1. The .md shown in the fenced code block is the same
+    #    as the file on disk.
+    want = labeled.contents(label='my-markdown-file')
+    with open('doc/my_markdown_file.md', 'r', encoding='utf-8') as fp:
+        got = fp.read()
+    verify.a_and_b_are_the_same(want, got)
+
+    # 2. The Python code example in the fenced code block is the same as
+    #    the body of the function chooser_example_code() above.
+    verify.example_code_checker(
+        callable_function=chooser_example_code,
+        example_string=labeled.contents(label='fetch-it')
+    )
+
+    # 3. The example output shown in the fenced code block is
+    #    the same as the output from running chooser_example_code().
+    want3 = labeled.contents(label='fetched-contents')
+    assert want3
+    chooser_example_code()
+    got3 = capsys.readouterr().out
+    assert got3.endswith('\n\n'), 'FCB newline + print() newline'
+    got3 = got3[:-1]    # drop the newline that print() added.
+    verify.a_and_b_are_the_same(want3, got3)
+
+
+def test_setup_first_fcb():
+    """Make sure example setup fenced code block same as in the file."""
+    want = labeled.contents(label='setup-md-first-block')
+    blocks = phmdoctest.tool.fenced_code_blocks('doc/setup.md')
+    got = blocks[0]
+    verify.a_and_b_are_the_same(want, got)
+
+
+def test_directive1_example():
+    """Make sure generated --outfile and --report are as expected."""
+
+    # Note that the report_command is hard coded here.
+    # The command shown in README.md is not tested.
+    report_command = 'phmdoctest doc/directive1.md --report'
+
+    directive_command = labeled.contents(label='directive-1-outfile')
+    _ = verify.one_example(
+        directive_command,
+        want_file_name='doc/test_directive1.py',
+        pytest_options=None
+    )
+
+    with open('doc/directive1_report.txt') as f:
+        want = f.read()
+    simulator_status = verify.one_example(
+        report_command,
+        want_file_name=None,
+        pytest_options=None
+    )
+    got = simulator_status.runner_status.stdout
+    verify.a_and_b_are_the_same(want, got)
+
+
+def test_directive2_example():
+    """Make sure generated --outfile and --report are as expected."""
+
+    # Note that the report_command is hard coded here.
+    # The command shown in README.md is not tested.
+    report_command = 'phmdoctest doc/directive2.md --report'
+
+    directive_command = labeled.contents(label='directive-2-outfile')
+    _ = verify.one_example(
+        directive_command,
+        want_file_name='doc/test_directive2.py',
+        pytest_options=None
+    )
+
+    with open('doc/directive2_report.txt') as f:
+        want = f.read()
+    simulator_status = verify.one_example(
+        report_command,
+        want_file_name=None,
+        pytest_options=None
+    )
+    got = simulator_status.runner_status.stdout
+    verify.a_and_b_are_the_same(want, got)
+
+
+def test_directive3_example():
+    """Make sure generated --outfile and --report are as expected."""
+
+    # Note that the report_command is hard coded here.
+    # The command shown in README.md is not tested.
+    report_command = 'phmdoctest doc/directive3.md --report'
+
+    directive_command = labeled.contents(label='directive-3-outfile')
+    _ = verify.one_example(
+        directive_command,
+        want_file_name='doc/test_directive3.py',
+        pytest_options=None
+    )
+
+    with open('doc/directive3_report.txt') as f:
+        want = f.read()
+    simulator_status = verify.one_example(
+        report_command,
+        want_file_name=None,
+        pytest_options=None
+    )
+    got = simulator_status.runner_status.stdout
+    verify.a_and_b_are_the_same(want, got)
+
+
 def test_skip_example():
     """Make sure generated --outfile and --report are as expected."""
-    skip_command = next(readme_blocks)
-    want = next(readme_blocks)    # get the skip report
-    short_form_command = next(readme_blocks)
+    skip_command = labeled.contents(label='skip-command')
+    want = labeled.contents(label='skip-report')
+    short_form_command = labeled.contents(label='short-skip-command')
     simulator_status = verify.one_example(
         skip_command,
         want_file_name='doc/test_example2.py',
@@ -107,18 +217,10 @@ def test_skip_example():
     verify.a_and_b_are_the_same(want, got2)
 
 
-def test_setup_first_fcb():
-    """Make sure example setup fenced code block same as in the file."""
-    want = next(readme_blocks)    # get the setup block example
-    blocks = phmdoctest.tool.fenced_code_blocks('doc/setup.md')
-    got = blocks[0]
-    verify.a_and_b_are_the_same(want, got)
-
-
 def test_setup_report_example():
     """Make sure report in README is correct."""
-    command = next(readme_blocks)
-    want = next(readme_blocks)    # get the report
+    command = labeled.contents(label='setup-command-report')
+    want = labeled.contents(label='setup-report')
     simulator_status = verify.one_example(
         command,
         want_file_name=None,
@@ -130,7 +232,7 @@ def test_setup_report_example():
 
 def test_setup():
     """Make sure --setup --outfile is correct."""
-    command = next(readme_blocks)
+    command = labeled.contents(label='setup-command-outfile')
     _ = verify.one_example(
         command,
         want_file_name='doc/test_setup.py',
@@ -140,7 +242,7 @@ def test_setup():
 
 def test_setup_doctest():
     """Make sure --setup-doctest --outfile is correct."""
-    command = next(readme_blocks)
+    command = labeled.contents(label='setup-doctest-outfile')
     _ = verify.one_example(
         command,
         want_file_name='doc/test_setup_doctest.py',
@@ -150,8 +252,8 @@ def test_setup_doctest():
 
 def test_outfile_to_stdout():
     """Make sure generated --outfile and --report are as expected."""
-    outfile_command1 = next(readme_blocks)
-    outfile_command2 = next(readme_blocks)
+    outfile_command1 = labeled.contents(label='outfile-dash1')
+    outfile_command2 = labeled.contents(label='outfile-dash2')
     simulator_status = verify.one_example(
         outfile_command1,
         want_file_name=None,
@@ -184,7 +286,7 @@ def test_usage():
     #       The test here replaces 'entry-point' with 'phmdoctest'.
     simulator_status = phmdoctest.simulator.run_and_pytest(
         'phmdoctest --help', pytest_options=None)
-    want1 = next(readme_blocks)
+    want1 = labeled.contents(label='usage')
     want2 = re.sub(r'\s+', ' ', want1)
 
     got1 = simulator_status.runner_status.stdout
@@ -195,7 +297,7 @@ def test_usage():
 
 def test_yaml():
     """Show Markdown example and .travis.yml have the same commands."""
-    markdown_example_text = next(readme_blocks)
+    markdown_example_text = labeled.contents(label='yaml')
     expected = """\
 dist: xenial
 language: python
@@ -203,7 +305,7 @@ sudo: false
 
 matrix:
   include:
-    - python: 3.5
+    - python: 3.6
       install:
         - pip install "." pytest
       script:
@@ -219,7 +321,7 @@ matrix:
 # Developers: Changes here must be mirrored in a Markdown FCB in README.md.
 # Runnable version of example code in README.md.
 # The guts of this function are an exact copy of example in README.md.
-def example_code():
+def simulator_example_code():
     import phmdoctest.simulator
     command = 'phmdoctest doc/example1.md --report --outfile test_me.py'
     simulator_status = phmdoctest.simulator.run_and_pytest(
@@ -230,21 +332,15 @@ def example_code():
     assert simulator_status.pytest_exit_code == 0
 
 
-def test_simulator_python_code():
-    """Assure the guts of example_code() above are same as in Markdown."""
-    want1 = next(readme_blocks)
-    want2 = textwrap.indent(want1, '    ')
-    got1 = inspect.getsource(example_code)
-    got2 = got1.replace('def example_code():\n', '')
-    verify.a_and_b_are_the_same(want2, got2)
+def test_simulator():
+    """Assure the guts of the function are same as in Markdown."""
+    verify.example_code_checker(
+        callable_function=simulator_example_code,
+        example_string=labeled.contents(label='simulator')
+    )
+
     # also make sure the code runs with no assertions
-    example_code()
-
-
-def test_consumed_all_fenced_code_blocks():
-    """Verify no left over fenced code blocks from README.md"""
-    with pytest.raises(StopIteration):
-        _ = next(readme_blocks)
+    simulator_example_code()
 
 
 def test_quick_links():
@@ -253,4 +349,5 @@ def test_quick_links():
     with open(filename, 'r', encoding='utf-8') as f:
         readme = f.read()
         github_links = quick_links.make_quick_links(filename, style='github')
-        assert github_links + '\n\n## ' in readme
+        # There must be at least one blank line after the last link.
+        assert github_links + '\n\n' in readme

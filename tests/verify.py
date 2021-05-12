@@ -1,7 +1,9 @@
 """Logic used by pytest test cases."""
 
 import difflib
+import inspect
 from itertools import zip_longest
+import textwrap
 
 import phmdoctest.simulator
 
@@ -18,6 +20,18 @@ def a_and_b_are_the_same(a, b):
             for line in diffs:
                 print(line)
             assert False
+
+
+def example_code_checker(callable_function, example_string):
+    """Check that the body of the function matches the string."""
+    want1 = inspect.getsource(callable_function)
+    got = textwrap.indent(example_string, '    ')
+    # Drop the def function_name line.
+    newline_index = want1.find('\n')
+    assert newline_index > -1, 'must have a newline'
+    assert len(want1) > newline_index + 2, 'must have more after newline'
+    want2 = want1[newline_index + 1:]
+    a_and_b_are_the_same(want2, got)
 
 
 def one_example(
