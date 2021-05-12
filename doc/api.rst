@@ -5,7 +5,7 @@ Development tools API
 ~~~~~~~~~~~~~~~~~~~~~
 
 
-Read Markdown contents of fenced code blocks
+Read contents of Markdown fenced code blocks
 ============================================
 
 .. module:: phmdoctest.tool
