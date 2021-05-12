@@ -135,7 +135,7 @@ def extract_testsuite(
     root = ElementTree.fromstring(junit_xml_string)
     suite = root.find('testsuite')
     failed_test_cases = []
-    if suite:
+    if suite is not None:
         for case in suite:
             if case.find('failure') is not None:
                 failed_test_cases.append(case)

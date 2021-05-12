@@ -108,7 +108,7 @@ import phmdoctest.tool
 )
 @click.version_option()
 # Note- docstring for entry point shows up in click's usage text.
-def entry_point(    # type: ignore
+def entry_point(
         markdown_file, outfile, skip, report, fail_nocode,
         setup, teardown, setup_doctest):
     args = Args(
