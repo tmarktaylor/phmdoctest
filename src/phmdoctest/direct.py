@@ -9,8 +9,9 @@ import commonmark.node    # type: ignore
 class Marker(Enum):
     """HTML comment before a fenced code block."""
     SKIP = '<!--phmdoctest-skip-->'
+    SKIPIF = '<!--phmdoctest-skipif<3.'   # No trailing space, no "-->".
     MARK_SKIP = '<!--phmdoctest-mark.skip-->'
-    SKIPIF = '<!--phmdoctest-mark.skipif<3.'   # No trailing space, no "-->".
+    MARK_SKIPIF = '<!--phmdoctest-mark.skipif<3.'   # No trailing space, no "-->".
     LABEL = '<!--phmdoctest-label '            # Note trailing space, no "-->".
     SETUP = '<!--phmdoctest-setup-->'
     TEARDOWN = '<!--phmdoctest-teardown-->'
@@ -61,10 +62,10 @@ def find_one_directive(node: commonmark.node) -> Optional[Directive]:
                 line=node.sourcepos[0][0],
                 literal=node.literal
             )
-        elif node.literal.startswith(Marker.SKIPIF.value):
+        elif node.literal.startswith(Marker.MARK_SKIPIF.value):
             return Directive(
-                type=Marker.SKIPIF,
-                value=extract_value(node.literal, Marker.SKIPIF),
+                type=Marker.MARK_SKIPIF,
+                value=extract_value(node.literal, Marker.MARK_SKIPIF),
                 line=node.sourcepos[0][0],
                 literal=node.literal
             )

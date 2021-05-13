@@ -55,14 +55,14 @@ def get_skipif_minor_number(block: FencedBlock) -> int:
     # Return zero if there is no such directive.
     minor_number = 0
     for directive in block.directives:
-        if directive.type == Marker.SKIPIF:
+        if directive.type == Marker.MARK_SKIPIF:
             value = directive.value
             try:
                 minor_number = int(value, 10)
                 assert minor_number > 0
             except (AssertionError, ValueError):
                 lines = [
-                    Marker.SKIPIF.value + '{}-->'.format(value),
+                    Marker.MARK_SKIPIF.value + '{}-->'.format(value),
                     (
                         'at markdown file line {} '.format(directive.line) +
                         'must be a decimal number and greater than zero.'
@@ -87,10 +87,9 @@ def needs_sys(blocks: List[FencedBlock]) -> bool:
 def has_pytest_mark_decorator(blocks: List[FencedBlock]) -> bool:
     """True if any code blocks generate @pytest.mark.* decorators."""
     for block in blocks:
-        if block.role == Role.CODE:
-            for directive in block.directives:
-                if directive.type in [Marker.SKIP, Marker.SKIPIF]:
-                    return True
+        any_mark = any(dr.type in (Marker.MARK_SKIP, Marker.MARK_SKIPIF) for dr in block.directives)
+        if block.role == Role.CODE and any_mark:
+            return True
     return False
 
 
@@ -189,16 +188,18 @@ def any_names_directives(blocks: List[FencedBlock]) -> bool:
     return False
 
 
-def add_pytest_mark_decorator(writer: StringIO, block: FencedBlock) -> None:
+def add_pytest_mark_decorator(writer: StringIO, block: FencedBlock) -> int:
     """If block has a -mark. directive add the pytest.mark decorator.
 
     If the block has a mark.skip directive, write pytest.mark.skip.
     If the block has a mark.skipif directive, write pytest.mark.skipif.
     """
+    count = 0
     for directive in block.directives:
         if directive.type == Marker.MARK_SKIP:
             writer.write('\n')
             writer.write('@pytest.mark.skip()')
+            count += 1
 
     mark_format = (
         '@pytest.mark.skipif(sys.version_info < (3, {0}), '
@@ -208,6 +209,8 @@ def add_pytest_mark_decorator(writer: StringIO, block: FencedBlock) -> None:
     if minor_number:
         writer.write('\n')
         writer.write(mark_format.format(minor_number))
+        count += 1
+    return count
 
 
 def test_case(block: FencedBlock, used_names: Set[str]) -> str:
