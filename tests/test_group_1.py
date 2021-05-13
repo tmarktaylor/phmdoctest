@@ -285,6 +285,19 @@ def test_blanklines_in_output():
     assert simulator_status.pytest_exit_code == 0
 
 
+def test_one_mark_skip():
+    """Expected output has empty lines and no doctest <BLANKLINE>."""
+    command = (
+        'phmdoctest tests/one_mark_skip.md --outfile discarded.py'
+    )
+    simulator_status = phmdoctest.simulator.run_and_pytest(
+        well_formed_command=command,
+        pytest_options=['--doctest-modules', '-v'],
+    )
+    assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code == 0
+
+
 def test_no_namespace_manager_call_generated():
     """phmdoctest.cases.call_namespace_manager() returns empty string."""
     # In cases.py there is never a call to call_namespace_manager()
