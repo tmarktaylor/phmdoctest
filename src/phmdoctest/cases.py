@@ -89,7 +89,7 @@ def has_pytest_mark_decorator(blocks: List[FencedBlock]) -> bool:
     for block in blocks:
         if block.role == Role.CODE:
             for directive in block.directives:
-                if directive.type in [Marker.SKIP, Marker.SKIPIF]:
+                if directive.type in [Marker.MARK_SKIP, Marker.SKIPIF]:
                     return True
     return False
 
