@@ -1,4 +1,8 @@
 ## Recent changes
+1.1.1 - 2021-05-13
+
+- Documentation typo fixes.
+
 1.1.0 - 2021-05-12
 
 - Add test directives taken from HTML comments in .md.

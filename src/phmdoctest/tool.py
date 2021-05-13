@@ -30,7 +30,7 @@ class FCBChooser:
 
         Returns:
             Contents of the labeled fenced code block as a string
-            or empty string the label is not found. Fenced code block
+            or empty string if the label is not found. Fenced code block
             strings typically end with a newline.
         """
         for block in self._blocks:

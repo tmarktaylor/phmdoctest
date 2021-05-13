@@ -2,7 +2,7 @@
 
 #### This will be the setup code.
 The setup logic makes the names assigned here global to the test module.
-The code assigns the names tau, mylist, a, b, and the function doubler().
+The code assigns the names math, mylist, a, b, and the function doubler().
 Use phmdoctest --setup FIRST to select it.
 Setup code does not have an output block.
 ```py3

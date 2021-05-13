@@ -307,15 +307,16 @@ Hello World!
 
 Directive HTML comment | Use on blocks
 -------------- | ---------------------
-`<!--phmdoctest-skip-->`| code, session, output
+`<!--phmdoctest-skip-->` | code, session, output
 `<!--phmdoctest-label IDENTIFIER-->` | code, session
 `<!--phmdoctest-label TEXT-->` | **any**
-`<!--phmdoctest-mark.skip-->`| code
+`<!--phmdoctest-mark.skip-->` | code
 `<!--phmdoctest-mark.skipif<3.N-->` | code
 `<!--phmdoctest-setup-->` | code
 `<!--phmdoctest-teardown-->` | code 
-`<!--phmdoctest-share-names-->`| code
-`<!--phmdoctest-clear-names-->` |code
+`<!--phmdoctest-share-names-->` | code
+`<!--phmdoctest-clear-names-->` | code
+
 
 [Directive hints](#directive-hints)
 
@@ -419,7 +420,7 @@ using the [--teardown](#--teardown) command line option.
  
 ## share-names
 Names assigned by the Python code block are copied to
-the test module after the test code runs. This happens at run
+the test module as globals after the test code runs. This happens at run
 time. These names are now visible to subsequent 
 test cases generated for Python code blocks in the Markdown file.
 share-names modifies the execution context as described for
@@ -436,6 +437,7 @@ After the test case generated for the Python code block
 with the clear-names directive runs, all names that were
 created by one or more preceding share-names directives
 are deleted. The names that were shared are no longer visible.
+This directive also deletes the names assigned by setup.
 [Example.](#share-names-clear-names-example)
 
 ## label skip and mark example
@@ -714,7 +716,7 @@ When run without `--setup`
   - Names assigned by setup code will no longer be visible.
   
 #### With `--setup` and `--setup-doctest`
-Same as previous section plus:
+Same as the setup section plus:
 - names assigned by the setup code block 
   are visible to the sessions.
 - Sessions can modify the objects created by the setup code. 
@@ -734,7 +736,7 @@ execution order of setup_module(), test cases, sessions, and
 teardown_module().
 The demos are in one of the Travis CI builds.
 - Look for the build log here [Build][12].
-- Go to the Python 3.7 build which runs tox.
+- Go to the Python 3.8 build which runs tox.
 - Go to the Job Log tab.
 - Look for the tox demo environment commands near the end.
 

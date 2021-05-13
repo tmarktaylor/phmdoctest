@@ -30,9 +30,9 @@ else:
 
 #### Share the names assigned here with later Python code blocks. 
 The share-names directive makes the names assigned here
-global to the test module.  The names are visible to
-all Python code blocks occurring later in the Markdown source file.
-The code assigns the names tau, mylist, a, b, and the function doubler().
+global to the test module.  The names are visible to all Python code blocks
+occurring later in the Markdown source file. The code assigns the 
+names string, x, y, z, grades, and the function incrementer().
 Place the `<!--phmdoctest-share-names-->` directive in the Markdown file.
 
 <!--phmdoctest-label test_directive_share_names-->
