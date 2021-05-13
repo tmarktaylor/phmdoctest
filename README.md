@@ -304,19 +304,20 @@ Hello World!
 ```
 ~~~
 
-
-Directive HTML comment | Use on blocks
--------------- | ---------------------
-`<!--phmdoctest-skip-->` | code, session, output
-`<!--phmdoctest-label IDENTIFIER-->` | code, session
-`<!--phmdoctest-label TEXT-->` | **any**
-`<!--phmdoctest-mark.skip-->` | code
-`<!--phmdoctest-mark.skipif<3.N-->` | code
-`<!--phmdoctest-setup-->` | code
-`<!--phmdoctest-teardown-->` | code 
-`<!--phmdoctest-share-names-->` | code
-`<!--phmdoctest-clear-names-->` | code
-
+List of Directives
+```
+       Directive HTML comment      |    Use on blocks
+---------------------------------- | ---------------------
+<!--phmdoctest-skip-->             | code, session, output
+<!--phmdoctest-label IDENTIFIER--> | code, session
+<!--phmdoctest-label TEXT-->       | any
+<!--phmdoctest-mark.skip-->        | code
+<!--phmdoctest-mark.skipif<3.N-->  | code
+<!--phmdoctest-setup-->            | code
+<!--phmdoctest-teardown-->         | code 
+<!--phmdoctest-share-names-->      | code
+<!--phmdoctest-clear-names-->      | code
+```
 
 [Directive hints](#directive-hints)
 
