@@ -19,6 +19,32 @@ import quick_links
 labeled = phmdoctest.tool.FCBChooser('README.md')
 
 
+def test_directive_example_raw():
+    """README raw markdown is same as the disk file."""
+    want = labeled.contents(label='directive-example-raw')
+    with open('tests/one_mark_skip.md', 'r', encoding='utf-8') as fp:
+        got = fp.read()
+        verify.a_and_b_are_the_same(want, got)
+
+
+def test_directive_example():
+    """Make sure generated --outfile is as expected; Run pytest.
+
+    Check the --outfile against the copy in the fenced code block.
+    """
+    example1_command = labeled.contents(label='directive-example-command')
+    want = labeled.contents(label='directive-example-outfile')
+    simulator_status = verify.one_example(
+        example1_command,
+        want_file_name=None,
+        pytest_options=['--doctest-modules', '-v']
+    )
+    # Fenced code block in README.md is the same as the --outfile.
+    got = simulator_status.outfile
+    verify.a_and_b_are_the_same(want, got)
+    assert simulator_status.pytest_exit_code == 0
+
+
 def test_raw_example1_md():
     """README raw markdown is same as file doc/example1.md."""
     want = labeled.contents(label='example1-raw')

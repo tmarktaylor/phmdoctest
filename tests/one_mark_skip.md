@@ -1,7 +1,7 @@
 <!--phmdoctest-mark.skip-->
-<!--phmdoctest-label test_mark_skip-->
+<!--phmdoctest-label test_example-->
 ```python
-print('testing @pytest.mark.skip().')
+print('Hello World!')
 ```
 ```
 incorrect expected output

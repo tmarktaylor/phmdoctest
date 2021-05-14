@@ -46,7 +46,8 @@ examples in Markdown.
 
 [Introduction](#introduction) |
 [Installation](#installation) |
-[Sample usage](#sample-usage) |
+[Sample Usage](#sample-usage) |
+[Sample usage without directives](#sample-usage-without-directives) |
 [--report](#--report) |
 [Identifying blocks](#identifying-blocks) |
 [Directives](#directives) |
@@ -87,7 +88,61 @@ It is advisable to install in a virtual environment.
 
     python -m pip install phmdoctest
 
-## Sample usage
+## Sample Usage
+
+Given the Markdown file shown in raw form here...
+<!--phmdoctest-label directive-example-raw-->
+~~~
+<!--phmdoctest-mark.skip-->
+<!--phmdoctest-label test_example-->
+```python
+print('Hello World!')
+```
+```
+incorrect expected output
+```
+~~~
+
+the command...
+<!--phmdoctest-label directive-example-command-->
+```
+phmdoctest tests/one_mark_skip.md --outfile test_one_mark_skip.py
+```
+
+creates the python source code file shown here...
+<!--phmdoctest-label directive-example-outfile-->
+```python3
+"""pytest file built from tests/one_mark_skip.md"""
+import pytest
+
+from phmdoctest.functions import _phm_compare_exact
+
+
+@pytest.mark.skip()
+def test_example(capsys):
+    print('Hello World!')
+
+    _phm_expected_str = """\
+incorrect expected output
+"""
+    _phm_compare_exact(a=_phm_expected_str, b=capsys.readouterr().out)
+```
+
+Run the --outfile with pytest...
+```
+$ pytest -vv test_one_mark_skip.py
+
+test_one_mark_skip.py::test_example SKIPPED 
+```
+
+- The HTML comments in the Markdown are phmdoctest **directives**.
+- The skip directive adds the @pytest.mark.skip() line.
+- The label directive names the test case function.
+- List of  [Directives](#directives)
+- Directives are not required.
+
+
+## Sample usage without directives
 
 Given the Markdown file [example1.md](doc/example1.md)
 shown in raw form here...
