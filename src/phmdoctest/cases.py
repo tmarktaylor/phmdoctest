@@ -55,14 +55,14 @@ def get_skipif_minor_number(block: FencedBlock) -> int:
     # Return zero if there is no such directive.
     minor_number = 0
     for directive in block.directives:
-        if directive.type == Marker.SKIPIF:
+        if directive.type == Marker.PYTEST_SKIPIF:
             value = directive.value
             try:
                 minor_number = int(value, 10)
                 assert minor_number > 0
             except (AssertionError, ValueError):
                 lines = [
-                    Marker.SKIPIF.value + '{}-->'.format(value),
+                    Marker.PYTEST_SKIPIF.value + '{}-->'.format(value),
                     (
                         'at markdown file line {} '.format(directive.line) +
                         'must be a decimal number and greater than zero.'
@@ -89,7 +89,8 @@ def has_pytest_mark_decorator(blocks: List[FencedBlock]) -> bool:
     for block in blocks:
         if block.role == Role.CODE:
             for directive in block.directives:
-                if directive.type in [Marker.MARK_SKIP, Marker.SKIPIF]:
+                if directive.type in [
+                    Marker.PYTEST_SKIP, Marker.PYTEST_SKIPIF]:
                     return True
     return False
 
@@ -196,7 +197,7 @@ def add_pytest_mark_decorator(writer: StringIO, block: FencedBlock) -> None:
     If the block has a mark.skipif directive, write pytest.mark.skipif.
     """
     for directive in block.directives:
-        if directive.type == Marker.MARK_SKIP:
+        if directive.type == Marker.PYTEST_SKIP:
             writer.write('\n')
             writer.write('@pytest.mark.skip()')
 
