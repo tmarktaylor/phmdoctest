@@ -55,14 +55,14 @@ def get_skipif_minor_number(block: FencedBlock) -> int:
     # Return zero if there is no such directive.
     minor_number = 0
     for directive in block.directives:
-        if directive.type == Marker.SKIPIF:
+        if directive.type == Marker.PYTEST_SKIPIF:
             value = directive.value
             try:
                 minor_number = int(value, 10)
                 assert minor_number > 0
             except (AssertionError, ValueError):
                 lines = [
-                    Marker.SKIPIF.value + '{}-->'.format(value),
+                    Marker.PYTEST_SKIPIF.value + '{}-->'.format(value),
                     (
                         'at markdown file line {} '.format(directive.line) +
                         'must be a decimal number and greater than zero.'
@@ -86,12 +86,13 @@ def needs_sys(blocks: List[FencedBlock]) -> bool:
 
 def has_pytest_mark_decorator(blocks: List[FencedBlock]) -> bool:
     """True if any code blocks generate @pytest.mark.* decorators."""
-    for block in blocks:
-        if block.role == Role.CODE:
-            for directive in block.directives:
-                if directive.type in [Marker.SKIP, Marker.SKIPIF]:
-                    return True
-    return False
+    code_blocks = [b for b in blocks if b.role == Role.CODE]
+    # Return True if any calls to add_pytest_mark_decorator() write a line
+    # to the StringIO file.
+    pytest_marks_lines = StringIO()
+    for block in code_blocks:
+        add_pytest_mark_decorator(pytest_marks_lines, block)
+    return len(pytest_marks_lines.getvalue()) > 0
 
 
 def compose_import_lines(
@@ -100,10 +101,11 @@ def compose_import_lines(
         needs_output_checking: bool) -> str:
     """Generate import lines for the test file."""
     needs_fixture = needs_setup_or_teardown or any_names_directives(blocks)
+    needs_import_pytest = has_pytest_mark_decorator(blocks)
     lines = list()
     if needs_sys(blocks):
         lines.append('import sys\n\n')
-    if needs_fixture or has_pytest_mark_decorator(blocks):
+    if needs_fixture or needs_import_pytest:
         lines.append('import pytest\n\n')
     if needs_fixture:
         lines.append('from phmdoctest.fixture import managenamespace\n')
@@ -196,7 +198,7 @@ def add_pytest_mark_decorator(writer: StringIO, block: FencedBlock) -> None:
     If the block has a mark.skipif directive, write pytest.mark.skipif.
     """
     for directive in block.directives:
-        if directive.type == Marker.MARK_SKIP:
+        if directive.type == Marker.PYTEST_SKIP:
             writer.write('\n')
             writer.write('@pytest.mark.skip()')
 
