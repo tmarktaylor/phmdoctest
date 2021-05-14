@@ -138,7 +138,7 @@ def test_mark_skip():
     directives = fenced_block_node_directives()
     assert len(directives) == 1
     marker = directives[0]
-    assert marker.type == phmdoctest.direct.Marker.MARK_SKIP
+    assert marker.type == phmdoctest.direct.Marker.PYTEST_SKIP
     assert marker.value == ''
     assert marker.line == 90
     assert marker.literal == '<!--phmdoctest-mark.skip-->'
@@ -148,7 +148,7 @@ def test_skipif_sharenames():
     directives = fenced_block_node_directives()
     assert len(directives) == 2
     marker = directives[0]
-    assert marker.type == phmdoctest.direct.Marker.MARK_SKIPIF
+    assert marker.type == phmdoctest.direct.Marker.PYTEST_SKIPIF
     assert marker.value == '8'
     assert marker.line == 102
     assert marker.literal == '<!--phmdoctest-mark.skipif<3.8-->'
