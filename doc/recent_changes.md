@@ -1,4 +1,9 @@
 ## Recent changes
+1.1.1 - 2021-05-14
+
+- Bugfix- Pull Request #6, Issue #8 --outfile missing `import pytest`.
+- Documentation typo fixes.
+
 1.1.0 - 2021-05-12
 
 - Add test directives taken from HTML comments in .md.

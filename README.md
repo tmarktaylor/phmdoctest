@@ -1,4 +1,4 @@
-# phmdoctest 1.1.0
+# phmdoctest 1.1.1
 
 ## Introduction
 
@@ -46,7 +46,8 @@ examples in Markdown.
 
 [Introduction](#introduction) |
 [Installation](#installation) |
-[Sample usage](#sample-usage) |
+[Sample Usage](#sample-usage) |
+[Sample usage without directives](#sample-usage-without-directives) |
 [--report](#--report) |
 [Identifying blocks](#identifying-blocks) |
 [Directives](#directives) |
@@ -87,7 +88,61 @@ It is advisable to install in a virtual environment.
 
     python -m pip install phmdoctest
 
-## Sample usage
+## Sample Usage
+
+Given the Markdown file shown in raw form here...
+<!--phmdoctest-label directive-example-raw-->
+~~~
+<!--phmdoctest-mark.skip-->
+<!--phmdoctest-label test_example-->
+```python
+print('Hello World!')
+```
+```
+incorrect expected output
+```
+~~~
+
+the command...
+<!--phmdoctest-label directive-example-command-->
+```
+phmdoctest tests/one_mark_skip.md --outfile test_one_mark_skip.py
+```
+
+creates the python source code file shown here...
+<!--phmdoctest-label directive-example-outfile-->
+```python3
+"""pytest file built from tests/one_mark_skip.md"""
+import pytest
+
+from phmdoctest.functions import _phm_compare_exact
+
+
+@pytest.mark.skip()
+def test_example(capsys):
+    print('Hello World!')
+
+    _phm_expected_str = """\
+incorrect expected output
+"""
+    _phm_compare_exact(a=_phm_expected_str, b=capsys.readouterr().out)
+```
+
+Run the --outfile with pytest...
+```
+$ pytest -vv test_one_mark_skip.py
+
+test_one_mark_skip.py::test_example SKIPPED 
+```
+
+- The HTML comments in the Markdown are phmdoctest **directives**.
+- The skip directive adds the @pytest.mark.skip() line.
+- The label directive names the test case function.
+- List of  [Directives](#directives)
+- Directives are not required.
+
+
+## Sample usage without directives
 
 Given the Markdown file [example1.md](doc/example1.md)
 shown in raw form here...
@@ -304,18 +359,20 @@ Hello World!
 ```
 ~~~
 
-
-Directive HTML comment | Use on blocks
--------------- | ---------------------
-`<!--phmdoctest-skip-->`| code, session, output
-`<!--phmdoctest-label IDENTIFIER-->` | code, session
-`<!--phmdoctest-label TEXT-->` | **any**
-`<!--phmdoctest-mark.skip-->`| code
-`<!--phmdoctest-mark.skipif<3.N-->` | code
-`<!--phmdoctest-setup-->` | code
-`<!--phmdoctest-teardown-->` | code 
-`<!--phmdoctest-share-names-->`| code
-`<!--phmdoctest-clear-names-->` |code
+List of Directives
+```
+       Directive HTML comment      |    Use on blocks
+---------------------------------- | ---------------------
+<!--phmdoctest-skip-->             | code, session, output
+<!--phmdoctest-label IDENTIFIER--> | code, session
+<!--phmdoctest-label TEXT-->       | any
+<!--phmdoctest-mark.skip-->        | code
+<!--phmdoctest-mark.skipif<3.N-->  | code
+<!--phmdoctest-setup-->            | code
+<!--phmdoctest-teardown-->         | code 
+<!--phmdoctest-share-names-->      | code
+<!--phmdoctest-clear-names-->      | code
+```
 
 [Directive hints](#directive-hints)
 
@@ -419,7 +476,7 @@ using the [--teardown](#--teardown) command line option.
  
 ## share-names
 Names assigned by the Python code block are copied to
-the test module after the test code runs. This happens at run
+the test module as globals after the test code runs. This happens at run
 time. These names are now visible to subsequent 
 test cases generated for Python code blocks in the Markdown file.
 share-names modifies the execution context as described for
@@ -436,6 +493,7 @@ After the test case generated for the Python code block
 with the clear-names directive runs, all names that were
 created by one or more preceding share-names directives
 are deleted. The names that were shared are no longer visible.
+This directive also deletes the names assigned by setup.
 [Example.](#share-names-clear-names-example)
 
 ## label skip and mark example
@@ -714,7 +772,7 @@ When run without `--setup`
   - Names assigned by setup code will no longer be visible.
   
 #### With `--setup` and `--setup-doctest`
-Same as previous section plus:
+Same as the setup section plus:
 - names assigned by the setup code block 
   are visible to the sessions.
 - Sessions can modify the objects created by the setup code. 
@@ -734,7 +792,7 @@ execution order of setup_module(), test cases, sessions, and
 teardown_module().
 The demos are in one of the Travis CI builds.
 - Look for the build log here [Build][12].
-- Go to the Python 3.7 build which runs tox.
+- Go to the Python 3.8 build which runs tox.
 - Go to the Job Log tab.
 - Look for the tox demo environment commands near the end.
 

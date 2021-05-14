@@ -6,7 +6,7 @@ the Raw button.
 
 #### This will be marked as the setup code.
 The setup logic makes the names assigned here global to the test module.
-The code assigns the names tau, mylist, a, b, and the function doubler().
+The code assigns the names math, mylist, a, b, and the function doubler().
 Setup code does not have an output block.
 Note the `<!--phmdoctest-setup-->` directive in the Markdown file.
 <!--phmdoctest-setup-->
