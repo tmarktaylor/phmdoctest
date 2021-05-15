@@ -136,7 +136,7 @@ test_one_mark_skip.py::test_example SKIPPED
 ```
 
 - The HTML comments in the Markdown are phmdoctest **directives**.
-- The skip directive adds the @pytest.mark.skip() line.
+- The mark.skip directive adds the @pytest.mark.skip() line.
 - The label directive names the test case function.
 - List of  [Directives](#directives)
 - Directives are not required.
@@ -437,7 +437,7 @@ decorator.
 
 ## mark.skipif<3.N
 This directive generates a test case with the pytest decorator
-`@pytest.mark.skipif(sys.version_info < (3.N), reason="requires >=py3.N")`.
+`@pytest.mark.skipif(sys.version_info < (3, N), reason="requires >=py3.N")`.
 N is a Python minor version number.
 [Example.](#label-skip-and-mark-example)
 
