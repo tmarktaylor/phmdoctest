@@ -4,7 +4,10 @@ name: Code Coverage, Inspections, Docs
 #       None of the jobs run tests on the installed module.
 #       Tests import phmdoctest from the checked out root/src folder
 #       via $PYTHONPATH.
-on: [push]
+on: 
+  push:
+  pull_request:
+    branches: [develop]
 
 jobs:
   tests:
@@ -39,7 +42,6 @@ jobs:
         PYTHONPATH: ${{ github.workspace }}/src
 
   inspect:
-    # needs: tests
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -63,20 +65,21 @@ jobs:
         pip install check-manifest
         pip install twine
         pip freeze
-    - name: Inspections
+    - name: Code Style
       run: |
         flake8 --exit-zero --max-complexity=10
-        check-manifest
-        python3 setup.py sdist
-        twine check dist/*
-    - name: typing
+    - name: Type Hints
       run: |
         mypy src/phmdoctest --strict
         mypy tests/test_type_packaging.py --strict
       continue-on-error: true
+    - name: Deployable
+      run: |
+        check-manifest
+        python3 setup.py sdist
+        twine check dist/*
 
   docs:
-    # needs: inspect
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
