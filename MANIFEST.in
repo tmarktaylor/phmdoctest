@@ -7,6 +7,7 @@ include *.rst
 # Include the license file
 include LICENSE.txt
 
+include CONTRIBUTING.md
 include checklist.txt
 include conf.py
 
