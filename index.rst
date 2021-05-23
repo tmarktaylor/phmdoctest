@@ -14,6 +14,7 @@ phmdoctest 1.1.1
    doc/recent_changes
    doc/api
    doc/about
+   CONTRIBUTING
    doc/examples
 
 Search

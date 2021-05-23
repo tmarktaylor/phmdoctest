@@ -79,6 +79,7 @@ examples in Markdown.
 [Call from Python](#call-from-python) |
 [Hints](#hints) |
 [Directive hints](#directive-hints) |
+[Contributions](#contributions) |
 [Related projects](#related-projects) |
 [Recent changes](#recent-changes)
 
@@ -992,7 +993,9 @@ assert simulator_status.pytest_exit_code == 0
 - There is no limit to number of blank lines after
   the directive HTML comment but before the fenced code block.
   
-  
+## Contributions
+
+Please see [Contibutions Welcome](CONTRIBUTING.md)
   
 ## Related projects
 - rundoc
