@@ -50,10 +50,7 @@ templates_path = ['_templates']
 # Any .md, .rst, or folders at the project root that don't
 # belong in the documentation should be listed here.
 #
-# tmarktaylor: Travis CI Job #28.3 build log of tox.ini docs is finding
-# input files in the .tox tree.
 
-#
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.

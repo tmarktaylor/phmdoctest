@@ -40,8 +40,8 @@ matrix:
         - cmp tests/example2_report.txt tests/tmp/example2_report.txt
 
     - python: 3.8
-      install: pip install tox
-      script: tox -e cover,docs,demo
+      install: *utest_install
+      script: *utest_run
 
     - python: 3.9
       install: *utest_install
@@ -51,6 +51,42 @@ matrix:
       install: *utest_install
       script: *utest_run
 
+    - python: 3.8
+      install: *utest_install
+      script:
+        # Show setup, teardown, and doctests pytest run time order using
+        # pytest Live Logs.
+        # The terminal output should show the order:
+        #     setup_module
+        #     test_1
+        #     test_2
+        #     test_3
+        #     teardown_module
+        - python -m pytest doc/livelog.py --log-cli-level=debug --color=yes
+
+        # This is the same command plus the --doctest-modules option.
+        # Note that the PASSED indication for session_00000 is printed
+        # after setup_module log message.
+        # The terminal output should show the order:
+        #     setup_module
+        #     session_00000
+        #     session_00001
+        #     session_00002
+        #     teardown_module
+        #     setup_module
+        #     test_1
+        #     test_2
+        #     test_3
+        #     teardown_module
+        - python -m pytest --log-cli-level=debug --color=yes --doctest-modules doc/livelog.py
+
+        # demo test case assertion with early teardown with pytest -x
+        - python -m pytest -vv -x --log-cli-level=DEBUG --doctest-modules --color=yes doc/livelog_test_assertion.py
+
+        # demo test case assertion with early teardown with pytest -x
+        - python -m pytest -vv -x --log-cli-level=DEBUG --doctest-modules --color=yes doc/livelog_bad_session.py
+
 branches:
   only:
   - master
+  - develop
