@@ -52,6 +52,7 @@ matrix:
       script: *utest_run
 
     - python: 3.8
+      name: Pytest Live Log Demo
       install: *utest_install
       script:
         # Show setup, teardown, and doctests pytest run time order using
@@ -80,13 +81,16 @@ matrix:
         #     teardown_module
         - python -m pytest --log-cli-level=debug --color=yes --doctest-modules doc/livelog.py
 
+        # These steps cause the build to fail.
+        # A GitHub workflow called demo.yml runs the same steps.
+        # A GitHub login is required to view the terminal output.
+        #
         # demo test case assertion with early teardown with pytest -x
-        - python -m pytest -vv -x --log-cli-level=DEBUG --doctest-modules --color=yes doc/livelog_test_assertion.py
-
+        # - python -m pytest -vv -x --log-cli-level=DEBUG --doctest-modules --color=yes doc/livelog_test_assertion.py
         # demo test case assertion with early teardown with pytest -x
-        - python -m pytest -vv -x --log-cli-level=DEBUG --doctest-modules --color=yes doc/livelog_bad_session.py
+        # - python -m pytest -vv -x --log-cli-level=DEBUG --doctest-modules --color=yes doc/livelog_bad_session.py
 
 branches:
   only:
   - master
-  - develop
+  - develop    # todo- for development testing only
