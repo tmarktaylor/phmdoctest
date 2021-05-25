@@ -793,9 +793,9 @@ execution order of setup_module(), test cases, sessions, and
 teardown_module().
 The demos are in one of the Travis CI builds.
 - Look for the build log here [Build][12].
-- Go to the Python 3.8 build which runs tox.
+- Go to the the second Python 3.8 build.
 - Go to the Job Log tab.
-- Look for the tox demo environment commands near the end.
+- Look for the commands with option -log-cli-level=debug.
 
 
 

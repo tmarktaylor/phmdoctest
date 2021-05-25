@@ -1,27 +1,24 @@
-name: Code Coverage, Inspections, Docs
+name: Cover, Inspect, Docs
 
-# Note: Only inspect and docs jobs install phmdoctest and only to Python 3.x.
-#       None of the jobs run tests on the installed module.
-#       Tests import phmdoctest from the checked out root/src folder
-#       via $PYTHONPATH.
-on: 
+# Note: The coverage job does not install phmdoctest.
+#       It imports phmdoctest from the checked out
+#       src folder via $PYTHONPATH.
+#       The inspect job installs phmdoctest.
+on:
   push:
   pull_request:
     branches: [develop]
 
 jobs:
   tests:
-  
+
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [3.6, 3.7, 3.8, 3.9, pypy3]
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Set up Python 3.8
       uses: actions/setup-python@v2
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: 3.8
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
@@ -36,7 +33,7 @@ jobs:
     - name: Tests, coverage report
       run: |
         coverage run --branch --source=src -m pytest -vv tests
-        coverage run --append -m phmdoctest --help
+        coverage run --branch --source=src --append -m phmdoctest --help
         coverage report --show-missing
       env:
         PYTHONPATH: ${{ github.workspace }}/src
@@ -48,7 +45,7 @@ jobs:
     - name: Setup Python
       uses: actions/setup-python@v2
       with:
-        python-version: 3.7
+        python-version: 3.8
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
@@ -86,19 +83,21 @@ jobs:
     - name: Setup Python
       uses: actions/setup-python@v2
       with:
-        # This should be the same as in .readthedocs.yml  
+        # This should be the same as in .readthedocs.yml
         python-version: 3.8
-    - name: Install Tox
+    - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install tox
-    - name: Tox docs
-      run: tox -e docs
-          
+        pip install -r doc/requirements.txt
+        pip freeze
+    - name: Sphinx build
+      run: |
+        mkdir docbuild
+        sphinx-build -b html -d docbuild/doctrees . docbuild/html
+
     - name: Upload docs
       uses: actions/upload-artifact@v2
       with:
         name: docs
-        # in tox.ini this is {envtmpdir}/html
-        path: .tox/docs/tmp/html
+        path: docbuild/html
         retention-days: 5
