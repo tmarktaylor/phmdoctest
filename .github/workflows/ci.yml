@@ -33,7 +33,7 @@ jobs:
     - name: Tests, coverage report
       run: |
         coverage run --branch --source=src -m pytest -vv tests
-        coverage run --append -m phmdoctest --help
+        coverage run --branch --source=src --append -m phmdoctest --help
         coverage report --show-missing
       env:
         PYTHONPATH: ${{ github.workspace }}/src

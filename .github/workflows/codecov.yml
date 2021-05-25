@@ -5,10 +5,10 @@ name: codecov
 #       src folder via $PYTHONPATH.
 on:
   push:
-    branches: [master]
+    branches: [master, develop]   # todo- master only
 
 jobs:
-  codecov integration:
+  codecov:
 
     runs-on: ubuntu-latest
     steps:
@@ -33,7 +33,7 @@ jobs:
     - name: codecov
       run: |
         coverage run --branch --source=src -m pytest -vv tests
-        coverage run --append -m phmdoctest --help
+        coverage run --branch --source=src --append -m phmdoctest --help
         codecov -X gcov
       env:
         PYTHONPATH: ${{ github.workspace }}/src
