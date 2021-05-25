@@ -784,7 +784,7 @@ Same as the setup section plus:
   a session.
 - Names assigned by the setup code block are globally visible
   to the entire test suite via the Pytest doctest_namespace
-  fixture.  See hint near the end [Directive hints](#directive-hints).
+  fixture.  See hint near the end [Hints](#Hints).
 
 #### Pytest live logging demos
 The live logging demos reveal pytest execution contexts. 
@@ -793,10 +793,11 @@ execution order of setup_module(), test cases, sessions, and
 teardown_module().
 The demos are in one of the Travis CI builds.
 - Look for the build log here [Build][12].
-- Go to the the second Python 3.8 build.
+- Go to last job called Pytest Live Log Demo.
 - Go to the Job Log tab.
-- Look for the commands with option -log-cli-level=debug.
 
+There are 2 more demo invocations in the workflow action
+called Pytest Live Log Demo.  
 
 
 ## Send outfile to stdout
