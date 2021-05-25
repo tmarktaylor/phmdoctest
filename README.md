@@ -54,8 +54,8 @@ examples in Markdown.
 [skip](#skip) |
 [label on code and sessions](#label-on-code-and-sessions) |
 [label on any fenced code block](#label-on-any-fenced-code-block) |
-[mark.skip](#mark.skip) |
-[mark.skipif<3.N](#mark.skipif<3.n) |
+[pytest skip](#pytest-skip) |
+[pytest skipif](#pytest-skipif) |
 [setup](#setup) |
 [teardown](#teardown) |
 [share-names](#share-names) |
@@ -430,13 +430,13 @@ Output:
 The label directive can be placed on any fenced code block.
 ```
 
-## mark.skip
+## pytest skip
 This directive generates a test case with a `@pytest.mark.skip()`
 decorator. 
 [Example.](#label-skip-and-mark-example)
 
 
-## mark.skipif<3.N
+## pytest skipif
 This directive generates a test case with the pytest decorator
 `@pytest.mark.skipif(sys.version_info < (3, N), reason="requires >=py3.N")`.
 N is a Python minor version number.
