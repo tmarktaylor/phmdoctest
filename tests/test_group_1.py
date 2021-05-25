@@ -286,7 +286,7 @@ def test_blanklines_in_output():
 
 
 def test_one_mark_skip():
-    """Expected output has empty lines and no doctest <BLANKLINE>."""
+    """A single <!--phmdoctest-mark.skip--> directive."""
     command = (
         'phmdoctest tests/one_mark_skip.md --outfile discarded.py'
     )

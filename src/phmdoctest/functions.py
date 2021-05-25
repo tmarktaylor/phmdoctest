@@ -7,7 +7,7 @@ import pytest
 # mypy: ignore_errors
 
 
-# The function below is copied into the generated python source
+# The function below is imported into the generated python source.
 def _phm_compare_exact(a, b):
     """Line by line helper compare function with assertion for pytest."""
     a_lines = a.splitlines()

@@ -1,3 +1,4 @@
+"""Pytest fixture imported by generated code."""
 import inspect
 import logging
 
