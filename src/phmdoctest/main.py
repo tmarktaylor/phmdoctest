@@ -106,7 +106,7 @@ import phmdoctest.tool
             ' This option is ignored if there is no --setup option.'
     )
 )
-@click.version_option()
+@click.version_option()    # type: ignore
 # Note- docstring for entry point shows up in click's usage text.
 def entry_point(
         markdown_file, outfile, skip, report, fail_nocode,
