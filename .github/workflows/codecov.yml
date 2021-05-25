@@ -5,7 +5,7 @@ name: codecov
 #       src folder via $PYTHONPATH.
 on:
   push:
-    branches: [master, develop]   # todo- master only
+    branches: [master]
 
 jobs:
   codecov:
