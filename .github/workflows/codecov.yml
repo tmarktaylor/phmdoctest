@@ -1,15 +1,10 @@
 name: codecov.io
-
-# Note: The coverage job does not install phmdoctest.
-#       It imports phmdoctest from the checked out
-#       src folder via $PYTHONPATH.
 on:
   push:
     branches: [master]
 
 jobs:
   pytest:
-
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2

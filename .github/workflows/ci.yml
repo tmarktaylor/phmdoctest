@@ -1,6 +1,6 @@
 ame: CI
 
-# Note: The coverage job does not install phmdoctest.
+# Note: The pytest job does not install phmdoctest.
 #       It imports phmdoctest from the checked out
 #       src folder via $PYTHONPATH.
 #       The inspect job installs phmdoctest.
@@ -11,7 +11,6 @@ on:
 
 jobs:
   pytest:
-
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
