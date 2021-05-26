@@ -345,7 +345,7 @@ code block. It is OK if other HTML comments are present.
 The `<!--phmdoctest-skip-->` directive is shown in the
 raw Markdown below.
 With the skip directive no test code will be
-generated from the fenced code blocks.
+generated from the fenced code block.
 
 <!--phmdoctest-label intro-to-directives-->
 ~~~
@@ -431,13 +431,14 @@ The label directive can be placed on any fenced code block.
 ```
 
 ## pytest skip
-This directive generates a test case with a `@pytest.mark.skip()`
-decorator. 
+The `<!--phmdoctest-mark.skip-->`  directive generates a test
+case with a `@pytest.mark.skip()` decorator. 
 [Example.](#label-skip-and-mark-example)
 
 
 ## pytest skipif
-This directive generates a test case with the pytest decorator
+The `<!--phmdoctest-mark.skipif<3.N-->`  directive generates 
+a test case with the pytest decorator
 `@pytest.mark.skipif(sys.version_info < (3, N), reason="requires >=py3.N")`.
 N is a Python minor version number.
 [Example.](#label-skip-and-mark-example)
