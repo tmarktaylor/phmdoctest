@@ -1,4 +1,4 @@
-ame: CI
+name: CI
 
 # Note: The pytest job does not install phmdoctest.
 #       It imports phmdoctest from the checked out
