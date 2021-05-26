@@ -54,7 +54,7 @@ jobs:
         # pip install "Click>=7.1.1"
         # pip install "commonmark>=0.9.1"
         # pip install "monotable>=2.1.1"
-        pip install "."
+        pip install --use-feature=in-tree-build "."    # todo- remove --use-feature
         pip install flake8
         pip install pep8-naming
         pip install mypy
