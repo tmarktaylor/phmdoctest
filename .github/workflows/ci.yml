@@ -1,4 +1,4 @@
-name: Cover, Inspect, Docs
+ame: CI
 
 # Note: The coverage job does not install phmdoctest.
 #       It imports phmdoctest from the checked out
@@ -10,7 +10,7 @@ on:
     branches: [develop]
 
 jobs:
-  tests:
+  pytest:
 
     runs-on: ubuntu-latest
     steps:
@@ -54,7 +54,7 @@ jobs:
         # pip install "Click>=7.1.1"
         # pip install "commonmark>=0.9.1"
         # pip install "monotable>=2.1.1"
-        pip install --use-feature=in-tree-build "."    # todo- remove --use-feature
+        pip install "."
         pip install flake8
         pip install pep8-naming
         pip install mypy

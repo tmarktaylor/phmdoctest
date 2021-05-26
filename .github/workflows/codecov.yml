@@ -1,4 +1,4 @@
-name: codecov
+name: codecov.io
 
 # Note: The coverage job does not install phmdoctest.
 #       It imports phmdoctest from the checked out
@@ -8,7 +8,7 @@ on:
     branches: [master]
 
 jobs:
-  codecov:
+  pytest:
 
     runs-on: ubuntu-latest
     steps:

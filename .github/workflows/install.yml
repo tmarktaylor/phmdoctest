@@ -1,10 +1,10 @@
 # Test on pip install of phmdoctest rather than the checked out repository.
-name: Test pip install via setup.py
+name: Usage
 
 on: [push]
 
 jobs:
-  installtest:
+  pytest:
     runs-on: ubuntu-latest
     strategy:
       matrix:

@@ -1,9 +1,9 @@
-name: Pytest Live Log Demo
+name: Live Log
 
 on:
   push:
   pull_request:
-    branches: [master, develop]    # todo- master only
+    branches: [master]
 
 jobs:
   demo:
