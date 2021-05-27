@@ -8,7 +8,7 @@ import pathlib
 here = pathlib.Path(__file__).parent.resolve()
 
 # Get the long description from the README file
-long_description = (here / 'README.md').read_text(encoding='utf-8')
+long_description = (here / "README.md").read_text(encoding="utf-8")
 
 # Arguments marked as "Required" below must be included for upload to PyPI.
 # Fields marked as "Optional" may be commented out.
@@ -25,21 +25,18 @@ setup(
     # There are some restrictions on what makes a valid project name
     # specification here:
     # https://packaging.python.org/specifications/core-metadata/#name
-    name='phmdoctest',  # Required
-
+    name="phmdoctest",  # Required
     # Versions should comply with PEP 440:
     # https://www.python.org/dev/peps/pep-0440/
     #
     # For a discussion on single-sourcing the version across setup.py and the
     # project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='1.1.1',  # Required
-
+    version="1.1.1",  # Required
     # This is a one-line description or tagline of what your project does. This
     # corresponds to the "Summary" metadata field:
     # https://packaging.python.org/specifications/core-metadata/#summary
-    description='Python syntax highlighted Markdown doctest.',  # Optional
-
+    description="Python syntax highlighted Markdown doctest.",  # Optional
     # This is an optional longer description of your project that represents
     # the body of text which users will see when they visit PyPI.
     #
@@ -49,7 +46,6 @@ setup(
     # This field corresponds to the "Description" metadata field:
     # https://packaging.python.org/specifications/core-metadata/#description-optional
     long_description=long_description,  # Optional
-
     # Denotes that our long_description is in Markdown; valid values are
     # text/plain, text/x-rst, and text/markdown
     #
@@ -60,22 +56,18 @@ setup(
     #
     # This field corresponds to the "Description-Content-Type" metadata field:
     # https://packaging.python.org/specifications/core-metadata/#description-content-type-optional
-    long_description_content_type='text/markdown',  # Optional (see note above)
-
+    long_description_content_type="text/markdown",  # Optional (see note above)
     # This should be a valid link to your project's main homepage.
     #
     # This field corresponds to the "Home-Page" metadata field:
     # https://packaging.python.org/specifications/core-metadata/#home-page-optional
-    url='https://github.com/tmarktaylor/phmdoctest',  # Optional
-
+    url="https://github.com/tmarktaylor/phmdoctest",  # Optional
     # This should be your name or the name of the organization which owns the
     # project.
-    author='Mark Taylor',  # Optional
-
+    author="Mark Taylor",  # Optional
     # This should be a valid email address corresponding to the author listed
     # above.
-    author_email='mark66547ta2@gmail.com',  # Optional
-
+    author_email="mark66547ta2@gmail.com",  # Optional
     # Classifiers help users find your project by categorizing it.
     #
     # For a list of valid classifiers, see https://pypi.org/classifiers/
@@ -84,40 +76,34 @@ setup(
         #   3 - Alpha
         #   4 - Beta
         #   5 - Production/Stable
-        'Development Status :: 4 - Beta',
-
+        "Development Status :: 4 - Beta",
         # Indicate who your project is intended for
-        'Intended Audience :: Developers',
+        "Intended Audience :: Developers",
         "Topic :: Software Development :: Testing",
         "Topic :: Software Development :: Documentation",
-        'Topic :: Software Development :: Libraries :: Python Modules',
-        'Topic :: Utilities',
-
+        "Topic :: Software Development :: Libraries :: Python Modules",
+        "Topic :: Utilities",
         # Pick your license as you wish
-        'License :: OSI Approved :: MIT License',
-
+        "License :: OSI Approved :: MIT License",
         # Specify the Python versions you support here. In particular, ensure
         # that you indicate whether you support Python 2, Python 3 or both.
         # These classifiers are *not* checked by 'pip install'. See instead
         # 'python_requires' below.
-        'Programming Language :: Python :: 3 :: Only',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: 3.8',
-        'Programming Language :: Python :: 3.9',
-        'Programming Language :: Python :: Implementation :: PyPy',
+        "Programming Language :: Python :: 3 :: Only",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: Implementation :: PyPy",
     ],
-
     # This field adds keywords for your project which will appear on the
     # project page. What does your project relate to?
     #
     # Note that this is a string of words separated by whitespace, not a list.
-    keywords='documentation doctest markdown regression testing',  # Optional
-
+    keywords="documentation doctest markdown regression testing",  # Optional
     # When your source code is in a subdirectory under the project root, e.g.
     # `src/`, it is necessary to specify the `package_dir` argument.
-    package_dir={'': 'src'},  # Optional
-
+    package_dir={"": "src"},  # Optional
     # You can just specify package directories manually here if your project is
     # simple. Or you can use find_packages().
     #
@@ -127,28 +113,22 @@ setup(
     #
     #   py_modules=["my_module"],
     #
-    packages=find_packages(where='src'),  # Required
+    packages=find_packages(where="src"),  # Required
     package_data={"phmdoctest": ["py.typed"]},
-    zip_safe=False,    # per mypy 26.2  Making PEP 561 compatible packages
-
+    zip_safe=False,  # per mypy 26.2  Making PEP 561 compatible packages
     # Specify which Python versions you support. In contrast to the
     # 'Programming Language' classifiers above, 'pip install' will check this
     # and refuse to install the project if the version does not match. If you
     # do not support Python 2, you can simplify this to '>=3.5' or similar, see
     # https://packaging.python.org/guides/distributing-packages-using-setuptools/#python-requires
-    python_requires='>=3.5',
-
+    python_requires=">=3.5",
     # This field lists other packages that your project depends on to run.
     # Any package you put here will be installed by pip when your project is
     # installed, so they must be valid existing projects.
     #
     # For an analysis of "install_requires" vs pip's requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
-    install_requires=[
-        'Click>=7.1.1',
-        'commonmark>=0.9.1',
-        'monotable>=2.1.1'],
-
+    install_requires=["Click>=7.1.1", "commonmark>=0.9.1", "monotable>=2.1.1"],
     # List additional groups of dependencies here (e.g. development
     # dependencies). Users will be able to install these using the "extras"
     # syntax, for example:
@@ -158,16 +138,17 @@ setup(
     # Similar to `install_requires` above, these must be valid existing
     # projects.
     extras_require={  # Optional
-        'test': ['coverage', 'pytest', 'codecov'],
-        'inspect': [
-            'flake8', 'pep8-naming',
-            'mypy', 'typing',
-            'check-manifest',
-            'twine'
+        "test": ["coverage", "pytest", "codecov"],
+        "inspect": [
+            "flake8",
+            "pep8-naming",
+            "mypy",
+            "typing",
+            "check-manifest",
+            "twine",
         ],
-        'docs': ['recommonmark', 'sphinx', 'sphinx_rtd_theme'],
+        "docs": ["recommonmark", "sphinx", "sphinx_rtd_theme"],
     },
-
     # To provide executable scripts, use entry points in preference to the
     # "scripts" keyword. Entry points provide cross-platform support and allow
     # `pip` to create the appropriate form of executable for the target
@@ -176,11 +157,10 @@ setup(
     # For example, the following would provide a command called `sample` which
     # executes the function `main` from this package when invoked:
     entry_points={  # Optional
-        'console_scripts': [
-            'phmdoctest=phmdoctest.main:entry_point',
+        "console_scripts": [
+            "phmdoctest=phmdoctest.main:entry_point",
         ],
     },
-
     # List additional URLs that are relevant to your project as a dict.
     #
     # This field corresponds to the "Project-URL" metadata fields:
@@ -191,7 +171,7 @@ setup(
     # maintainers, and where to support the project financially. The key is
     # what's used to render the link text on PyPI.
     project_urls={  # Optional
-        'Bug Reports': 'https:/github.com/tmarktaylor/phmdoctest/issues',
-        'Source': 'https://github.com/tmarktaylor/phmdoctest/',
+        "Bug Reports": "https:/github.com/tmarktaylor/phmdoctest/issues",
+        "Source": "https://github.com/tmarktaylor/phmdoctest/",
     },
 )

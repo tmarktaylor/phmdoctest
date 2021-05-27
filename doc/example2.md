@@ -36,12 +36,12 @@ The first one:
 ```py3
 a, b = 0, 1
 while a < 1000:
-    print(a, end=',')
-    a, b = b, a+b
+    print(a, end=",")
+    a, b = b, a + b
 ```
 The second one. This means the preceding code block has no output block.
 ```py3
-words = ['cat', 'window', 'defenestrate']
+words = ["cat", "window", "defenestrate"]
 for w in words:
     print(w, len(w))
 ```
@@ -72,7 +72,7 @@ Here is a Python interactive session.  It is described by
 the Python Standard Library module doctest.  Note there is
 no need for an empty line at the end of the session. 
 ```py
->>> a = 'Greetings Planet!'
+>>> a = "Greetings Planet!"
 >>> a
 'Greetings Planet!'
 >>> b = 12
@@ -85,7 +85,8 @@ no need for an empty line at the end of the session.
 Example borrowed from Python Standard Library datetime documentation.
 ```py3
 from datetime import date
-d = date.fromordinal(730920)    # 730920th day after 1. 1. 0001
+
+d = date.fromordinal(730920)  # 730920th day after 1. 1. 0001
 print(d)
 ```
 

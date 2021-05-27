@@ -8,6 +8,7 @@ class Floats(Enum):
     CIDER = 2
     CHERRIES = 3
     ADUCK = 4
+
 for floater in Floats:
     print(floater)
 ```

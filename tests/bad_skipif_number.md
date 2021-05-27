@@ -4,7 +4,7 @@
 <!--phmdoctest-mark.skipif<3.A-->
 ```python
 user = 'eric_idle'
-print(f'{user=}')
+print(f"{user=}")
 ```
 ```
 user='eric_idle'

@@ -19,6 +19,7 @@ def _phm_compare_exact(a, b):
                 print(line)
             assert False
 
+
 # The functions below are used as a template to generate python source
 # code to be written to a file.
 # It is coded here as compiled python so the IDE can check for
@@ -31,26 +32,26 @@ def _phm_compare_exact(a, b):
 def _phm_setup_teardown(managenamespace):
     # <setup code here>
 
-    managenamespace(operation='update', additions=locals())
+    managenamespace(operation="update", additions=locals())
     yield
     # <teardown code here>
 
-    managenamespace(operation='clear')
+    managenamespace(operation="clear")
 
 
 @pytest.fixture(scope="module")
 def _phm_setup_doctest_teardown(doctest_namespace, managenamespace):
     # <setup code here>
 
-    managenamespace(operation='update', additions=locals())
+    managenamespace(operation="update", additions=locals())
     # update doctest namespace
-    additions = managenamespace(operation='copy')
+    additions = managenamespace(operation="copy")
     for k, v in additions.items():
         doctest_namespace[k] = v
     yield
     # <teardown code here>
 
-    managenamespace(operation='clear')
+    managenamespace(operation="clear")
 
 
 def test_code_and_output(capsys):
@@ -81,7 +82,7 @@ def test_managed_code_only(managenamespace):
 
 def test_nothing_fails():
     """Fail if no Python code blocks or sessions were processed."""
-    assert False, 'nothing to test'
+    assert False, "nothing to test"
 
 
 def test_nothing_passes():
@@ -97,7 +98,7 @@ def test_nothing_passes():
 populate_doctest_namespace_str = """\
 @pytest.fixture()
 def populate_doctest_namespace(doctest_namespace, managenamespace):
-    additions = managenamespace(operation='copy')
+    additions = managenamespace(operation="copy")
     for k, v in additions.items():
         doctest_namespace[k] = v
 """

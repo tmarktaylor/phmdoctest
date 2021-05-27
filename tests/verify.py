@@ -7,7 +7,7 @@ import textwrap
 
 import phmdoctest.simulator
 
-JUNIT_FAMILY = 'xunit2'    # Pytest output format for JUnit XML file
+JUNIT_FAMILY = "xunit2"  # Pytest output format for JUnit XML file
 
 
 def a_and_b_are_the_same(a, b):
@@ -25,25 +25,22 @@ def a_and_b_are_the_same(a, b):
 def example_code_checker(callable_function, example_string):
     """Check that the body of the function matches the string."""
     want1 = inspect.getsource(callable_function)
-    got = textwrap.indent(example_string, '    ')
+    got = textwrap.indent(example_string, "    ")
     # Drop the def function_name line.
-    newline_index = want1.find('\n')
-    assert newline_index > -1, 'must have a newline'
-    assert len(want1) > newline_index + 2, 'must have more after newline'
-    want2 = want1[newline_index + 1:]
+    newline_index = want1.find("\n")
+    assert newline_index > -1, "must have a newline"
+    assert len(want1) > newline_index + 2, "must have more after newline"
+    want2 = want1[newline_index + 1 :]
     a_and_b_are_the_same(want2, got)
 
 
 def one_example(
-        well_formed_command,
-        want_file_name=None,
-        pytest_options=None,
-        junit_family=''):
+    well_formed_command, want_file_name=None, pytest_options=None, junit_family=""
+):
     """Simulate running a phmdoctest command and pytest on the result."""
     simulator_status = phmdoctest.simulator.run_and_pytest(
-        well_formed_command,
-        pytest_options=pytest_options,
-        junit_family=junit_family)
+        well_formed_command, pytest_options=pytest_options, junit_family=junit_family
+    )
     # check that the phmdoctest command succeeded
     exit_code = simulator_status.runner_status.exit_code
     assert exit_code == 0, exit_code

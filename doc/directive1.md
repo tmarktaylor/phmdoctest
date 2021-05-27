@@ -21,6 +21,7 @@ A test case is generated that runs the code block but does
 not check the expected output.
 ```python
 from datetime import date
+
 date.today()
 ```
 
@@ -34,7 +35,7 @@ datetime.date(2021, 4, 18)
 No test case is generated.
 <!--phmdoctest-skip-->
 ```pycon
->>> print('Hello World!')
+>>> print("Hello World!")
 incorrect expected output should fail
 if test case is generated
 ```
@@ -49,7 +50,7 @@ if test case is generated
 <!--phmdoctest-mark.skip-->
 <!--phmdoctest-label test_mark_skip-->
 ```python
-print('testing @pytest.mark.skip().')
+print("testing @pytest.mark.skip().")
 ```
 ```
 incorrect expected output
@@ -66,8 +67,8 @@ Python 3.8.
 <!--phmdoctest-label test_fstring-->
 <!--phmdoctest-mark.skipif<3.8-->
 ```python
-user = 'eric_idle'
-print(f'{user=}')
+user = "eric_idle"
+print(f"{user=}")
 ```
 ```
 user='eric_idle'
@@ -78,6 +79,6 @@ This will generate a test case called
 `test_print_coffee()`.
 <!--phmdoctest-label test_print_coffee-->
 ```pycon
->>> print('coffee')
+>>> print("coffee")
 coffee
 ```

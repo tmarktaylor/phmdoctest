@@ -9,7 +9,7 @@ from phmdoctest.entryargs import Args
 from phmdoctest.fenced import Role, FencedBlock
 
 
-PYTHON_FLAVORS = ['python', 'py3', 'python3']
+PYTHON_FLAVORS = ["python", "py3", "python3"]
 """Python fenced code blocks info string will start with one of these."""
 
 
@@ -29,7 +29,7 @@ def identify_code_output_session_blocks(blocks: List[FencedBlock]) -> None:
         for flavor in PYTHON_FLAVORS:
             if block.type.startswith(flavor):
                 block.set(Role.CODE)
-        if block.contents.startswith('>>> ') and block.type.startswith('py'):
+        if block.contents.startswith(">>> ") and block.type.startswith("py"):
             block.set(Role.SESSION)
 
     # When we find an output block we update the preceding
@@ -83,14 +83,14 @@ def apply_skips(args: Args, blocks: List[FencedBlock]) -> None:
 
 def findall(pattern: str, blocks: List[FencedBlock]) -> List[FencedBlock]:
     """Return list of blocks that contain search pattern."""
-    found = []     # type: List[FencedBlock]
-    if pattern == 'FIRST':
+    found = []  # type: List[FencedBlock]
+    if pattern == "FIRST":
         found.append(blocks[0])
-    elif pattern == 'LAST':
+    elif pattern == "LAST":
         found.append(blocks[-1])
-    elif pattern == 'SECOND' and len(blocks) > 1:
+    elif pattern == "SECOND" and len(blocks) > 1:
         found.append(blocks[1])
-    if pattern not in ['FIRST', 'SECOND', 'LAST']:
+    if pattern not in ["FIRST", "SECOND", "LAST"]:
         for block in blocks:
             if block.contents.find(pattern) > -1:
                 found.append(block)
@@ -98,9 +98,7 @@ def findall(pattern: str, blocks: List[FencedBlock]) -> List[FencedBlock]:
 
 
 def find_only_one_by_pattern(
-        pattern: str,
-        blocks: List[FencedBlock],
-        command_line_option_name: str
+    pattern: str, blocks: List[FencedBlock], command_line_option_name: str
 ) -> Optional[FencedBlock]:
     """Find a single block containing pattern, die if more matches."""
     matches = findall(pattern, blocks)
@@ -112,16 +110,15 @@ def find_only_one_by_pattern(
     # by a command line option.  Raise an exception.
     line_numbers = [str(b.line) for b in matches]
     message = (
-        'More than one block matched command line {}.\n'
-        'Only one match is allowed.\n'
-        'The matching blocks are at line numbers {}.'
-    ).format(command_line_option_name, ', '.join(line_numbers))
+        "More than one block matched command line {}.\n"
+        "Only one match is allowed.\n"
+        "The matching blocks are at line numbers {}."
+    ).format(command_line_option_name, ", ".join(line_numbers))
     raise click.ClickException(message)
 
 
 def find_only_one_by_marker(
-        blocks: List[FencedBlock],
-        marker: Marker
+    blocks: List[FencedBlock], marker: Marker
 ) -> Optional[FencedBlock]:
     """Find 1 block that has directive indicated by Marker, die if more."""
     found = []
@@ -136,25 +133,22 @@ def find_only_one_by_marker(
     # More than one block has the directive
     line_numbers = [str(b.line) for b in found]
     message = (
-        'More than 1 block has directive {}.\n'
-        'The blocks are at line numbers {}.'
-    ).format(marker.value, ', '.join(line_numbers))
+        "More than 1 block has directive {}.\nThe blocks are at line numbers {}."
+    ).format(marker.value, ", ".join(line_numbers))
     raise click.ClickException(message)
 
 
-def check_for_error(
-        block1: FencedBlock, block2: FencedBlock, name: str) -> None:
+def check_for_error(block1: FencedBlock, block2: FencedBlock, name: str) -> None:
     """Raise an exception if the two blocks are different."""
     if block1.line != block2.line:
         message = (
-            'More than one block is designated as {}.\n'
-            'The blocks are at line numbers {}, {}.'
+            "More than one block is designated as {}.\n"
+            "The blocks are at line numbers {}, {}."
         ).format(name, block1.line, block2.line)
         raise click.ClickException(message)
 
 
-def find_and_designate_setup(
-        pattern: str, blocks: List[FencedBlock]) -> None:
+def find_and_designate_setup(pattern: str, blocks: List[FencedBlock]) -> None:
     """Find and designate Python code block as setup.
 
     Search the contents of each block for the pattern.
@@ -174,10 +168,10 @@ def find_and_designate_setup(
     if pattern is None:
         match = None
     else:
-        match = find_only_one_by_pattern(pattern, blocks, '--setup or -u')
+        match = find_only_one_by_pattern(pattern, blocks, "--setup or -u")
     marked = find_only_one_by_marker(blocks, Marker.SETUP)
     if match is not None and marked is not None:
-        check_for_error(match, marked, 'setup')
+        check_for_error(match, marked, "setup")
     block = match or marked
     if block and block.role == Role.CODE:
         block.set(Role.SETUP)
@@ -187,8 +181,7 @@ def find_and_designate_setup(
             block.output.set(Role.DEL_OUTPUT)
 
 
-def find_and_designate_teardown(
-        pattern: str, blocks: List[FencedBlock]) -> None:
+def find_and_designate_teardown(pattern: str, blocks: List[FencedBlock]) -> None:
     """Find and designate Python code block as teardown.
 
     Search the contents of each block for the pattern.
@@ -208,10 +201,10 @@ def find_and_designate_teardown(
     if pattern is None:
         match = None
     else:
-        match = find_only_one_by_pattern(pattern, blocks, '--teardown or -d')
+        match = find_only_one_by_pattern(pattern, blocks, "--teardown or -d")
     marked = find_only_one_by_marker(blocks, Marker.TEARDOWN)
     if match is not None and marked is not None:
-        check_for_error(match, marked, 'teardown')
+        check_for_error(match, marked, "teardown")
     block = match or marked
     if block and block.role == Role.CODE:
         if pattern is not None:

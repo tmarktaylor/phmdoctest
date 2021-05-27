@@ -3,55 +3,53 @@ from collections import namedtuple
 from enum import Enum
 from typing import List, Optional
 
-import commonmark.node    # type: ignore
+import commonmark.node  # type: ignore
 
 
 class Marker(Enum):
     """HTML comment before a fenced code block."""
-    SKIP = '<!--phmdoctest-skip-->'
-    PYTEST_SKIP = '<!--phmdoctest-mark.skip-->'
-    PYTEST_SKIPIF = '<!--phmdoctest-mark.skipif<3.'   # No space, no "-->".
-    LABEL = '<!--phmdoctest-label '            # Note trailing space, no "-->".
-    SETUP = '<!--phmdoctest-setup-->'
-    TEARDOWN = '<!--phmdoctest-teardown-->'
-    SHARE_NAMES = '<!--phmdoctest-share-names-->'
-    CLEAR_NAMES = '<!--phmdoctest-clear-names-->'
+
+    SKIP = "<!--phmdoctest-skip-->"
+    PYTEST_SKIP = "<!--phmdoctest-mark.skip-->"
+    PYTEST_SKIPIF = "<!--phmdoctest-mark.skipif<3."  # No space, no "-->".
+    LABEL = "<!--phmdoctest-label "  # Note trailing space, no "-->".
+    SETUP = "<!--phmdoctest-setup-->"
+    TEARDOWN = "<!--phmdoctest-teardown-->"
+    SHARE_NAMES = "<!--phmdoctest-share-names-->"
+    CLEAR_NAMES = "<!--phmdoctest-clear-names-->"
 
 
 Directive = namedtuple(
-    'Directive',
+    "Directive",
     [
-        'type',    # Enum
-        'value',
-        'line',
-        'literal',     # commonmark.node.Node literal value
-    ]
+        "type",  # Enum
+        "value",
+        "line",
+        "literal",  # commonmark.node.Node literal value
+    ],
 )
 """Information from a phmdoctest HTML comment marker."""
 
 
 def extract_value(literal: str, marker: Marker) -> str:
-    """"Strip both ends of the HTML comment, return what's left."""
+    """Strip both ends of the HTML comment, return what's left."""
     # The marker's Enum.value string matches the first part of the
     # HTML comment literal. Keep the rest of the literal
     # after the space, but not the '->>'.
     # Remove leading/trailing whitespace.
-    text = literal[len(marker.value):]
-    text = text.replace('-->', '')
+    text = literal[len(marker.value) :]
+    text = text.replace("-->", "")
     return text.strip()
 
 
 def find_one_directive(node: commonmark.node) -> Optional[Directive]:
     """Get a phmdoctest Directive instance from a HTML comment node."""
-    assert node.t == 'html_block', 'Must be HTML'
-    assert node.html_block_type == 2, 'Must be a HTML comment/'
+    assert node.t == "html_block", "Must be HTML"
+    assert node.html_block_type == 2, "Must be a HTML comment/"
     for marker in Marker:
         if node.literal == marker.value:
             return Directive(
-                type=marker,
-                value='',
-                line=node.sourcepos[0][0],
-                literal=node.literal
+                type=marker, value="", line=node.sourcepos[0][0], literal=node.literal
             )
         elif node.literal.startswith(Marker.LABEL.value):
             # The label marker carries a value.
@@ -59,14 +57,14 @@ def find_one_directive(node: commonmark.node) -> Optional[Directive]:
                 type=Marker.LABEL,
                 value=extract_value(node.literal, Marker.LABEL),
                 line=node.sourcepos[0][0],
-                literal=node.literal
+                literal=node.literal,
             )
         elif node.literal.startswith(Marker.PYTEST_SKIPIF.value):
             return Directive(
                 type=Marker.PYTEST_SKIPIF,
                 value=extract_value(node.literal, Marker.PYTEST_SKIPIF),
                 line=node.sourcepos[0][0],
-                literal=node.literal
+                literal=node.literal,
             )
     return None
 
@@ -90,7 +88,7 @@ def get_directives(node: commonmark.node.Node) -> List[Directive]:
         loop_count += 1
         if loop_count > 100:
             break
-        if prev.t == 'html_block' and prev.html_block_type == 2:
+        if prev.t == "html_block" and prev.html_block_type == 2:
             one = find_one_directive(prev)
             if one:
                 directives.append(one)

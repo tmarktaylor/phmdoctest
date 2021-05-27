@@ -4,12 +4,12 @@ from phmdoctest.functions import _phm_compare_exact
 
 def session_00001_line_6():
     r"""
-    >>> print('Hello World!')
+    >>> print("Hello World!")
     Hello World!
     """
 
 
-def test_code_14_output_27(capsys):
+def test_code_14_output_28(capsys):
     from enum import Enum
 
     class Floats(Enum):
@@ -17,6 +17,7 @@ def test_code_14_output_27(capsys):
         CIDER = 2
         CHERRIES = 3
         ADUCK = 4
+
     for floater in Floats:
         print(floater)
 

@@ -12,18 +12,20 @@ Note the `<!--phmdoctest-setup-->` directive in the Markdown file.
 <!--phmdoctest-setup-->
 ```py3
 import math
+
 mylist = [1, 2, 3]
 a, b = 10, 11
+
 def doubler(x):
     return x * 2
 ```
 
 #### This test case shows the setup names are visible.
 ```py3
-print('math.pi=', round(math.pi, 3))
+print("math.pi=", round(math.pi, 3))
 print(mylist)
 print(a, b)
-print('doubler(16)=', doubler(16))
+print("doubler(16)=", doubler(16))
 ```
 expected output:
 ```
@@ -60,5 +62,5 @@ Note `<!--phmdoctest-teardown-->` directive in the Markdown file.
 <!--phmdoctest-teardown-->
 ```py3
 mylist.clear()
-assert not mylist, 'mylist was not emptied'
+assert not mylist, "mylist was not emptied"
 ```

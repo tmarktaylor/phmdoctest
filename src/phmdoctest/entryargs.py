@@ -3,16 +3,16 @@
 from collections import namedtuple
 
 Args = namedtuple(
-    'Args',
+    "Args",
     [
-        'markdown_file',
-        'outfile',
-        'skips',
-        'is_report',
-        'fail_nocode',
-        'setup',
-        'teardown',
-        'setup_doctest',
-    ]
+        "markdown_file",
+        "outfile",
+        "skips",
+        "is_report",
+        "fail_nocode",
+        "setup",
+        "teardown",
+        "setup_doctest",
+    ],
 )
 """Command line arguments with some renames."""

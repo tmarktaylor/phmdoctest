@@ -4,12 +4,12 @@ block    line  test      TEXT or directive
 type   number  role      quoted and one per line
 ------------------------------------------------
 py3        14  setup     -setup
-py3        23  code
-           30  output
-py3        40  code
-           45  output
-py3        50  code
-           54  output
-py3        62  teardown  -teardown
+py3        25  code
+           32  output
+py3        42  code
+           47  output
+py3        52  code
+           56  output
+py3        64  teardown  -teardown
 ------------------------------------------------
 3 test cases.

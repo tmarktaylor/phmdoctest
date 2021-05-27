@@ -8,42 +8,26 @@ import phmdoctest.functions
 def test_phm_compare_exact():
     """Exercise the expected output checker for code blocks."""
     # No assertion since a, b are the same.
-    phmdoctest.functions._phm_compare_exact(
-        a='123\n456\n7890',
-        b='123\n456\n7890'
-    )
+    phmdoctest.functions._phm_compare_exact(a="123\n456\n7890", b="123\n456\n7890")
 
     with pytest.raises(AssertionError):
-        phmdoctest.functions._phm_compare_exact(
-            a='',
-            b='123\n456\n7890x'
-        )
+        phmdoctest.functions._phm_compare_exact(a="", b="123\n456\n7890x")
 
     with pytest.raises(AssertionError):
-        phmdoctest.functions._phm_compare_exact(
-            a='123\n456\n7890',
-            b=''
-        )
+        phmdoctest.functions._phm_compare_exact(a="123\n456\n7890", b="")
 
     with pytest.raises(AssertionError):
-        phmdoctest.functions._phm_compare_exact(
-            a='123\n456\n7890',
-            b='123\n456\n7890x'
-        )
+        phmdoctest.functions._phm_compare_exact(a="123\n456\n7890", b="123\n456\n7890x")
 
     with pytest.raises(AssertionError):
-        phmdoctest.functions._phm_compare_exact(
-            a='123\n456\n7890',
-            b='123\n456\n7890x'
-        )
+        phmdoctest.functions._phm_compare_exact(a="123\n456\n7890", b="123\n456\n7890x")
 
 
 def test_phm_compare_exact_prints(capsys):
     """Exercise the expected output checker for code blocks."""
     with pytest.raises(AssertionError):
         phmdoctest.functions._phm_compare_exact(
-            a='123zzz\n456aaa\n7890ccc',
-            b='123zzz\n4x6aaa\n7890ccc'
+            a="123zzz\n456aaa\n7890ccc", b="123zzz\n4x6aaa\n7890ccc"
         )
     expected = """\
   123zzz
@@ -70,12 +54,14 @@ def test_phm_compare_exact_prints(capsys):
 
 class MockReadouterr:
     """Simulate pytest capsys fixture function member readouterr."""
+
     def __init__(self):
-        self.out = '<<<replaced>>>'
+        self.out = "<<<replaced>>>"
 
 
 class MockCapsys:
     """Simulate pytest capsys fixture."""
+
     @staticmethod
     def readouterr():
         return MockReadouterr()
@@ -93,8 +79,7 @@ def test_def_code_only():
 
 def test_def_test_managed_code_and_output(managenamespace):
     """The only purpose is to get code coverage."""
-    phmdoctest.functions.test_managed_code_and_output(
-        MockCapsys(), managenamespace)
+    phmdoctest.functions.test_managed_code_and_output(MockCapsys(), managenamespace)
 
 
 def test_def_test_managed_code_only(managenamespace):

@@ -15,8 +15,8 @@ yaml       59  --
 text       67  --
 py         75  session
 py3        87  code
-           93  output
-pycon     101  skip-session  "LAST"
+           94  output
+pycon     102  skip-session  "LAST"
 ----------------------------------------------------
 5 test cases.
 1 skipped code blocks.
@@ -28,5 +28,5 @@ pycon     101  skip-session  "LAST"
 skip pattern  matching code block line number(s)
 ------------------------------------------------
 Python 3.7    20
-LAST          101
+LAST          102
 ------------------------------------------------

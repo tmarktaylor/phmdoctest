@@ -97,7 +97,7 @@ Given the Markdown file shown in raw form here...
 <!--phmdoctest-mark.skip-->
 <!--phmdoctest-label test_example-->
 ```python
-print('Hello World!')
+print("Hello World!")
 ```
 ```
 incorrect expected output
@@ -121,7 +121,7 @@ from phmdoctest.functions import _phm_compare_exact
 
 @pytest.mark.skip()
 def test_example(capsys):
-    print('Hello World!')
+    print("Hello World!")
 
     _phm_expected_str = """\
 incorrect expected output
@@ -155,7 +155,7 @@ shown in raw form here...
 ## Interactive Python session (doctest)
 
 ```pycon 
->>> print('Hello World!')
+>>> print("Hello World!")
 Hello World!
 ```
 
@@ -170,6 +170,7 @@ class Floats(Enum):
     CIDER = 2
     CHERRIES = 3
     ADUCK = 4
+
 for floater in Floats:
     print(floater)
 ```
@@ -199,12 +200,12 @@ from phmdoctest.functions import _phm_compare_exact
 
 def session_00001_line_6():
     r"""
-    >>> print('Hello World!')
+    >>> print("Hello World!")
     Hello World!
     """
 
 
-def test_code_14_output_27(capsys):
+def test_code_14_output_28(capsys):
     from enum import Enum
 
     class Floats(Enum):
@@ -212,6 +213,7 @@ def test_code_14_output_27(capsys):
         CIDER = 2
         CHERRIES = 3
         ADUCK = 4
+
     for floater in Floats:
         print(floater)
 
@@ -239,7 +241,7 @@ line number in [example1.md](doc/example1.md) of the first line
 of the interactive session. `00001` is a sequence number to
 order the doctests. 
 
-The `14` in the function name `test_code_14_output_27` is the
+The `14` in the function name `test_code_14_output_28` is the
 line number of the first line
 of python code. `27` shows the line number of the expected 
 terminal output.
@@ -285,8 +287,8 @@ yaml       59  --
 text       67  --
 py         75  session
 py3        87  code
-           93  output
-pycon     101  session
+           94  output
+pycon     102  session
 -----------------------------------------------
 7 test cases.
 1 code blocks with no output block.
@@ -352,7 +354,7 @@ generated from the fenced code block.
 <!--phmdoctest-skip-->
 <!--Another HTML comment-->
 ```python3
-print('Hello World!')
+print("Hello World!")
 ```
 Expected Output
 ```
@@ -419,8 +421,8 @@ Here is Python code to fetch it:
 ```python3
 import phmdoctest.tool
 
-chooser = phmdoctest.tool.FCBChooser('doc/my_markdown_file.md')
-text = chooser.contents(label='my-fenced-code-block')
+chooser = phmdoctest.tool.FCBChooser("doc/my_markdown_file.md")
+text = chooser.contents(label="my-fenced-code-block")
 print(text)
 ```
 Output:
@@ -457,8 +459,10 @@ Here is an example setup block from
 <!--phmdoctest-label setup-md-first-block-->
 ```py3
 import math
+
 mylist = [1, 2, 3]
 a, b = 10, 11
+
 def doubler(x):
     return x * 2
 ```
@@ -614,8 +618,8 @@ yaml       59  --
 text       67  --
 py         75  session
 py3        87  code
-           93  output
-pycon     101  skip-session  "LAST"
+           94  output
+pycon     102  skip-session  "LAST"
 ----------------------------------------------------
 5 test cases.
 1 skipped code blocks.
@@ -627,7 +631,7 @@ pycon     101  skip-session  "LAST"
 skip pattern  matching code block line number(s)
 ------------------------------------------------
 Python 3.7    20
-LAST          101
+LAST          102
 ------------------------------------------------
 ```
  
@@ -700,13 +704,13 @@ block    line  test      TEXT or directive
 type   number  role      quoted and one per line
 ------------------------------------------------
 py3         9  setup     "FIRST"
-py3        18  code
-           25  output
-py3        35  code
-           40  output
-py3        45  code
-           49  output
-py3        56  teardown  "LAST"
+py3        20  code
+           27  output
+py3        37  code
+           42  output
+py3        47  code
+           51  output
+py3        58  teardown  "LAST"
 ------------------------------------------------
 3 test cases.
 ```
@@ -930,10 +934,10 @@ pytest_options are passed as a list of strings as shown below.
 <!--phmdoctest-label simulator-->
 ```python
 import phmdoctest.simulator
-command = 'phmdoctest doc/example1.md --report --outfile test_me.py'
+
+command = "phmdoctest doc/example1.md --report --outfile test_me.py"
 simulator_status = phmdoctest.simulator.run_and_pytest(
-    well_formed_command=command,
-    pytest_options=['--doctest-modules', '-v']
+    well_formed_command=command, pytest_options=["--doctest-modules", "-v"]
 )
 assert simulator_status.runner_status.exit_code == 0
 assert simulator_status.pytest_exit_code == 0

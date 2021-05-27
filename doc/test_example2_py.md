@@ -17,14 +17,14 @@ def test_code_9_output_14(capsys):
 def test_code_37():
     a, b = 0, 1
     while a < 1000:
-        print(a, end=',')
-        a, b = b, a+b
+        print(a, end=",")
+        a, b = b, a + b
 
     # Caution- no assertions.
 
 
 def test_code_44_output_51(capsys):
-    words = ['cat', 'window', 'defenestrate']
+    words = ["cat", "window", "defenestrate"]
     for w in words:
         print(w, len(w))
 
@@ -38,7 +38,7 @@ defenestrate 12
 
 def session_00001_line_75():
     r"""
-    >>> a = 'Greetings Planet!'
+    >>> a = "Greetings Planet!"
     >>> a
     'Greetings Planet!'
     >>> b = 12
@@ -47,9 +47,10 @@ def session_00001_line_75():
     """
 
 
-def test_code_87_output_93(capsys):
+def test_code_87_output_94(capsys):
     from datetime import date
-    d = date.fromordinal(730920)    # 730920th day after 1. 1. 0001
+
+    d = date.fromordinal(730920)  # 730920th day after 1. 1. 0001
     print(d)
 
     _phm_expected_str = """\
