@@ -158,14 +158,6 @@ def test_skipif_sharenames():
     assert marker.line == 103
     assert marker.literal == "<!--phmdoctest-share-names-->"
 
-    # directives = fenced_block_node_directives()
-    # assert len(directives) == 1
-    # marker = directives[0]
-    # assert marker.type == phmdoctest.direct.Marker.SKIP
-    # assert marker.value == ''
-    # assert marker.line == 111
-    # assert marker.literal == '<!--phmdoctest-skip-->'
-
 
 def test_skip_plus_label():
     directives = fenced_block_node_directives()
