@@ -1,4 +1,5 @@
 """First group of pytest test cases for phmdoctest."""
+import configparser
 import copy
 import re
 
@@ -112,6 +113,28 @@ class TestDocBuildVersions:
         assert self.monotable_version in self.doc_requirements, "sanity check"
         expected = self.to_setup_style(self.monotable_version)
         assert self.setup.count(expected) == 1
+
+
+def test_requirements_file():
+    """setup.cfg install_requires == requirements.txt.
+
+    Whitespace should not be significant.
+    The config file parser returns a string for the key
+    "install_requires". The string has embedded newlines.
+    The string starts with a blank first line.
+    The comment lines are removed from requirements.txt.
+    All the blanks are removed from each line.
+    """
+    config = configparser.ConfigParser()
+    config.read("setup.cfg")
+    config_lines = config["options"]["install_requires"].splitlines()
+    config_lines = [line.replace(" ", "") for line in config_lines if line]
+    with open("requirements.txt", "r", encoding="utf-8") as f:
+        text = f.read()
+    lines = text.splitlines()
+    lines = [line for line in lines if not line.startswith("#")]
+    requirements_lines = [line.replace(" ", "") for line in lines if line]
+    assert requirements_lines == config_lines
 
 
 def test_empty_output_block_report():
