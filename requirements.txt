@@ -1,0 +1,3 @@
+Click >=7.1.1
+commonmark >=0.9.1
+monotable >=2.1.1

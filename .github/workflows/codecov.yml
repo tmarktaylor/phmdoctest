@@ -19,11 +19,7 @@ jobs:
         pip install coverage
         pip install "pytest>=5"
         pip install codecov
-        # if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-        # todo- replace 3 lines below with root/requirements.txt
-        pip install "Click>=7.1.1"
-        pip install "commonmark>=0.9.1"
-        pip install "monotable>=2.1.1"
+        pip install -r requirements.txt
         pip freeze
     - name: codecov
       run: |
