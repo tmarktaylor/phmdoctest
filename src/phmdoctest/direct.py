@@ -45,7 +45,7 @@ def extract_value(literal: str, marker: Marker) -> str:
 def find_one_directive(node: commonmark.node) -> Optional[Directive]:
     """Get a phmdoctest Directive instance from a HTML comment node."""
     assert node.t == "html_block", "Must be HTML"
-    assert node.html_block_type == 2, "Must be a HTML comment/"
+    assert node.html_block_type == 2, "Must be a HTML comment"
     for marker in Marker:
         if node.literal == marker.value:
             return Directive(

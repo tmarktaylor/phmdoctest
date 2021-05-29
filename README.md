@@ -243,7 +243,7 @@ order the doctests.
 
 The `14` in the function name `test_code_14_output_28` is the
 line number of the first line
-of python code. `27` shows the line number of the expected 
+of python code. `28` shows the line number of the expected 
 terminal output.
 
 One test case function is generated for each: 
