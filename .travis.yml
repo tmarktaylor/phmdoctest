@@ -95,3 +95,4 @@ matrix:
 branches:
   only:
   - master
+  - develop    # todo- temporary for testing
