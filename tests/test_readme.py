@@ -307,7 +307,8 @@ matrix:
   include:
     - python: 3.6
       install:
-        - pip install "." pytest
+        - pip install --no-deps "."
+        - pip install -r requirements.txt
       script:
         - mkdir tests/tmp
         - phmdoctest project.md --report --outfile tests/tmp/test_project.py
