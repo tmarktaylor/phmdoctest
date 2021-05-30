@@ -56,13 +56,12 @@ class TestSameVersions:
         """Check version in the release = line in conf.py."""
         self.verify_found_in_file("conf.py", 'release = "{}"')
 
-    def test_setup_py(self):
-        """Check the version anywhere in setup.py."""
-        with open("setup.py", "r", encoding="utf-8") as f:
-            setup_text = f.read()
-        # keep the part between single or double quotes after version=
-        match = re.search(r" *version=['\"]([^'\"]*)['\"]", setup_text, re.M)
-        assert match.group(1) == self.package_version
+    def test_setup_cfg(self):
+        """Check the version in setup.cfg."""
+        config = configparser.ConfigParser()
+        config.read("setup.cfg")
+        metadata_version = config["metadata"]["version"]
+        assert metadata_version == self.package_version
 
 
 def test_requirements_file():
