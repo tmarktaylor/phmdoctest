@@ -296,27 +296,18 @@ def test_usage():
 
 
 def test_yaml():
-    """Show Markdown example and .travis.yml have the same commands."""
-    markdown_example_text = labeled.contents(label="yaml")
-    expected = """\
-dist: xenial
-language: python
-sudo: false
-
-matrix:
-  include:
-    - python: 3.6
-      install:
-        - pip install --no-deps "."
-        - pip install -r requirements.txt
-      script:
+    """Show the 2 lines are in both Markdown example and .travis.yml."""
+    # Note the lines are indented 8 spaces in both files, so they must have
+    # the same indent here.
+    expected = """
         - mkdir tests/tmp
         - phmdoctest project.md --report --outfile tests/tmp/test_project.py
-        - pytest --doctest-modules -vv tests"""
-    verify.a_and_b_are_the_same(expected, markdown_example_text)
+        """
+    markdown_example_text = labeled.contents(label="yaml")
     with open(".travis.yml", "r", encoding="utf-8") as f:
         travis_text = f.read()
-        assert travis_text.startswith(expected)
+    assert expected in travis_text
+    assert expected in markdown_example_text
 
 
 # Developers: Changes here must be mirrored in a Markdown FCB in README.md.
