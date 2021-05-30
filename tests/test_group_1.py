@@ -65,56 +65,6 @@ class TestSameVersions:
         assert match.group(1) == self.package_version
 
 
-class TestDocBuildVersions:
-    """
-    Some versions are the same in doc/requirements.txt and setup.py.
-
-    Click and monotable versions should be the same.
-
-    For the Sphinx documentation build on readthedocs.org (RTD)
-    specific versions are pinned by the file doc/requirements.txt.
-
-    For Sphinx autodoc the phmdoctest dependencies Click and monotable
-    are installed so that the RTD build can import phmdoctest to look
-    for docstrings.
-
-    Note that commonmark is also a phmdoctest dependency. Because it is
-    pinned to different versions in doc/requirements.txt and setup.py
-    it is not tested here.
-    """
-
-    with open("doc/requirements.txt", "r", encoding="utf-8") as f:
-        doc_requirements = f.read()
-        for line in doc_requirements.splitlines():
-            if line.startswith("Click"):
-                click_version = line
-            if line.startswith("monotable"):
-                monotable_version = line
-    with open("setup.py", "r", encoding="utf-8") as f:
-        setup = f.read()
-
-    @staticmethod
-    def to_setup_style(value):
-        """Convert value from requirements.txt style to setup.py style."""
-        drop_newline = value.replace("\n", "", 1)
-        drop_space = drop_newline.replace(" ", "", 1)
-        # quoted = drop_space.join(["'", "'"])
-        quoted = drop_space.join(['"', '"'])
-        return quoted
-
-    def test_click(self):
-        """Click version in doc/requirements.txt same as setup.py"""
-        assert self.click_version in self.doc_requirements, "sanity check"
-        expected = self.to_setup_style(self.click_version)
-        assert self.setup.count(expected) == 1
-
-    def test_monotable(self):
-        """monotable version in doc/requirements.txt same as setup.py"""
-        assert self.monotable_version in self.doc_requirements, "sanity check"
-        expected = self.to_setup_style(self.monotable_version)
-        assert self.setup.count(expected) == 1
-
-
 def test_requirements_file():
     """setup.cfg install_requires == requirements.txt.
 
@@ -135,6 +85,43 @@ def test_requirements_file():
     lines = [line for line in lines if not line.startswith("#")]
     requirements_lines = [line.replace(" ", "") for line in lines if line]
     assert requirements_lines == config_lines
+
+
+def test_doc_requirements_file():
+    """
+    Some versions are the same in doc/requirements.txt and setup.py.
+
+    Click and monotable versions should be the same.
+
+    For the Sphinx documentation build on readthedocs.org (RTD)
+    specific versions are pinned by the file doc/requirements.txt.
+
+    For Sphinx autodoc the phmdoctest dependencies Click and monotable
+    are installed so that the RTD build can import phmdoctest to look
+    for docstrings.
+
+    Note that commonmark is also a phmdoctest dependency. Because it is
+    pinned to different versions in doc/requirements.txt and setup.py
+    it is not tested here.
+    """
+    with open("requirements.txt", "r", encoding="utf-8") as f:
+        setup_requirements = f.read()
+        for line in setup_requirements.splitlines():
+            if line.startswith("Click"):
+                setup_click = line.replace(" ", "")
+            if line.startswith("monotable"):
+                setup_monotable = line.replace(" ", "")
+
+    with open("doc/requirements.txt", "r", encoding="utf-8") as f:
+        doc_requirements = f.read()
+        for line in doc_requirements.splitlines():
+            if line.startswith("Click"):
+                doc_click = line.replace(" ", "")
+            if line.startswith("monotable"):
+                doc_monotable = line.replace(" ", "")
+
+    assert setup_click == doc_click
+    assert setup_monotable == doc_monotable
 
 
 def test_empty_output_block_report():
