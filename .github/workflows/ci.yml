@@ -77,6 +77,13 @@ jobs:
         check-manifest
         python3 setup.py sdist
         twine check dist/*
+    - name: Upload dist
+      uses: actions/upload-artifact@v2
+      with:
+        name: dist
+        path: dist
+        retention-days: 5
+
 
   docs:
     runs-on: ubuntu-latest
