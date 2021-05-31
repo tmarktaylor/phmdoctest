@@ -9,6 +9,7 @@ matrix:
         &utest_install
         - pip install --no-deps "."
         - pip install -r requirements.txt
+        - pip install pytest
       script:
         &utest_run
         - mkdir tests/tmp

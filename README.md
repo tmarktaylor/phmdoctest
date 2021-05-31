@@ -887,7 +887,7 @@ Options:
 The partial script shown below is for Python 3.6 on [Travis CI][5].
 The script steps are:
 
-- Install phmdoctest (the ".") and install pytest.
+- Install phmdoctest and pytest.
 - Create a new directory to take the generated test file.
 - Run phmdoctest to generate the test file and print the report.
 - Run pytest suite.
@@ -906,6 +906,7 @@ matrix:
     - python: 3.6
       install:
         - pip install phmdoctest
+        - pip install pytest
       script:
         - mkdir tests/tmp
         - phmdoctest project.md --report --outfile tests/tmp/test_project.py
