@@ -11,6 +11,7 @@ from phmdoctest.entryargs import Args
 from phmdoctest.fenced import Role, FencedBlock
 from phmdoctest.direct import Marker
 from phmdoctest import functions
+from phmdoctest.inline import apply_inline_commands
 
 
 def get_block_with_role(blocks: List[FencedBlock], role: Role) -> Optional[FencedBlock]:
@@ -129,14 +130,16 @@ def setup_and_teardown_fixture(
     # do teardown code replace first so not searching through setup code.
     if teardown_block:
         comment = "# teardown code line {}.\n".format(teardown_block.line)
-        code = comment + teardown_block.contents
-        indented_code = textwrap.indent(code, "    ")
+        code, _ = apply_inline_commands(teardown_block.contents)
+        full_code = comment + code
+        indented_code = textwrap.indent(full_code, "    ")
         src = src.replace("    # <teardown code here>\n", indented_code, 1)
 
     if setup_block:
         comment = "# setup code line {}.\n".format(setup_block.line)
-        code = comment + setup_block.contents
-        indented_code = textwrap.indent(code, "    ")
+        code, _ = apply_inline_commands((setup_block.contents))
+        full_code = comment + code
+        indented_code = textwrap.indent(full_code, "    ")
         src = src.replace("    # <setup code here>\n", indented_code, 1)
 
     src += "\n\n"
@@ -227,7 +230,9 @@ def test_case(block: FencedBlock, used_names: Set[str]) -> str:
             output_identifier = "_output_" + str(block.output.line)
         function_name = code_identifier + output_identifier
     assert function_name.isidentifier(), "must be a valid python identifier"
-    code = block.contents
+    code, num_commented_out_sections = apply_inline_commands(block.contents)
+    if num_commented_out_sections:
+        function_name += "_{}".format(num_commented_out_sections)
     expected_output = block.get_output_contents()
     # A 'managed' block has the share-names or clear-names directive.
     managed = has_names_directive(block)
@@ -353,6 +358,6 @@ def build_test_cases(args: Args, blocks: List[FencedBlock]) -> str:
             nocode_func = functions.test_nothing_fails
         else:
             nocode_func = functions.test_nothing_passes
-        generated.write("\n")
+        generated.write("\n\n")
         generated.write(inspect.getsource(nocode_func))
     return generated.getvalue()
