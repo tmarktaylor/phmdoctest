@@ -579,7 +579,7 @@ takes_too_long()
 ```
 Use `phmdoctest:omit` on single or multi-line statements. Note that two
 time.sleep(99) calls were commented out. They follow and are indented more
-that the `if __name__ == "__main__"`line with `phmdoctest:omit`
+that the `if condition:`line with `phmdoctest:omit`.
 
 <!--phmdoctest-label omit-code-->
 ```python3
