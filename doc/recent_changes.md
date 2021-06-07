@@ -1,4 +1,10 @@
 ## Recent changes
+1.2.0 - 2021-06-08
+
+- Add inline annotations.
+- Reformat code style with black.
+- Rework setup.py/setup.cfg.
+
 1.1.1 - 2021-05-14
 
 - Bugfix- Pull Request #6, Issue #8 --outfile missing `import pytest`.
