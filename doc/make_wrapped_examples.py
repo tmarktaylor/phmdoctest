@@ -83,6 +83,8 @@ def main():
     wrap_one_file("doc/test_directive3.py")
     wrap_text("doc/directive3_report.txt")
 
+    wrap_one_file("doc/test_inline_example.py")
+
 
 if __name__ == "__main__":
     main()

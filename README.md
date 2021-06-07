@@ -1,4 +1,4 @@
-# phmdoctest 1.1.1
+# phmdoctest 1.2.0
 
 ## Introduction
 
@@ -19,6 +19,7 @@ examples in Markdown.
   - Add a pytest.mark.skip decorator.
   - Promote names defined in a test case to module level globals.
   - Label any fenced code block for later retrieval (API).
+- Add inline annotations to comment out sections of code.  
 - Get code coverage by running pytest with [coverage][6].
 - Select Python source code blocks as setup and teardown code.
 - Setup applies to code blocks and optionally to session blocks.
@@ -32,13 +33,15 @@ examples in Markdown.
 [![](https://img.shields.io/pypi/l/phmdoctest.svg)](https://github.com/tmarktaylor/phmdoctest/blob/master/LICENSE.txt)
 [![](https://img.shields.io/pypi/v/phmdoctest.svg)](https://pypi.python.org/pypi/phmdoctest)
 [![](https://img.shields.io/pypi/pyversions/phmdoctest.svg)](https://pypi.python.org/pypi/phmdoctest)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 [![](https://readthedocs.org/projects/phmdoctest/badge/?version=latest)](https://phmdoctest.readthedocs.io/en/latest/?badge=latest)
 [![](https://travis-ci.org/tmarktaylor/phmdoctest.svg?branch=master)](https://travis-ci.org/tmarktaylor/phmdoctest)
 [![](https://codecov.io/gh/tmarktaylor/phmdoctest/coverage.svg?branch=master)](https://codecov.io/gh/tmarktaylor/phmdoctest?branch=master)
 
-[Documentation](https://phmdoctest.readthedocs.io/en/latest/) |
-[Homepage](https://github.com/tmarktaylor/phmdoctest) |
+[Readme](https://github.com/tmarktaylor/phmdoctest#readme) |
+[Docs](https://phmdoctest.readthedocs.io/en/latest/) |
+[Repos](https://github.com/tmarktaylor/phmdoctest) |
 [Build][12] |
 [Codecov](https://codecov.io/gh/tmarktaylor/phmdoctest?branch=master) |
 [License](https://github.com/tmarktaylor/phmdoctest/blob/master/LICENSE.txt)
@@ -63,6 +66,7 @@ examples in Markdown.
 [label skip and mark example](#label-skip-and-mark-example) |
 [setup and teardown example](#setup-and-teardown-example) |
 [share-names clear-names example](#share-names-clear-names-example) |
+[Inline annotations](#inline-annotations) |
 [skipping blocks with --skip](#skipping-blocks-with---skip) |
 [--skip](#--skip) |
 [-s short form of --skip](#-s-short-form-of---skip) |
@@ -505,53 +509,116 @@ This directive also deletes the names assigned by setup.
 ## label skip and mark example
 The file [directive1.md](doc/directive1_raw.md) contains
 example usage of label, skip, and mark directives.
-The command
+The command below generates
+[test_directive1.py](doc/test_directive1_py.md).
+`phmdoctest doc/directive1.md --report`
+produces this
+[report](doc/directive1_report_txt.md).
 
 <!--phmdoctest-label directive-1-outfile-->
 ```
 phmdoctest doc/directive1.md --outfile test_directive1.py
 ```
 
-generates
-[test_directive1.py](doc/test_directive1_py.md).
-`phmdoctest doc/directive1.md --report`
-produces this
-[report](doc/directive1_report_txt.md).
-
 
 ## setup and teardown example
 The file [directive2.md](doc/directive2_raw.md) contains
 example usage of label, skip, and mark directives. 
-The command   
+The command below generates
+[test_directive2.py](doc/test_directive2_py.md).
+`phmdoctest doc/directive2.md --report`
+produces this
+[report](doc/directive2_report_txt.md).
 
 <!--phmdoctest-label directive-2-outfile-->
 ```
 phmdoctest doc/directive2.md --outfile test_directive2.py
 ```
 
-generates
-[test_directive2.py](doc/test_directive2_py.md).
-`phmdoctest doc/directive2.md --report`
-produces this
-[report](doc/directive2_report_txt.md).
-
-
 ## share-names clear-names example
 The file [directive3.md](doc/directive3_raw.md) contains
 example usage of share-names and clear-names directives. 
-The command   
-
+The command below generates
+[test_directive3.py](doc/test_directive3_py.md).
+`phmdoctest doc/directive3.md --report`
+produces this
+[report](doc/directive3_report_txt.md).
 <!--phmdoctest-label directive-3-outfile-->
 ```
 phmdoctest doc/directive3.md --outfile test_directive3.py
 ```
 
-generates
-[test_directive3.py](doc/test_directive3_py.md).
-`phmdoctest doc/directive3.md --report`
-produces this
-[report](doc/directive3_report_txt.md).
 
+## Inline annotations
+
+Inline annotations comment out sections of code.
+They can be added to the end of lines in Python code blocks.
+They should be in a comment. 
+
+- `phmdoctest:omit` comments out a section of code.  The line it is on, 
+  plus following lines at greater indent are commented out.
+- `phmdoctest:pass` comments out one line of code and prepends the pass statement.
+
+Here is a snippet showing how to place `phmdoctest:pass` in the code.
+The second block shows the code that is generated. Note there is no `#`
+immediately before `phmdoctest:pass`. It is not required.
+<!--phmdoctest-label pass-code-->
+```python3
+import time
+def takes_too_long():
+    time.sleep(100)    # delay for awhile. phmdoctest:pass
+takes_too_long()
+```
+
+<!--phmdoctest-label pass-result-->
+```python3
+import time
+def takes_too_long():
+    pass  # time.sleep(100)    # delay for awhile. phmdoctest:pass
+takes_too_long()
+```
+Use `phmdoctest:omit` on single or multi-line statements. Note that two
+time.sleep(99) calls were commented out. They follow and are indented more
+that the `if __name__ == "__main__"`line with `phmdoctest:omit`
+
+<!--phmdoctest-label omit-code-->
+```python3
+import time                      # phmdoctest:omit
+
+condition = True
+if condition:       # phmdoctest:omit
+    time.sleep(99)
+    time.sleep(99)
+```
+
+<!--phmdoctest-label omit-result-->
+```python3
+# import time                      # phmdoctest:omit
+
+condition = True
+# if condition:       # phmdoctest:omit
+#     time.sleep(99)
+#     time.sleep(99)
+```
+
+Inline annotation processing counts the number of commented
+out sections and adds the count as the suffix 
+`_N` to the name of the pytest function in the
+generated test file.
+
+Inline annotations are similar, but less powerful
+than the Python standard library **doctest** directive `#doctest+SKIP`.
+Improper use of `phmdoctest:omit` can cause Python syntax errors.
+
+The examples above are snippets that illustrate how to
+use inline annotations. 
+Here is an example that produces a pytest file from Markdown.
+The command below takes [inline_example.md](doc/inline_example.md) and generates
+[test_inline_example.py](doc/test_inline_example_py.md).
+<!--phmdoctest-label inline-outfile-->
+```
+phmdoctest doc/inline_example.md --outfile test_inline_example.py
+```
 
 
 ## skipping blocks with --skip
