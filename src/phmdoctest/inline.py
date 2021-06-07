@@ -135,7 +135,6 @@ def apply_inline_commands(code: str) -> Tuple[str, int]:
                 num_commented_out_sections += 1
                 rewritten.extend(commenter.comment_out())
                 commenter = None
-
                 lines.insert(0, line)
             else:
                 # Collect This line to comment out later.
