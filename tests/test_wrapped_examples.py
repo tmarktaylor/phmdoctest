@@ -111,3 +111,11 @@ def test_test_setup_doctest_py_md():
         markdown_path="doc/test_setup_doctest_py.md",
         contents_path="doc/test_setup_doctest.py",
     )
+
+
+def test_test_inline_example_py_md():
+    """The copy of .py file in fenced code block is the same as the file."""
+    check_first_block(
+        markdown_path="doc/test_inline_example_py.md",
+        contents_path="doc/test_inline_example.py",
+    )

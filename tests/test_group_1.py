@@ -270,6 +270,19 @@ def test_example2_report():
     verify.a_and_b_are_the_same(a=want, b=stdout)
 
 
+def test_setup_with_inline():
+    """Do inline annotations in setup and teardown blocks."""
+    command = (
+        "phmdoctest tests/setup_with_inline.md -u FIRST -d LAST --outfile discarded.py"
+    )
+    simulator_status = verify.one_example(
+        well_formed_command=command,
+        want_file_name="tests/test_setup_with_inline.py",
+        pytest_options=["--doctest-modules", "-v"],
+    )
+    assert simulator_status.runner_status.exit_code == 0
+
+
 def test_blanklines_in_output():
     """Expected output has empty lines and no doctest <BLANKLINE>."""
     command = "phmdoctest tests/output_has_blank_lines.md --outfile discarded.py"

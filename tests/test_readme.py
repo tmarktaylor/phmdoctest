@@ -4,6 +4,7 @@ import re
 
 import phmdoctest.main
 import phmdoctest.direct
+import phmdoctest.inline
 import phmdoctest.simulator
 import phmdoctest.tool
 import verify
@@ -205,6 +206,36 @@ def test_directive3_example():
     )
     got = simulator_status.runner_status.stdout
     verify.a_and_b_are_the_same(want, got)
+
+
+def test_inline_pass():
+    """Show the result block is produced by the code block."""
+    code = labeled.contents(label="pass-code")
+    assert code
+    want, num_commented_out = phmdoctest.inline.apply_inline_commands(code)
+    got = labeled.contents(label="pass-result")
+    assert num_commented_out == 1
+    verify.a_and_b_are_the_same(want, got)
+
+
+def test_inline_omit():
+    """Show the result block is produced by the code block."""
+    code = labeled.contents(label="omit-code")
+    assert code
+    want, num_commented_out = phmdoctest.inline.apply_inline_commands(code)
+    got = labeled.contents(label="omit-result")
+    assert num_commented_out == 2
+    verify.a_and_b_are_the_same(want, got)
+
+
+def test_inline_example():
+    """Make sure generated --outfile is as the same as on disk."""
+    directive_command = labeled.contents(label="inline-outfile")
+    _ = verify.one_example(
+        directive_command,
+        want_file_name="doc/test_inline_example.py",
+        pytest_options=None,
+    )
 
 
 def test_skip_example():
