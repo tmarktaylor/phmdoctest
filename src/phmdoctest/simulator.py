@@ -183,7 +183,6 @@ def run_and_pytest(
             commandline.append("-o junit_family=" + junit_family)
         commandline.append(tmpdir)
         completed = subprocess.run(commandline)
-        pytest_exit_code = completed.returncode
 
         xml = ""
         if junit_family:
@@ -193,6 +192,6 @@ def run_and_pytest(
         return SimulatorStatus(
             runner_status=runner_status,
             outfile=outfile_text,
-            pytest_exit_code=pytest_exit_code,
+            pytest_exit_code=completed.returncode,
             junit_xml=xml,
         )
