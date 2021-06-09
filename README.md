@@ -36,7 +36,7 @@ examples in Markdown.
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 [![](https://readthedocs.org/projects/phmdoctest/badge/?version=latest)](https://phmdoctest.readthedocs.io/en/latest/?badge=latest)
-[![](https://travis-ci.org/tmarktaylor/phmdoctest.svg?branch=master)](https://travis-ci.org/tmarktaylor/phmdoctest)
+[![](https://travis-ci.com/tmarktaylor/phmdoctest.svg?branch=master)](https://travis-ci.com/tmarktaylor/phmdoctest)
 [![](https://codecov.io/gh/tmarktaylor/phmdoctest/coverage.svg?branch=master)](https://codecov.io/gh/tmarktaylor/phmdoctest?branch=master)
 
 [Readme](https://github.com/tmarktaylor/phmdoctest#readme) |
