@@ -1,9 +1,11 @@
 ## Recent changes
-1.2.0 - 2021-06-08
+1.2.0 - 2021-06-09
 
 - Add inline annotations.
 - Reformat code style with black.
 - Rework setup.py/setup.cfg.
+- Remove tox.
+- Fix bad travis example in README.md.
 
 1.1.1 - 2021-05-14
 
