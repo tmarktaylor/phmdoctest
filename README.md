@@ -78,7 +78,6 @@ examples in Markdown.
 [Execution context](#execution-context) |
 [Send outfile to stdout](#send-outfile-to-stdout) |
 [Usage](#usage) |
-[Run on Travis CI](#run-on-travis-ci) |
 [Run as a Python module](#run-as-a-python-module) |
 [Call from Python](#call-from-python) |
 [Hints](#hints) |
@@ -949,37 +948,6 @@ Options:
   --help               Show this message and exit.
 ```
 
-## Run on Travis CI  
-
-The partial script shown below is for Python 3.6 on [Travis CI][5].
-The script steps are:
-
-- Install phmdoctest and pytest.
-- Create a new directory to take the generated test file.
-- Run phmdoctest to generate the test file and print the report.
-- Run pytest suite.
-
-Writing the generated test files to a new directory
-assures an existing test file is not overwritten by mistake.
-
-<!--phmdoctest-label yaml-->
-```yaml
-dist: xenial
-language: python
-sudo: false
-
-matrix:
-  include:
-    - python: 3.6
-      install:
-        - pip install phmdoctest
-        - pip install pytest
-      script:
-        - mkdir tests/tmp
-        - phmdoctest project.md --report --outfile tests/tmp/test_project.py
-        - pytest --doctest-modules -vv tests
-```
-
 ## Run as a Python module
 
 To run phmdoctest from the command line a Python module:
@@ -1092,4 +1060,4 @@ Please see [Contibutions Welcome](CONTRIBUTING.md)
 [4]: https://docs.python.org/3/library/doctest.html
 [5]: https://docs.travis-ci.com
 [6]: https://pypi.python.org/project/coverage
-[12]: https://travis-ci.org/tmarktaylor/phmdoctest
+[12]: https://travis-ci.com/tmarktaylor/phmdoctest

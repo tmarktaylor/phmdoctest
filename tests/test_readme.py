@@ -326,21 +326,6 @@ def test_usage():
     verify.a_and_b_are_the_same(want2, got3)
 
 
-def test_yaml():
-    """Show the 2 lines are in both Markdown example and .travis.yml."""
-    # Note the lines are indented 8 spaces in both files, so they must have
-    # the same indent here.
-    expected = """
-        - mkdir tests/tmp
-        - phmdoctest project.md --report --outfile tests/tmp/test_project.py
-        """
-    markdown_example_text = labeled.contents(label="yaml")
-    with open(".travis.yml", "r", encoding="utf-8") as f:
-        travis_text = f.read()
-    assert expected in travis_text
-    assert expected in markdown_example_text
-
-
 # Developers: Changes here must be mirrored in a Markdown FCB in README.md.
 # Runnable version of example code in README.md.
 # The guts of this function are an exact copy of example in README.md.
