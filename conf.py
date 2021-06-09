@@ -12,7 +12,8 @@
 #
 import os
 import sys
-py_sources_path = os.path.abspath('./src')
+
+py_sources_path = os.path.abspath("./src")
 sys.path.insert(0, py_sources_path)
 
 # -- Project information -----------------------------------------------------
@@ -21,12 +22,12 @@ sys.path.insert(0, py_sources_path)
 
 # Configuration for Sphinx 1.8.5
 
-project = 'phmdoctest'
-copyright = '2021, Mark Taylor'
-author = 'Mark Taylor'
+project = "phmdoctest"
+copyright = "2021, Mark Taylor"
+author = "Mark Taylor"
 
 # The full version, including alpha/beta/rc tags
-release = '1.1.1'
+release = "1.2.0"
 
 
 # -- General configuration ---------------------------------------------------
@@ -34,46 +35,45 @@ release = '1.1.1'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['recommonmark',
-              'sphinx.ext.autodoc',
-              'sphinx.ext.napoleon']
+extensions = ["recommonmark", "sphinx.ext.autodoc", "sphinx.ext.napoleon"]
 
 source_suffix = {
-    '.rst': 'restructuredtext',
-    '.md': 'markdown',
+    ".rst": "restructuredtext",
+    ".md": "markdown",
 }
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ["_templates"]
 
 # tmarktaylor: The documentation sources are at the project root.
 # Any .md, .rst, or folders at the project root that don't
 # belong in the documentation should be listed here.
 #
-# tmarktaylor: Travis CI Job #28.3 build log of tox.ini docs is finding
-# input files in the .tox tree.
 
-#
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = [
-    'tests', 'src',
-    '.tox',
-    '.pytest_cache',
-    '_build', 'Thumbs.db', '.DS_Store',
+    "tests",
+    "src",
+    ".tox",
+    ".pytest_cache",
+    "_build",
+    "Thumbs.db",
+    ".DS_Store",
     # for personal dev environments
-    '.export*'
+    ".export*",
 ]
 
-master_doc = 'index'
+master_doc = "index"
 
 # -- Options for HTML output -------------------------------------------------
 
-on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
+on_rtd = os.environ.get("READTHEDOCS", None) == "True"
 if not on_rtd:
     import sphinx_rtd_theme
-    html_theme = 'sphinx_rtd_theme'
+
+    html_theme = "sphinx_rtd_theme"
     html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for

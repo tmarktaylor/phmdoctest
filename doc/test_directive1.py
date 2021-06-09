@@ -6,8 +6,9 @@ import pytest
 from phmdoctest.functions import _phm_compare_exact
 
 
-def test_code_23_output_29():
+def test_code_23_output_30():
     from datetime import date
+
     date.today()
 
     # Caution- no assertions.
@@ -15,7 +16,7 @@ def test_code_23_output_29():
 
 @pytest.mark.skip()
 def test_mark_skip(capsys):
-    print('testing @pytest.mark.skip().')
+    print("testing @pytest.mark.skip().")
 
     _phm_expected_str = """\
 incorrect expected output
@@ -25,8 +26,8 @@ incorrect expected output
 
 @pytest.mark.skipif(sys.version_info < (3, 8), reason="requires >=py3.8")
 def test_fstring(capsys):
-    user = 'eric_idle'
-    print(f'{user=}')
+    user = "eric_idle"
+    print(f"{user=}")
 
     _phm_expected_str = """\
 user='eric_idle'
@@ -36,6 +37,6 @@ user='eric_idle'
 
 def test_print_coffee():
     r"""
-    >>> print('coffee')
+    >>> print("coffee")
     coffee
     """

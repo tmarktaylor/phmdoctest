@@ -8,16 +8,16 @@ py3        13  code
 py3        23  code    -label test_not_visible
 py3        41  code    -label test_directive_share_names
                        -share-names
-py3        50  code
-           57  output
-py3        67  code
-py3        72  code
-           76  output
-py3        82  code    -share-names
-           90  output
-py3       105  code    -clear-names
-          111  output
-py3       118  code
+py3        53  code
+           60  output
+py3        70  code
+py3        75  code
+           79  output
+py3        85  code    -share-names
+           93  output
+py3       108  code    -clear-names
+          114  output
+py3       121  code
 --------------------------------------------------------
 9 test cases.
 4 code blocks with no output block.

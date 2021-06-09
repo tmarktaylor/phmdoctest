@@ -3,14 +3,15 @@ from typing import IO, Optional, List, NamedTuple, Tuple
 from xml.etree import ElementTree
 from xml.etree.ElementTree import Element
 
-import commonmark    # type: ignore
-import commonmark.node    # type: ignore
+import commonmark  # type: ignore
+import commonmark.node  # type: ignore
 
 import phmdoctest.direct
 
 
 class FCBChooser:
     """Select labeled fenced code block from the Markdown file."""
+
     def __init__(self, markdown_filename: str):
         """Gather labelled Markdown fenced code blocks in the file.
 
@@ -20,7 +21,7 @@ class FCBChooser:
         """
         self._blocks = labeled_fenced_code_blocks(markdown_filename)
 
-    def contents(self, label: str = '') -> str:
+    def contents(self, label: str = "") -> str:
         """Return contents of the labeled fenced code block with label.
 
         Args:
@@ -36,22 +37,21 @@ class FCBChooser:
         for block in self._blocks:
             if block.label == label:
                 return block.contents
-        return ''
+        return ""
 
 
 LabeledFCB = NamedTuple(
-    'LabeledFCB',
+    "LabeledFCB",
     [
-        ('label', str),       # the label directive's value
-        ('line', str),        # Markdown file line number of block contents
-        ('contents', str)     # fenced code block contents
-    ]
+        ("label", str),  # the label directive's value
+        ("line", str),  # Markdown file line number of block contents
+        ("contents", str),  # fenced code block contents
+    ],
 )
 """Information about a fenced code block that has a label directive."""
 
 
-def labeled_fenced_code_blocks(
-        markdown_filename: str) -> List[LabeledFCB]:
+def labeled_fenced_code_blocks(markdown_filename: str) -> List[LabeledFCB]:
     """Return Markdown fenced code blocks that have label directives.
 
     Label directives are placed immediately before a fenced code block
@@ -81,7 +81,7 @@ def labeled_fenced_code_blocks(
           starts.
         - contents is the fenced code block contents as a string.
     """
-    with open(markdown_filename, encoding='utf-8') as fp:
+    with open(markdown_filename, encoding="utf-8") as fp:
         nodes = fenced_block_nodes(fp)
         labeled_blocks = []
         for node in nodes:
@@ -109,7 +109,7 @@ def fenced_code_blocks(markdown_filename: str) -> List[str]:
         List of strings, one for the contents of each Markdown
         fenced code block.
     """
-    with open(markdown_filename, encoding='utf-8') as fp:
+    with open(markdown_filename, encoding="utf-8") as fp:
         nodes = fenced_block_nodes(fp)
         return [node.literal for node in nodes]
 
@@ -132,13 +132,12 @@ def fenced_block_nodes(fp: IO[str]) -> List[commonmark.node.Node]:
     # Presumably, because fenced code blocks nodes are leaf nodes
     # they will only be entered once by the walker.
     for node, entering in walker:
-        if node.t == 'code_block' and node.is_fenced:
+        if node.t == "code_block" and node.is_fenced:
             nodes.append(node)
     return nodes
 
 
-def extract_testsuite(
-        junit_xml_string: str) -> Tuple[Optional[Element], List[Element]]:
+def extract_testsuite(junit_xml_string: str) -> Tuple[Optional[Element], List[Element]]:
     """Return testsuite tree and list of failing trees from JUnit XML.
 
     Args:
@@ -150,10 +149,10 @@ def extract_testsuite(
          tuple testsuite tree, list of failed test case trees
     """
     root = ElementTree.fromstring(junit_xml_string)
-    suite = root.find('testsuite')
+    suite = root.find("testsuite")
     failed_test_cases = []
     if suite is not None:
         for case in suite:
-            if case.find('failure') is not None:
+            if case.find("failure") is not None:
                 failed_test_cases.append(case)
     return suite, failed_test_cases

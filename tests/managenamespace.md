@@ -19,6 +19,7 @@ generated test file.
 <!--phmdoctest-share-names-->
 ```python
 import sys
+
 a = 10
 print(sys.version_info)
 ```

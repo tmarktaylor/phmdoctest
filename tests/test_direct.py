@@ -22,7 +22,7 @@ def setup_module():
     """
     # test cases below iterate through the blocks.
     global fenced_block_nodes
-    with open('tests/direct.md', 'r', encoding='utf-8') as fp:
+    with open("tests/direct.md", "r", encoding="utf-8") as fp:
         nodes = phmdoctest.tool.fenced_block_nodes(fp)
         fenced_block_nodes = iter(nodes)
 
@@ -38,9 +38,9 @@ def test_skip_before_comment():
     assert len(directives) == 1
     marker = directives[0]
     assert marker.type == phmdoctest.direct.Marker.SKIP
-    assert marker.value == ''
+    assert marker.value == ""
     assert marker.line == 1
-    assert marker.literal == '<!--phmdoctest-skip-->'
+    assert marker.literal == "<!--phmdoctest-skip-->"
 
 
 def test_no_directive_on_output_block():
@@ -53,9 +53,9 @@ def test_comment_skip_on_pycon():
     assert len(directives) == 1
     marker = directives[0]
     assert marker.type == phmdoctest.direct.Marker.SKIP
-    assert marker.value == ''
+    assert marker.value == ""
     assert marker.line == 23
-    assert marker.literal == '<!--phmdoctest-skip-->'
+    assert marker.literal == "<!--phmdoctest-skip-->"
 
 
 def test_label_on_session():
@@ -63,21 +63,21 @@ def test_label_on_session():
     assert len(directives) == 3
     marker0 = directives[0]
     assert marker0.type == phmdoctest.direct.Marker.LABEL
-    assert marker0.value == 'coffee_session'
+    assert marker0.value == "coffee_session"
     assert marker0.line == 33
-    assert marker0.literal == '<!--phmdoctest-label coffee_session -->'
+    assert marker0.literal == "<!--phmdoctest-label coffee_session -->"
 
     marker1 = directives[1]
     assert marker1.type == phmdoctest.direct.Marker.LABEL
-    assert marker1.value == 'NO_TRAILING_SPACE'
+    assert marker1.value == "NO_TRAILING_SPACE"
     assert marker1.line == 35
-    assert marker1.literal == '<!--phmdoctest-label NO_TRAILING_SPACE-->'
+    assert marker1.literal == "<!--phmdoctest-label NO_TRAILING_SPACE-->"
 
     marker2 = directives[2]
     assert marker2.type == phmdoctest.direct.Marker.LABEL
-    assert marker2.value == 'EXTRA_SPACES'
+    assert marker2.value == "EXTRA_SPACES"
     assert marker2.line == 36
-    assert marker2.literal == '<!--phmdoctest-label   EXTRA_SPACES  -->'
+    assert marker2.literal == "<!--phmdoctest-label   EXTRA_SPACES  -->"
 
 
 # Note- There is no limit to number of blank lines
@@ -89,9 +89,9 @@ def test_blank_lines_below_marker():
     assert len(directives) == 1
     marker = directives[0]
     assert marker.type == phmdoctest.direct.Marker.CLEAR_NAMES
-    assert marker.value == ''
+    assert marker.value == ""
     assert marker.line == 47
-    assert marker.literal == '<!--phmdoctest-clear-names-->'
+    assert marker.literal == "<!--phmdoctest-clear-names-->"
 
 
 def test_not_found_text_below_marker():
@@ -106,21 +106,21 @@ def test_the_rest_mixed_with_comments():
     assert len(directives) == 3
     marker0 = directives[0]
     assert marker0.type == phmdoctest.direct.Marker.SETUP
-    assert marker0.value == ''
+    assert marker0.value == ""
     assert marker0.line == 70
-    assert marker0.literal == '<!--phmdoctest-setup-->'
+    assert marker0.literal == "<!--phmdoctest-setup-->"
 
     marker1 = directives[1]
     assert marker1.type == phmdoctest.direct.Marker.TEARDOWN
-    assert marker1.value == ''
+    assert marker1.value == ""
     assert marker1.line == 72
-    assert marker1.literal == '<!--phmdoctest-teardown-->'
+    assert marker1.literal == "<!--phmdoctest-teardown-->"
 
     marker2 = directives[2]
     assert marker2.type == phmdoctest.direct.Marker.SHARE_NAMES
-    assert marker2.value == ''
+    assert marker2.value == ""
     assert marker2.line == 73
-    assert marker2.literal == '<!--phmdoctest-share-names-->'
+    assert marker2.literal == "<!--phmdoctest-share-names-->"
 
 
 def test_comment_skip_on_output():
@@ -129,9 +129,9 @@ def test_comment_skip_on_output():
     assert len(directives) == 1
     marker = directives[0]
     assert marker.type == phmdoctest.direct.Marker.SKIP
-    assert marker.value == ''
+    assert marker.value == ""
     assert marker.line == 83
-    assert marker.literal == '<!--phmdoctest-skip-->'
+    assert marker.literal == "<!--phmdoctest-skip-->"
 
 
 def test_mark_skip():
@@ -139,9 +139,9 @@ def test_mark_skip():
     assert len(directives) == 1
     marker = directives[0]
     assert marker.type == phmdoctest.direct.Marker.PYTEST_SKIP
-    assert marker.value == ''
+    assert marker.value == ""
     assert marker.line == 90
-    assert marker.literal == '<!--phmdoctest-mark.skip-->'
+    assert marker.literal == "<!--phmdoctest-mark.skip-->"
 
 
 def test_skipif_sharenames():
@@ -149,22 +149,14 @@ def test_skipif_sharenames():
     assert len(directives) == 2
     marker = directives[0]
     assert marker.type == phmdoctest.direct.Marker.PYTEST_SKIPIF
-    assert marker.value == '8'
+    assert marker.value == "8"
     assert marker.line == 102
-    assert marker.literal == '<!--phmdoctest-mark.skipif<3.8-->'
+    assert marker.literal == "<!--phmdoctest-mark.skipif<3.8-->"
     marker = directives[1]
     assert marker.type == phmdoctest.direct.Marker.SHARE_NAMES
-    assert marker.value == ''
+    assert marker.value == ""
     assert marker.line == 103
-    assert marker.literal == '<!--phmdoctest-share-names-->'
-
-    # directives = fenced_block_node_directives()
-    # assert len(directives) == 1
-    # marker = directives[0]
-    # assert marker.type == phmdoctest.direct.Marker.SKIP
-    # assert marker.value == ''
-    # assert marker.line == 111
-    # assert marker.literal == '<!--phmdoctest-skip-->'
+    assert marker.literal == "<!--phmdoctest-share-names-->"
 
 
 def test_skip_plus_label():
@@ -175,14 +167,14 @@ def test_skip_plus_label():
     assert marker.line == 112
     marker = directives[1]
     assert marker.type == phmdoctest.direct.Marker.LABEL
-    assert marker.value == 'my-hello-world'
+    assert marker.value == "my-hello-world"
     assert marker.line == 113
-    assert marker.literal == '<!--phmdoctest-label my-hello-world-->'
+    assert marker.literal == "<!--phmdoctest-label my-hello-world-->"
     marker = directives[2]
     assert marker.type == phmdoctest.direct.Marker.SKIP
-    assert marker.value == ''
+    assert marker.value == ""
     assert marker.line == 114
-    assert marker.literal == '<!--phmdoctest-skip-->'
+    assert marker.literal == "<!--phmdoctest-skip-->"
 
     # get directives from the output block
     directives = fenced_block_node_directives()
@@ -198,14 +190,14 @@ def test_skip_output_plus_label():
     assert len(directives) == 2
     marker = directives[0]
     assert marker.type == phmdoctest.direct.Marker.LABEL
-    assert marker.value == 'my-hello-world-output'
+    assert marker.value == "my-hello-world-output"
     assert marker.line == 128
-    assert marker.literal == '<!--phmdoctest-label my-hello-world-output-->'
+    assert marker.literal == "<!--phmdoctest-label my-hello-world-output-->"
     marker = directives[1]
     assert marker.type == phmdoctest.direct.Marker.SKIP
-    assert marker.value == ''
+    assert marker.value == ""
     assert marker.line == 129
-    assert marker.literal == '<!--phmdoctest-skip-->'
+    assert marker.literal == "<!--phmdoctest-skip-->"
 
 
 def test_consumed_all_nodes():
@@ -216,7 +208,7 @@ def test_consumed_all_nodes():
 
 def test_circuit_breaker():
     """Patch FCB Node prev points to self to spin traversal logic."""
-    with open('tests/direct.md', 'r', encoding='utf-8') as fp:
+    with open("tests/direct.md", "r", encoding="utf-8") as fp:
         nodes = phmdoctest.tool.fenced_block_nodes(fp)
     n = nodes[0]
     # Rig node n so that its prv pointer points to node n (itself).
@@ -226,7 +218,7 @@ def test_circuit_breaker():
     # This triggers the loop_count > 100: break.
     self = n.nxt.prv
     n.prv = self
-    n.t = 'html_block'
+    n.t = "html_block"
     n.html_block_type = 2
     d = phmdoctest.direct.get_directives(n)
     assert len(d) == 0

@@ -39,13 +39,9 @@ def test_managenamespace_outfile():
     # The combination of import sys at the top of the test file
     # and import sys in the example code is needed to test
     # that line of code.
-    command = (
-        'phmdoctest tests/managenamespace.md --outfile discarded.py'
-    )
+    command = "phmdoctest tests/managenamespace.md --outfile discarded.py"
     _ = verify.one_example(
-        command,
-        want_file_name='tests/test_managenamespace.py',
-        pytest_options=None
+        command, want_file_name="tests/test_managenamespace.py", pytest_options=None
     )
 
 
@@ -54,32 +50,32 @@ def test_update_item_removals(managenamespace):
     # 'sys' below exercises the _ = additions.pop('sys', None) line in the
     # fixture source code.
     items = {
-        'sys': None,
-        'managenamespace': None,
-        'doctest_namespace': None,
-        'capsys': None,
-        '_phm_expected_str': None,
-        'example_variable': 1111,
+        "sys": None,
+        "managenamespace": None,
+        "doctest_namespace": None,
+        "capsys": None,
+        "_phm_expected_str": None,
+        "example_variable": 1111,
     }
-    managenamespace(operation='update', additions=items)
-    namespace_copy = managenamespace(operation='copy')
-    assert 'example_variable' in namespace_copy
-    assert namespace_copy['example_variable'] == 1111
-    assert 'sys' not in namespace_copy
-    assert 'managenamespace' not in namespace_copy
-    assert 'doctest_namespace' not in namespace_copy
-    assert 'capsys' not in namespace_copy
-    assert '_phm_expected_str' not in namespace_copy
+    managenamespace(operation="update", additions=items)
+    namespace_copy = managenamespace(operation="copy")
+    assert "example_variable" in namespace_copy
+    assert namespace_copy["example_variable"] == 1111
+    assert "sys" not in namespace_copy
+    assert "managenamespace" not in namespace_copy
+    assert "doctest_namespace" not in namespace_copy
+    assert "capsys" not in namespace_copy
+    assert "_phm_expected_str" not in namespace_copy
 
     # Clear the namespace.
-    managenamespace(operation='clear', additions=None)
-    namespace_copy = managenamespace(operation='copy')
+    managenamespace(operation="clear", additions=None)
+    namespace_copy = managenamespace(operation="copy")
     assert len(namespace_copy) == 0
 
     # Add more items to the namespace.
-    more_items = {'A': None, 'B': None, 'C': None}
-    managenamespace(operation='update', additions=more_items)
-    namespace_copy = managenamespace(operation='copy')
+    more_items = {"A": None, "B": None, "C": None}
+    managenamespace(operation="update", additions=more_items)
+    namespace_copy = managenamespace(operation="copy")
     assert len(namespace_copy) == 3
     for name in more_items.keys():
         assert name in namespace_copy
@@ -87,17 +83,17 @@ def test_update_item_removals(managenamespace):
 
 def test_check_attribute_name_asserts(managenamespace):
     """Update asserts if an item is in the original module namespace."""
-    items = {'verify': None}
+    items = {"verify": None}
     with pytest.raises(AssertionError) as exc_info:
-        managenamespace(operation='update', additions=items)
-    want = 'Not allowed to replace module level name verify because'
+        managenamespace(operation="update", additions=items)
+    want = "Not allowed to replace module level name verify because"
     assert want in str(exc_info.value)
 
 
 def test_illegal_operation(managenamespace):
     """Update asserts if operation in not 'update', 'copy', or 'clear'."""
-    items = {'E': None, 'F': None}
+    items = {"E": None, "F": None}
     with pytest.raises(AssertionError) as exc_info:
-        managenamespace(operation='bogus', additions=items)
+        managenamespace(operation="bogus", additions=items)
     want = 'operation="bogus" is not allowed'
     assert want in str(exc_info.value)

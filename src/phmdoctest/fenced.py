@@ -4,40 +4,41 @@ from enum import Enum
 
 from typing import List, Optional
 
-import commonmark.node    # type: ignore
+import commonmark.node  # type: ignore
 import phmdoctest.direct
 
 
 class Role(Enum):
     """Role that markdown fenced code block plays in testing."""
-    UNKNOWN = '--'
-    CODE = 'code'
-    OUTPUT = 'output'
-    SESSION = 'session'
-    SKIP_CODE = 'skip-code'
-    SKIP_OUTPUT = 'skip-output'
-    SKIP_SESSION = 'skip-session'
-    SETUP = 'setup'
-    TEARDOWN = 'teardown'
-    DEL_CODE = 'del-code'
-    DEL_OUTPUT = 'del-output'
+
+    UNKNOWN = "--"
+    CODE = "code"
+    OUTPUT = "output"
+    SESSION = "session"
+    SKIP_CODE = "skip-code"
+    SKIP_OUTPUT = "skip-output"
+    SKIP_SESSION = "skip-session"
+    SETUP = "setup"
+    TEARDOWN = "teardown"
+    DEL_CODE = "del-code"
+    DEL_OUTPUT = "del-output"
 
 
 class FencedBlock:
     """Selected fields from commonmark node plus new field role."""
+
     def __init__(self, node: commonmark.node.Node) -> None:
         """Extract fields from commonmark fenced code block node."""
         self.type = node.info
         self.line = node.sourcepos[0][0] + 1
         self.role = Role.UNKNOWN
-        self.contents = node.literal    # type: str
-        self.output = None    # type: Optional['FencedBlock']
-        self.patterns = list()    # type: List[str]
+        self.contents = node.literal  # type: str
+        self.output = None  # type: Optional["FencedBlock"]
+        self.patterns = list()  # type: List[str]
         self.directives = phmdoctest.direct.get_directives(node)
 
     def __str__(self) -> str:
-        return 'FencedBlock(role={}, line={})'.format(
-            self.role.value, self.line)
+        return "FencedBlock(role={}, line={})".format(self.role.value, self.line)
 
     def set(self, role: Role) -> None:
         """Set the role for the fenced code block in subsequent testing."""
@@ -47,10 +48,10 @@ class FencedBlock:
         """Add the TEXT value that identified the block"""
         self.patterns.append(pattern)
 
-    def set_link_to_output(self, fenced_block: 'FencedBlock') -> None:
+    def set_link_to_output(self, fenced_block: "FencedBlock") -> None:
         """Save a reference to the code block's output block."""
-        assert self.role == Role.CODE, 'only allowed to be code'
-        assert fenced_block.role == Role.OUTPUT, 'only allowed to be output'
+        assert self.role == Role.CODE, "only allowed to be code"
+        assert fenced_block.role == Role.OUTPUT, "only allowed to be output"
         self.output = fenced_block
 
     def get_output_contents(self) -> str:
@@ -62,9 +63,9 @@ class FencedBlock:
         if self.output and self.output.role == Role.OUTPUT:
             return self.output.contents
         else:
-            return ''
+            return ""
 
-    def skip(self, pattern: str = '') -> None:
+    def skip(self, pattern: str = "") -> None:
         """Skip an already designated code block. Re-skip is OK.
 
         pattern is the TEXT value that identified the block.
@@ -83,10 +84,13 @@ class FencedBlock:
             # unless it is already skipped as tested in the any()
             # statement here.
             if not any(
-                    [self.role == Role.SKIP_CODE,
-                     self.role == Role.SKIP_SESSION,
-                     self.role == Role.SKIP_OUTPUT]):
-                assert False, 'cannot skip a block with {}.'.format(self.role)
+                [
+                    self.role == Role.SKIP_CODE,
+                    self.role == Role.SKIP_SESSION,
+                    self.role == Role.SKIP_OUTPUT,
+                ]
+            ):
+                assert False, "cannot skip a block with {}.".format(self.role)
         if pattern:
             self.patterns.append(pattern)
 

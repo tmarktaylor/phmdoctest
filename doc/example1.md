@@ -3,7 +3,7 @@
 ## Interactive Python session (doctest)
 
 ```pycon 
->>> print('Hello World!')
+>>> print("Hello World!")
 Hello World!
 ```
 
@@ -18,6 +18,7 @@ class Floats(Enum):
     CIDER = 2
     CHERRIES = 3
     ADUCK = 4
+
 for floater in Floats:
     print(floater)
 ```

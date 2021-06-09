@@ -6,20 +6,13 @@ matrix:
   include:
     - python: 3.6
       install:
-        - pip install "." pytest
-      script:
-        - mkdir tests/tmp
-        - phmdoctest project.md --report --outfile tests/tmp/test_project.py
-        - pytest --doctest-modules -vv tests
-
-    - python: 3.7
-      install:
         &utest_install
-        - pip install "." pytest
+        - pip install --no-deps "."
+        - pip install -r requirements.txt
+        - pip install pytest
       script:
         &utest_run
         - mkdir tests/tmp
-        # Run phmdoctest to generate test file and print the report.
         - phmdoctest project.md --report --outfile tests/tmp/test_project.py
         - phmdoctest doc/example1.md --report --outfile tests/tmp/test_example1.py
         - phmdoctest doc/example2.md --skip "Python 3.7" --skip LAST --report --outfile tests/tmp/test_example2.py
@@ -39,9 +32,13 @@ matrix:
         - phmdoctest doc/example2.md --skip "Python 3.7" --skip LAST --report > tests/tmp/example2_report.txt
         - cmp tests/example2_report.txt tests/tmp/example2_report.txt
 
+    - python: 3.7
+      install: *utest_install
+      script: *utest_run
+
     - python: 3.8
-      install: pip install tox
-      script: tox -e cover,docs,demo
+      install: *utest_install
+      script: *utest_run
 
     - python: 3.9
       install: *utest_install
@@ -50,6 +47,45 @@ matrix:
     - python: pypy3
       install: *utest_install
       script: *utest_run
+
+    - python: 3.8
+      name: Pytest Live Log Demo
+      install: *utest_install
+      script:
+        # Show setup, teardown, and doctests pytest run time order using
+        # pytest Live Logs.
+        # The terminal output should show the order:
+        #     setup_module
+        #     test_1
+        #     test_2
+        #     test_3
+        #     teardown_module
+        - python -m pytest doc/livelog.py --log-cli-level=debug --color=yes
+
+        # This is the same command plus the --doctest-modules option.
+        # Note that the PASSED indication for session_00000 is printed
+        # after setup_module log message.
+        # The terminal output should show the order:
+        #     setup_module
+        #     session_00000
+        #     session_00001
+        #     session_00002
+        #     teardown_module
+        #     setup_module
+        #     test_1
+        #     test_2
+        #     test_3
+        #     teardown_module
+        - python -m pytest --log-cli-level=debug --color=yes --doctest-modules doc/livelog.py
+
+        # These steps cause the build to fail.
+        # A GitHub workflow called demo.yml runs the same steps.
+        # A GitHub login is required to view the terminal output.
+        #
+        # demo test case assertion with early teardown with pytest -x
+        # - python -m pytest -vv -x --log-cli-level=DEBUG --doctest-modules --color=yes doc/livelog_test_assertion.py
+        # demo test case assertion with early teardown with pytest -x
+        # - python -m pytest -vv -x --log-cli-level=DEBUG --doctest-modules --color=yes doc/livelog_bad_session.py
 
 branches:
   only:

@@ -1,10 +1,10 @@
 # Test on pip install of phmdoctest rather than the checked out repository.
-name: Test pip install via setup.py
+name: Usage
 
 on: [push]
 
 jobs:
-  installtest:
+  pytest:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -18,8 +18,9 @@ jobs:
       - name: Install
         run: |
           python -m pip install --upgrade pip
-          pip install "."
           pip install "pytest>=5"
+          pip install --no-deps "."
+          pip install -r requirements.txt
           pip freeze
       - name: Test suite
         run: |

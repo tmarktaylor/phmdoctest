@@ -19,21 +19,22 @@ from phmdoctest.main import entry_point
 
 
 SimulatorStatus = NamedTuple(
-    'SimulatorStatus',
+    "SimulatorStatus",
     [
-        ('runner_status', click.testing.Result),
-        ('outfile', Optional[str]),
-        ('pytest_exit_code', Optional[int]),
-        ('junit_xml', Optional[str])
-     ]
+        ("runner_status", click.testing.Result),
+        ("outfile", Optional[str]),
+        ("pytest_exit_code", Optional[int]),
+        ("junit_xml", Optional[str]),
+    ],
 )
 """run_and_pytest() return value."""
 
 
 def run_and_pytest(
-        well_formed_command: str,
-        pytest_options: Optional[List[str]] = None,
-        junit_family: Optional[str] = None) -> SimulatorStatus:
+    well_formed_command: str,
+    pytest_options: Optional[List[str]] = None,
+    junit_family: Optional[str] = None,
+) -> SimulatorStatus:
     """
     Simulate a phmdoctest command, optionally run pytest.
 
@@ -91,26 +92,25 @@ def run_and_pytest(
         SimulatorStatus containing runner_status, outfile,
         pytest_exit_code, and generated JUnit XML.
     """
-    assert well_formed_command.startswith('phmdoctest ')
+    assert well_formed_command.startswith("phmdoctest ")
     # trim off any trailing whitespace
     command0 = well_formed_command.rstrip()
     # chop off phmdoctest since invoking by a python function call
-    command1 = command0.replace('phmdoctest ', '', 1)
+    command1 = command0.replace("phmdoctest ", "", 1)
     # simulate commands that don't write OUTFILE.
-    wants_help = '--help' in command1
-    wants_version = '--version' in command1
-    stream_outfile = (
-            command1.endswith('--outfile -') or
-            command1.endswith('--outfile=-')
+    wants_help = "--help" in command1
+    wants_version = "--version" in command1
+    stream_outfile = command1.endswith("--outfile -") or command1.endswith(
+        "--outfile=-"
     )
-    no_outfile = '--outfile' not in command1
+    no_outfile = "--outfile" not in command1
     runner = click.testing.CliRunner()
     if wants_help or wants_version or stream_outfile or no_outfile:
         return SimulatorStatus(
             runner_status=runner.invoke(cli=entry_point, args=command1),
             outfile=None,
             pytest_exit_code=None,
-            junit_xml=''
+            junit_xml="",
         )
 
     # Simulate commands that write an OUTFILE.
@@ -129,9 +129,9 @@ def run_and_pytest(
         # to the tmpdir.
         markdown_path, command2 = command1.split(maxsplit=1)
         markdown_name = Path(markdown_path).name
-        outfile_name = 'test_' + markdown_name.replace('.md', '.py')
+        outfile_name = "test_" + markdown_name.replace(".md", ".py")
         outfile_path = Path(tmpdir) / outfile_name
-        command3 = command2[:command2.find('--outfile')].strip()
+        command3 = command2[: command2.find("--outfile")].strip()
 
         # Split up the rest of the command into pieces to pass to
         # runner.invoke().
@@ -146,18 +146,18 @@ def run_and_pytest(
         #    --skip="Python 3.7"
         #         or
         #    --skip "Python 3.7"
-        command4a = command3.replace('--skip=', '--skip ')
-        command4b = command4a.replace('--setup=', '--setup ')
-        command4 = command4b.replace('--teardown=', '--teardown ')
+        command4a = command3.replace("--skip=", "--skip ")
+        command4b = command4a.replace("--setup=", "--setup ")
+        command4 = command4b.replace("--teardown=", "--teardown ")
 
         # get characters between double quotes including the quotes
         # get runs of non-whitespace characters
         args1 = re.findall(pattern=r'("[^"]*"|\S+)', string=command4)
         # If both leading and trailing double quotes, remove them.
-        args2 = [re.sub('^"([^"]*)"$', r'\1', arg) for arg in args1]
+        args2 = [re.sub('^"([^"]*)"$', r"\1", arg) for arg in args1]
         phm_args = [markdown_path]
         phm_args.extend(args2)
-        phm_args.extend(['--outfile', str(outfile_path)])
+        phm_args.extend(["--outfile", str(outfile_path)])
         runner_status = runner.invoke(cli=entry_point, args=phm_args)
 
         # return now if the command failed
@@ -166,33 +166,32 @@ def run_and_pytest(
                 runner_status=runner_status,
                 outfile=None,
                 pytest_exit_code=None,
-                junit_xml=''
+                junit_xml="",
             )
 
         # Copy the generated pytest file from the temporary directory.
-        with open(outfile_path, 'r', encoding='utf-8') as fp:
+        with open(outfile_path, "r", encoding="utf-8") as fp:
             outfile_text = fp.read()
 
-        commandline = ['python', '-m', 'pytest']
+        commandline = ["python", "-m", "pytest"]
         if pytest_options:
             commandline.extend(pytest_options)
         if junit_family:
-            junit_name = outfile_name.replace('.py', '.xml')
+            junit_name = outfile_name.replace(".py", ".xml")
             junit_path = Path(tmpdir) / junit_name
-            commandline.append('--junitxml=' + str(junit_path))
-            commandline.append('-o junit_family=' + junit_family)
+            commandline.append("--junitxml=" + str(junit_path))
+            commandline.append("-o junit_family=" + junit_family)
         commandline.append(tmpdir)
         completed = subprocess.run(commandline)
-        pytest_exit_code = completed.returncode
 
-        xml = ''
+        xml = ""
         if junit_family:
-            with open(junit_path, 'r', encoding='utf-8') as fp1:
+            with open(junit_path, "r", encoding="utf-8") as fp1:
                 xml = fp1.read()
 
         return SimulatorStatus(
             runner_status=runner_status,
             outfile=outfile_text,
-            pytest_exit_code=pytest_exit_code,
-            junit_xml=xml
+            pytest_exit_code=completed.returncode,
+            junit_xml=xml,
         )

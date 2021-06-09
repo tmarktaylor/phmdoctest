@@ -1,4 +1,4 @@
-# phmdoctest 1.1.1
+# phmdoctest 1.2.0
 
 ## Introduction
 
@@ -19,6 +19,7 @@ examples in Markdown.
   - Add a pytest.mark.skip decorator.
   - Promote names defined in a test case to module level globals.
   - Label any fenced code block for later retrieval (API).
+- Add inline annotations to comment out sections of code.  
 - Get code coverage by running pytest with [coverage][6].
 - Select Python source code blocks as setup and teardown code.
 - Setup applies to code blocks and optionally to session blocks.
@@ -32,13 +33,15 @@ examples in Markdown.
 [![](https://img.shields.io/pypi/l/phmdoctest.svg)](https://github.com/tmarktaylor/phmdoctest/blob/master/LICENSE.txt)
 [![](https://img.shields.io/pypi/v/phmdoctest.svg)](https://pypi.python.org/pypi/phmdoctest)
 [![](https://img.shields.io/pypi/pyversions/phmdoctest.svg)](https://pypi.python.org/pypi/phmdoctest)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 [![](https://readthedocs.org/projects/phmdoctest/badge/?version=latest)](https://phmdoctest.readthedocs.io/en/latest/?badge=latest)
 [![](https://travis-ci.org/tmarktaylor/phmdoctest.svg?branch=master)](https://travis-ci.org/tmarktaylor/phmdoctest)
 [![](https://codecov.io/gh/tmarktaylor/phmdoctest/coverage.svg?branch=master)](https://codecov.io/gh/tmarktaylor/phmdoctest?branch=master)
 
-[Documentation](https://phmdoctest.readthedocs.io/en/latest/) |
-[Homepage](https://github.com/tmarktaylor/phmdoctest) |
+[Readme](https://github.com/tmarktaylor/phmdoctest#readme) |
+[Docs](https://phmdoctest.readthedocs.io/en/latest/) |
+[Repos](https://github.com/tmarktaylor/phmdoctest) |
 [Build][12] |
 [Codecov](https://codecov.io/gh/tmarktaylor/phmdoctest?branch=master) |
 [License](https://github.com/tmarktaylor/phmdoctest/blob/master/LICENSE.txt)
@@ -54,8 +57,8 @@ examples in Markdown.
 [skip](#skip) |
 [label on code and sessions](#label-on-code-and-sessions) |
 [label on any fenced code block](#label-on-any-fenced-code-block) |
-[mark.skip](#mark.skip) |
-[mark.skipif<3.N](#mark.skipif<3.n) |
+[pytest skip](#pytest-skip) |
+[pytest skipif](#pytest-skipif) |
 [setup](#setup) |
 [teardown](#teardown) |
 [share-names](#share-names) |
@@ -63,6 +66,7 @@ examples in Markdown.
 [label skip and mark example](#label-skip-and-mark-example) |
 [setup and teardown example](#setup-and-teardown-example) |
 [share-names clear-names example](#share-names-clear-names-example) |
+[Inline annotations](#inline-annotations) |
 [skipping blocks with --skip](#skipping-blocks-with---skip) |
 [--skip](#--skip) |
 [-s short form of --skip](#-s-short-form-of---skip) |
@@ -79,6 +83,7 @@ examples in Markdown.
 [Call from Python](#call-from-python) |
 [Hints](#hints) |
 [Directive hints](#directive-hints) |
+[Contributions](#contributions) |
 [Related projects](#related-projects) |
 [Recent changes](#recent-changes)
 
@@ -96,7 +101,7 @@ Given the Markdown file shown in raw form here...
 <!--phmdoctest-mark.skip-->
 <!--phmdoctest-label test_example-->
 ```python
-print('Hello World!')
+print("Hello World!")
 ```
 ```
 incorrect expected output
@@ -120,7 +125,7 @@ from phmdoctest.functions import _phm_compare_exact
 
 @pytest.mark.skip()
 def test_example(capsys):
-    print('Hello World!')
+    print("Hello World!")
 
     _phm_expected_str = """\
 incorrect expected output
@@ -154,7 +159,7 @@ shown in raw form here...
 ## Interactive Python session (doctest)
 
 ```pycon 
->>> print('Hello World!')
+>>> print("Hello World!")
 Hello World!
 ```
 
@@ -169,6 +174,7 @@ class Floats(Enum):
     CIDER = 2
     CHERRIES = 3
     ADUCK = 4
+
 for floater in Floats:
     print(floater)
 ```
@@ -198,12 +204,12 @@ from phmdoctest.functions import _phm_compare_exact
 
 def session_00001_line_6():
     r"""
-    >>> print('Hello World!')
+    >>> print("Hello World!")
     Hello World!
     """
 
 
-def test_code_14_output_27(capsys):
+def test_code_14_output_28(capsys):
     from enum import Enum
 
     class Floats(Enum):
@@ -211,6 +217,7 @@ def test_code_14_output_27(capsys):
         CIDER = 2
         CHERRIES = 3
         ADUCK = 4
+
     for floater in Floats:
         print(floater)
 
@@ -238,9 +245,9 @@ line number in [example1.md](doc/example1.md) of the first line
 of the interactive session. `00001` is a sequence number to
 order the doctests. 
 
-The `14` in the function name `test_code_14_output_27` is the
+The `14` in the function name `test_code_14_output_28` is the
 line number of the first line
-of python code. `27` shows the line number of the expected 
+of python code. `28` shows the line number of the expected 
 terminal output.
 
 One test case function is generated for each: 
@@ -284,8 +291,8 @@ yaml       59  --
 text       67  --
 py         75  session
 py3        87  code
-           93  output
-pycon     101  session
+           94  output
+pycon     102  session
 -----------------------------------------------
 7 test cases.
 1 code blocks with no output block.
@@ -344,14 +351,14 @@ code block. It is OK if other HTML comments are present.
 The `<!--phmdoctest-skip-->` directive is shown in the
 raw Markdown below.
 With the skip directive no test code will be
-generated from the fenced code blocks.
+generated from the fenced code block.
 
 <!--phmdoctest-label intro-to-directives-->
 ~~~
 <!--phmdoctest-skip-->
 <!--Another HTML comment-->
 ```python3
-print('Hello World!')
+print("Hello World!")
 ```
 Expected Output
 ```
@@ -418,8 +425,8 @@ Here is Python code to fetch it:
 ```python3
 import phmdoctest.tool
 
-chooser = phmdoctest.tool.FCBChooser('doc/my_markdown_file.md')
-text = chooser.contents(label='my-fenced-code-block')
+chooser = phmdoctest.tool.FCBChooser("doc/my_markdown_file.md")
+text = chooser.contents(label="my-fenced-code-block")
 print(text)
 ```
 Output:
@@ -429,14 +436,15 @@ Output:
 The label directive can be placed on any fenced code block.
 ```
 
-## mark.skip
-This directive generates a test case with a `@pytest.mark.skip()`
-decorator. 
+## pytest skip
+The `<!--phmdoctest-mark.skip-->`  directive generates a test
+case with a `@pytest.mark.skip()` decorator. 
 [Example.](#label-skip-and-mark-example)
 
 
-## mark.skipif<3.N
-This directive generates a test case with the pytest decorator
+## pytest skipif
+The `<!--phmdoctest-mark.skipif<3.N-->`  directive generates 
+a test case with the pytest decorator
 `@pytest.mark.skipif(sys.version_info < (3, N), reason="requires >=py3.N")`.
 N is a Python minor version number.
 [Example.](#label-skip-and-mark-example)
@@ -455,8 +463,10 @@ Here is an example setup block from
 <!--phmdoctest-label setup-md-first-block-->
 ```py3
 import math
+
 mylist = [1, 2, 3]
 a, b = 10, 11
+
 def doubler(x):
     return x * 2
 ```
@@ -499,53 +509,116 @@ This directive also deletes the names assigned by setup.
 ## label skip and mark example
 The file [directive1.md](doc/directive1_raw.md) contains
 example usage of label, skip, and mark directives.
-The command
+The command below generates
+[test_directive1.py](doc/test_directive1_py.md).
+`phmdoctest doc/directive1.md --report`
+produces this
+[report](doc/directive1_report_txt.md).
 
 <!--phmdoctest-label directive-1-outfile-->
 ```
 phmdoctest doc/directive1.md --outfile test_directive1.py
 ```
 
-generates
-[test_directive1.py](doc/test_directive1_py.md).
-`phmdoctest doc/directive1.md --report`
-produces this
-[report](doc/directive1_report_txt.md).
-
 
 ## setup and teardown example
 The file [directive2.md](doc/directive2_raw.md) contains
 example usage of label, skip, and mark directives. 
-The command   
+The command below generates
+[test_directive2.py](doc/test_directive2_py.md).
+`phmdoctest doc/directive2.md --report`
+produces this
+[report](doc/directive2_report_txt.md).
 
 <!--phmdoctest-label directive-2-outfile-->
 ```
 phmdoctest doc/directive2.md --outfile test_directive2.py
 ```
 
-generates
-[test_directive2.py](doc/test_directive2_py.md).
-`phmdoctest doc/directive2.md --report`
-produces this
-[report](doc/directive2_report_txt.md).
-
-
 ## share-names clear-names example
 The file [directive3.md](doc/directive3_raw.md) contains
 example usage of share-names and clear-names directives. 
-The command   
-
+The command below generates
+[test_directive3.py](doc/test_directive3_py.md).
+`phmdoctest doc/directive3.md --report`
+produces this
+[report](doc/directive3_report_txt.md).
 <!--phmdoctest-label directive-3-outfile-->
 ```
 phmdoctest doc/directive3.md --outfile test_directive3.py
 ```
 
-generates
-[test_directive3.py](doc/test_directive3_py.md).
-`phmdoctest doc/directive3.md --report`
-produces this
-[report](doc/directive3_report_txt.md).
 
+## Inline annotations
+
+Inline annotations comment out sections of code.
+They can be added to the end of lines in Python code blocks.
+They should be in a comment. 
+
+- `phmdoctest:omit` comments out a section of code.  The line it is on, 
+  plus following lines at greater indent are commented out.
+- `phmdoctest:pass` comments out one line of code and prepends the pass statement.
+
+Here is a snippet showing how to place `phmdoctest:pass` in the code.
+The second block shows the code that is generated. Note there is no `#`
+immediately before `phmdoctest:pass`. It is not required.
+<!--phmdoctest-label pass-code-->
+```python3
+import time
+def takes_too_long():
+    time.sleep(100)    # delay for awhile. phmdoctest:pass
+takes_too_long()
+```
+
+<!--phmdoctest-label pass-result-->
+```python3
+import time
+def takes_too_long():
+    pass  # time.sleep(100)    # delay for awhile. phmdoctest:pass
+takes_too_long()
+```
+Use `phmdoctest:omit` on single or multi-line statements. Note that two
+time.sleep(99) calls were commented out. They follow and are indented more
+that the `if condition:`line with `phmdoctest:omit`.
+
+<!--phmdoctest-label omit-code-->
+```python3
+import time                      # phmdoctest:omit
+
+condition = True
+if condition:       # phmdoctest:omit
+    time.sleep(99)
+    time.sleep(99)
+```
+
+<!--phmdoctest-label omit-result-->
+```python3
+# import time                      # phmdoctest:omit
+
+condition = True
+# if condition:       # phmdoctest:omit
+#     time.sleep(99)
+#     time.sleep(99)
+```
+
+Inline annotation processing counts the number of commented
+out sections and adds the count as the suffix 
+`_N` to the name of the pytest function in the
+generated test file.
+
+Inline annotations are similar, but less powerful
+than the Python standard library **doctest** directive `#doctest+SKIP`.
+Improper use of `phmdoctest:omit` can cause Python syntax errors.
+
+The examples above are snippets that illustrate how to
+use inline annotations. 
+Here is an example that produces a pytest file from Markdown.
+The command below takes [inline_example.md](doc/inline_example.md) and generates
+[test_inline_example.py](doc/test_inline_example_py.md).
+<!--phmdoctest-label inline-outfile-->
+```
+phmdoctest doc/inline_example.md --outfile test_inline_example.py
+```
 
 
 ## skipping blocks with --skip
@@ -612,8 +685,8 @@ yaml       59  --
 text       67  --
 py         75  session
 py3        87  code
-           93  output
-pycon     101  skip-session  "LAST"
+           94  output
+pycon     102  skip-session  "LAST"
 ----------------------------------------------------
 5 test cases.
 1 skipped code blocks.
@@ -625,7 +698,7 @@ pycon     101  skip-session  "LAST"
 skip pattern  matching code block line number(s)
 ------------------------------------------------
 Python 3.7    20
-LAST          101
+LAST          102
 ------------------------------------------------
 ```
  
@@ -698,13 +771,13 @@ block    line  test      TEXT or directive
 type   number  role      quoted and one per line
 ------------------------------------------------
 py3         9  setup     "FIRST"
-py3        18  code
-           25  output
-py3        35  code
-           40  output
-py3        45  code
-           49  output
-py3        56  teardown  "LAST"
+py3        20  code
+           27  output
+py3        37  code
+           42  output
+py3        47  code
+           51  output
+py3        58  teardown  "LAST"
 ------------------------------------------------
 3 test cases.
 ```
@@ -783,7 +856,7 @@ Same as the setup section plus:
   a session.
 - Names assigned by the setup code block are globally visible
   to the entire test suite via the Pytest doctest_namespace
-  fixture.  See hint near the end [Directive hints](#directive-hints).
+  fixture.  See hint near the end [Hints](#Hints).
 
 #### Pytest live logging demos
 The live logging demos reveal pytest execution contexts. 
@@ -792,10 +865,11 @@ execution order of setup_module(), test cases, sessions, and
 teardown_module().
 The demos are in one of the Travis CI builds.
 - Look for the build log here [Build][12].
-- Go to the Python 3.8 build which runs tox.
+- Go to last job called Pytest Live Log Demo.
 - Go to the Job Log tab.
-- Look for the tox demo environment commands near the end.
 
+There are 2 more demo invocations in the workflow action
+called Pytest Live Log Demo.  
 
 
 ## Send outfile to stdout
@@ -880,7 +954,7 @@ Options:
 The partial script shown below is for Python 3.6 on [Travis CI][5].
 The script steps are:
 
-- Install phmdoctest (the ".") and install pytest.
+- Install phmdoctest and pytest.
 - Create a new directory to take the generated test file.
 - Run phmdoctest to generate the test file and print the report.
 - Run pytest suite.
@@ -898,7 +972,8 @@ matrix:
   include:
     - python: 3.6
       install:
-        - pip install "." pytest
+        - pip install phmdoctest
+        - pip install pytest
       script:
         - mkdir tests/tmp
         - phmdoctest project.md --report --outfile tests/tmp/test_project.py
@@ -927,10 +1002,10 @@ pytest_options are passed as a list of strings as shown below.
 <!--phmdoctest-label simulator-->
 ```python
 import phmdoctest.simulator
-command = 'phmdoctest doc/example1.md --report --outfile test_me.py'
+
+command = "phmdoctest doc/example1.md --report --outfile test_me.py"
 simulator_status = phmdoctest.simulator.run_and_pytest(
-    well_formed_command=command,
-    pytest_options=['--doctest-modules', '-v']
+    well_formed_command=command, pytest_options=["--doctest-modules", "-v"]
 )
 assert simulator_status.runner_status.exit_code == 0
 assert simulator_status.pytest_exit_code == 0
@@ -992,7 +1067,9 @@ assert simulator_status.pytest_exit_code == 0
 - There is no limit to number of blank lines after
   the directive HTML comment but before the fenced code block.
   
-  
+## Contributions
+
+Please see [Contibutions Welcome](CONTRIBUTING.md)
   
 ## Related projects
 - rundoc

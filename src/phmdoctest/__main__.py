@@ -5,4 +5,5 @@
 """
 
 from phmdoctest.main import entry_point
+
 entry_point()

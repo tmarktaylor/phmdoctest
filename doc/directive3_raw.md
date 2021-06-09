@@ -12,7 +12,7 @@ First a normal test case with no directives.
 This generates a test case.  The name `not_shared` is local to
 the function test_code_13_output_17().
 ```py3
-not_shared = 'Hello World!'
+not_shared = "Hello World!"
 print(not_shared)
 ```
 ```
@@ -27,7 +27,7 @@ try:
 except NameError:
     pass
 else:
-    assert False, 'did not get expected NameError'
+    assert False, "did not get expected NameError"
 ```
 
 #### Share the names assigned here with later Python code blocks. 
@@ -41,15 +41,18 @@ Place the `<!--phmdoctest-share-names-->` directive in the Markdown file.
 <!--phmdoctest-share-names-->
 ```py3
 import string
+
 x, y, z = 77, 88, 99
+
 def incrementer(x):
     return x + 1
-grades = ['A', 'B', 'C']
+
+grades = ["A", "B", "C"]
 ```
 
 #### This test case shows the shared names are visible.
 ```py3
-print('string.digits=', string.digits)
+print("string.digits=", string.digits)
 print(incrementer(10))
 print(grades)
 print(x, y, z)
@@ -66,12 +69,12 @@ string.digits= 0123456789
 The objects created by the share-names code block can be modified
 and blocks run afterward will see the changes.  
 ```py3
-grades.append('D')
+grades.append("D")
 ```
 
 #### This test case sees the modified grades.
 ```py3
-print(grades == ['A', 'B', 'C', 'D'])
+print(grades == ["A", "B", "C", "D"])
 ```
 expected output:
 ```
@@ -104,8 +107,8 @@ This test case is the same as the previous test case to show
 that mylist is still visible.
 <!--phmdoctest-clear-names-->
 ```py3
-print('Names are cleared after the code runs.')
-print(grades == ['A', 'B', 'C', 'D'])
+print("Names are cleared after the code runs.")
+print(grades == ["A", "B", "C", "D"])
 print(hex_digits)
 ```
 expected output:
@@ -122,13 +125,13 @@ try:
 except NameError:
     pass
 else:
-    assert False, 'expected NameError for grades'
+    assert False, "expected NameError for grades"
 try:
     print(hex_digits)
 except NameError:
     pass
 else:
-    assert False, 'expected NameError for hex_digits'
+    assert False, "expected NameError for hex_digits"
 ```
 ~~~
 This page is created from a Markdown file that contains the contents
