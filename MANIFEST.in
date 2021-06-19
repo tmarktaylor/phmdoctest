@@ -19,8 +19,8 @@ recursive-include tests *.py
 recursive-include tests *.txt
 
 include .gitignore
-include .readthedocs.yml
-include .travis.yml
+include *.yml
+include *.toml
 
 # Don't want Sphinx build artifacts
 recursive-exclude doc/_build *
