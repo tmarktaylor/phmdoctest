@@ -1,0 +1,4 @@
+# Configure GitHub pages builder
+theme: jekyll-theme-slate
+show_downloads: true
+include: CONTRIBUTING.md
