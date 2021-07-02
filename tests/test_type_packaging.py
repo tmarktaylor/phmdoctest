@@ -28,6 +28,7 @@ def test_mypy_likes_run_and_pytest() -> None:
         well_formed_command=command, pytest_options=None
     )
     assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code is None
 
 
 def test_mypy_likes_fenced_code_blocks() -> None:

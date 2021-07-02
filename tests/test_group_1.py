@@ -264,6 +264,7 @@ def test_example2_report():
         pytest_options=None,
     )
     assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code is None
     stdout = simulator_status.runner_status.stdout
     with open("tests/example2_report.txt", "r", encoding="utf-8") as f:
         want = f.read()

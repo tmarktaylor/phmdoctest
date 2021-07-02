@@ -87,6 +87,8 @@ def test_report():
     simulator_status = phmdoctest.simulator.run_and_pytest(
         report_command, pytest_options=None
     )
+    assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code is None
     got = simulator_status.runner_status.stdout
     verify.a_and_b_are_the_same(want, got)
 
@@ -317,6 +319,8 @@ def test_usage():
     simulator_status = phmdoctest.simulator.run_and_pytest(
         "phmdoctest --help", pytest_options=None
     )
+    assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code is None
     want1 = labeled.contents(label="usage")
     want2 = re.sub(r"\s+", " ", want1)
 

@@ -15,6 +15,7 @@ def test_missing_setup_for_setup_doctest():
         well_formed_command=command, pytest_options=None
     )
     assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code is None
     stdout = simulator_status.runner_status.stdout
     # no blocks set to role setup
     assert not ("  setup" in stdout)
@@ -29,6 +30,7 @@ def test_no_match_for_setup():
         well_formed_command=command, pytest_options=None
     )
     assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code is None
     stdout = simulator_status.runner_status.stdout
     # no blocks set to role setup
     assert not ("  setup" in stdout)
@@ -42,6 +44,7 @@ def test_too_many_matches_for_setup():
         well_formed_command=command, pytest_options=None
     )
     assert simulator_status.runner_status.exit_code == 1
+    assert simulator_status.pytest_exit_code is None
     stdout = simulator_status.runner_status.stdout
     assert "Error: More than one block matched command line" in stdout
     assert "--setup or -u." in stdout
@@ -56,6 +59,7 @@ def test_setup_is_not_code_block():
         well_formed_command=command, pytest_options=None
     )
     assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code is None
     stdout = simulator_status.runner_status.stdout
     assert not ("  setup" in stdout)
     assert "No setup block found." in stdout
@@ -68,6 +72,7 @@ def test_setup_is_not_skipped_block():
         well_formed_command=command, pytest_options=None
     )
     assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code is None
     stdout = simulator_status.runner_status.stdout
     assert not ("  setup" in stdout)
     assert "No setup block found." in stdout
@@ -80,6 +85,7 @@ def test_setup_has_output_block():
         well_formed_command=command, pytest_options=None
     )
     assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code is None
     stdout = simulator_status.runner_status.stdout
     assert 'python      22  setup       "19"' in stdout
     assert "            29  del-output" in stdout
@@ -93,6 +99,7 @@ def test_no_match_for_teardown():
         well_formed_command=command, pytest_options=None
     )
     assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code is None
     stdout = simulator_status.runner_status.stdout
     # no blocks set to role setup
     assert not ("  teardown" in stdout)
@@ -107,6 +114,7 @@ def test_too_many_matches_for_teardown():
         well_formed_command=command, pytest_options=None
     )
     assert simulator_status.runner_status.exit_code == 1
+    assert simulator_status.pytest_exit_code is None
     stdout = simulator_status.runner_status.stdout
     assert "Error: More than one block matched command line" in stdout
     assert "--teardown or -d." in stdout
@@ -121,6 +129,7 @@ def test_teardown_is_same_as_setup_block():
         well_formed_command=command, pytest_options=None
     )
     assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code is None
     stdout = simulator_status.runner_status.stdout
     assert not ("  teardown" in stdout)
     assert "No teardown block found." in stdout
@@ -133,6 +142,7 @@ def test_teardown_is_not_code_block():
         well_formed_command=command, pytest_options=None
     )
     assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code is None
     stdout = simulator_status.runner_status.stdout
     assert not ("  teardown" in stdout)
     assert "No teardown block found." in stdout
@@ -306,6 +316,7 @@ def test_empty_code_blocks_report():
         well_formed_command=command, pytest_options=None
     )
     assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code is None
     stdout = simulator_status.runner_status.stdout
     with open("tests/empty_code_report.txt", "r", encoding="utf-8") as f:
         want = f.read()
