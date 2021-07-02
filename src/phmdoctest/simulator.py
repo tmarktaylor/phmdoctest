@@ -173,25 +173,31 @@ def run_and_pytest(
         with open(outfile_path, "r", encoding="utf-8") as fp:
             outfile_text = fp.read()
 
-        commandline = ["python", "-m", "pytest"]
-        if pytest_options:
-            commandline.extend(pytest_options)
-        if junit_family:
-            junit_name = outfile_name.replace(".py", ".xml")
-            junit_path = Path(tmpdir) / junit_name
-            commandline.append("--junitxml=" + str(junit_path))
-            commandline.append("-o junit_family=" + junit_family)
-        commandline.append(tmpdir)
-        completed = subprocess.run(commandline)
+        if pytest_options is None:
+            return SimulatorStatus(
+                runner_status=runner_status,
+                outfile=outfile_text,
+                pytest_exit_code=None,
+                junit_xml="",
+            )
+        else:
+            commandline = ["python", "-m", "pytest"] + pytest_options
+            if junit_family:
+                junit_name = outfile_name.replace(".py", ".xml")
+                junit_path = Path(tmpdir) / junit_name
+                commandline.append("--junitxml=" + str(junit_path))
+                commandline.append("-o junit_family=" + junit_family)
+            commandline.append(tmpdir)
+            completed = subprocess.run(commandline)
 
-        xml = ""
-        if junit_family:
-            with open(junit_path, "r", encoding="utf-8") as fp1:
-                xml = fp1.read()
+            xml = ""
+            if junit_family:
+                with open(junit_path, "r", encoding="utf-8") as fp1:
+                    xml = fp1.read()
 
-        return SimulatorStatus(
-            runner_status=runner_status,
-            outfile=outfile_text,
-            pytest_exit_code=completed.returncode,
-            junit_xml=xml,
-        )
+            return SimulatorStatus(
+                runner_status=runner_status,
+                outfile=outfile_text,
+                pytest_exit_code=completed.returncode,
+                junit_xml=xml,
+            )
