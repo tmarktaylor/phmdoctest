@@ -10,6 +10,7 @@ Optionally run pytest on the temporary file.
 from pathlib import Path
 import re
 import subprocess
+import sys
 from tempfile import TemporaryDirectory
 from typing import List, Optional, NamedTuple
 
@@ -181,7 +182,7 @@ def run_and_pytest(
                 junit_xml="",
             )
         else:
-            commandline = ["python", "-m", "pytest"] + pytest_options
+            commandline = [sys.executable, "-m", "pytest"] + pytest_options
             if junit_family:
                 junit_name = outfile_name.replace(".py", ".xml")
                 junit_path = Path(tmpdir) / junit_name
