@@ -1,6 +1,7 @@
 name: CI
 
-# Note: The pytest job does not install phmdoctest.
+# Note: The toxpytest job creates a virtual environment.
+#       The coverage job does not install phmdoctest.
 #       It imports phmdoctest from the checked out
 #       src folder via $PYTHONPATH.
 #       The inspect job installs phmdoctest.
@@ -10,14 +11,35 @@ on:
     branches: [develop]
 
 jobs:
-  pytest:
-    runs-on: ubuntu-latest
+  toxpytest:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python 3.8
+    - name: Set up Python 3.x
       uses: actions/setup-python@v2
       with:
-        python-version: 3.8
+        python-version: 3.x
+    - name: Install Tox
+      run: |
+        python -m pip install --upgrade pip
+        pip install tox
+    - name: Run tox tests
+      run: tox -e tests
+
+  coverage:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.x
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.x
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
@@ -54,7 +76,6 @@ jobs:
         pip install twine
         pip install black
         pip freeze
-
     - name: Formating
       # Show reformatting changes.
       # Make the changes.
@@ -63,7 +84,6 @@ jobs:
         black --diff --color "."
         black "."
       continue-on-error: true
-
     - name: Code Style
       run: |
         flake8 --exit-zero --max-complexity=10
@@ -96,7 +116,6 @@ jobs:
       run: |
         mkdir docbuild
         sphinx-build -b html -d docbuild/doctrees . docbuild/html
-
     - name: Upload docs
       uses: actions/upload-artifact@v2
       with:
