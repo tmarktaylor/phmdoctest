@@ -31,7 +31,7 @@ Blank lines in the expected output must be replaced with `<BLANKLINE>`.
 To see the `<BLANKLINE>` navigate to [project.md unrendered][1]. 
 
 
-```pycon
+```py
 >>> print('Hello\n\nWorld!')
 Hello
 <BLANKLINE>
@@ -46,7 +46,7 @@ expected exception and use of the doctest directive
 To see the doctest directive navigate to [project.md unrendered][1]. 
 
 
-```pycon
+```py
 >>> int('def')    #doctest:+IGNORE_EXCEPTION_DETAIL   
 Traceback (most recent call last):
     ...

@@ -160,8 +160,8 @@ def test_run_setup_example():
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
     stdout = simulator_status.runner_status.stdout
-    assert 'py3         9  setup     "FIRST"' in stdout
-    assert 'py3        58  teardown  "LAST"' in stdout
+    assert 'python       9  setup     "FIRST"' in stdout
+    assert 'python      58  teardown  "LAST"' in stdout
 
 
 def test_simulator_setup_equals_quoted():
@@ -176,7 +176,7 @@ def test_simulator_setup_equals_quoted():
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
     stdout = simulator_status.runner_status.stdout
-    assert 'py3         9  setup     "import math"' in stdout
+    assert 'python       9  setup     "import math"' in stdout
 
 
 def test_simulator_setup_space_quoted():
@@ -191,7 +191,7 @@ def test_simulator_setup_space_quoted():
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
     stdout = simulator_status.runner_status.stdout
-    assert 'py3         9  setup     "import math"' in stdout
+    assert 'python       9  setup     "import math"' in stdout
 
 
 def test_simulator_teardown_equals_quoted():
@@ -206,7 +206,7 @@ def test_simulator_teardown_equals_quoted():
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
     stdout = simulator_status.runner_status.stdout
-    assert 'py3        58  teardown  "not emptied"' in stdout
+    assert 'python      58  teardown  "not emptied"' in stdout
 
 
 def test_simulator_teardown_space_quoted():
@@ -221,7 +221,7 @@ def test_simulator_teardown_space_quoted():
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
     stdout = simulator_status.runner_status.stdout
-    assert 'py3        58  teardown  "not emptied"' in stdout
+    assert 'python      58  teardown  "not emptied"' in stdout
 
 
 def test_teardown_without_setup():
@@ -236,8 +236,8 @@ def test_teardown_without_setup():
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
     stdout = simulator_status.runner_status.stdout
-    assert 'py3        87  teardown     "import date"' in stdout
-    assert "           94  del-output" in stdout
+    assert 'python      87  teardown     "import date"' in stdout
+    assert "            94  del-output" in stdout
 
 
 def test_run_setup_doctest_example():
@@ -252,8 +252,8 @@ def test_run_setup_doctest_example():
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
     stdout = simulator_status.runner_status.stdout
-    assert 'py3         9  setup     "FIRST"' in stdout
-    assert 'py3        86  teardown  "LAST"' in stdout
+    assert 'python       9  setup     "FIRST"' in stdout
+    assert 'python      86  teardown  "LAST"' in stdout
 
 
 def test_setup_no_teardown():

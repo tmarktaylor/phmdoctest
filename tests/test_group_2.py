@@ -18,7 +18,7 @@ def test_skip_first():
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
     stdout = simulator_status.runner_status.stdout
-    assert 'py3         9  skip-code     "FIRST"' in stdout
+    assert 'python       9  skip-code     "FIRST"' in stdout
     assert "FIRST         9" in stdout
 
 
@@ -31,7 +31,7 @@ def test_skip_second():
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
     stdout = simulator_status.runner_status.stdout
-    assert 'py3        20  skip-code    "SECOND"' in stdout
+    assert 'python      20  skip-code    "SECOND"' in stdout
     assert "SECOND        20" in stdout
 
 
@@ -94,7 +94,7 @@ def test_skip_second_when_more_than_one():
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
     stdout = simulator_status.runner_status.stdout
-    assert 'py3        20  skip-code    "SECOND"' in stdout
+    assert 'python      20  skip-code    "SECOND"' in stdout
     assert "SECOND        20" in stdout
 
 
@@ -110,8 +110,8 @@ def test_skip_code_that_has_no_output_block():
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
     stdout = simulator_status.runner_status.stdout
-    assert 'py3        20  skip-code    "SECOND"' in stdout
-    assert 'py3        37  skip-code    "while a < 1000:"' in stdout
+    assert 'python      20  skip-code    "SECOND"' in stdout
+    assert 'python      37  skip-code    "while a < 1000:"' in stdout
     assert "SECOND           20" in stdout
     assert "while a < 1000:  37" in stdout
 

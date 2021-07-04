@@ -7,7 +7,7 @@ To comment out sections of Python code blocks use inline annotations.
 
 This example shows use of phmdoctest:omit to comment out one line
 at a time in two places.
-```python3
+```python
 def cause_assertion():
     print("before assert...")
     assert False                  # phmdoctest:omit
@@ -25,7 +25,7 @@ after assert.
 This example shows use of phmdoctest:omit to comment out an
 indented section.
 
-```python3
+```python
 def prints_too_much(condition):
     print("called with", condition)
     if condition:             # phmdoctest:omit

@@ -36,7 +36,7 @@ datetime.date(2021, 4, 18)
 
 No test case is generated.
 <!--phmdoctest-skip-->
-```pycon
+```py
 >>> print("Hello World!")
 incorrect expected output should fail
 if test case is generated
@@ -80,7 +80,7 @@ user='eric_idle'
 This will generate a test case called 
 `test_print_coffee()`.
 <!--phmdoctest-label test_print_coffee-->
-```pycon
+```py
 >>> print("coffee")
 coffee
 ```

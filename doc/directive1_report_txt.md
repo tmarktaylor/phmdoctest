@@ -8,14 +8,14 @@ type    number  role          quoted and one per line
 python      16  skip-code     -skip
 python      23  code
             30  skip-output   -skip
-pycon       38  skip-session  -skip
+py          38  skip-session  -skip
 python      53  code          -mark.skip
                               -label test_mark_skip
             56  output
 python      70  code          -label test_fstring
                               -mark.skipif<3.8
             74  output
-pycon       82  session       -label test_print_coffee
+py          82  session       -label test_print_coffee
 ------------------------------------------------------
 4 test cases.
 1 skipped code blocks.

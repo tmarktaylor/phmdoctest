@@ -115,7 +115,7 @@ phmdoctest tests/one_mark_skip.md --outfile test_one_mark_skip.py
 
 creates the python source code file shown here...
 <!--phmdoctest-label directive-example-outfile-->
-```python3
+```python
 """pytest file built from tests/one_mark_skip.md"""
 import pytest
 
@@ -157,7 +157,7 @@ shown in raw form here...
 
 ## Interactive Python session (doctest)
 
-```pycon 
+```py 
 >>> print("Hello World!")
 Hello World!
 ```
@@ -165,7 +165,7 @@ Hello World!
 ## Source Code and terminal output
  
 Code:
-```python3
+```python
 from enum import Enum
 
 class Floats(Enum):
@@ -274,25 +274,25 @@ The `test role` column shows how each fenced code block is tested.
 <!--phmdoctest-label example2-report-->
 ```
          doc/example2.md fenced blocks
------------------------------------------------
-block    line  test     TEXT or directive
-type   number  role     quoted and one per line
------------------------------------------------
-py3         9  code
-           14  output
-py3        20  code
-           26  output
-           31  --
-py3        37  code
-py3        44  code
-           51  output
-yaml       59  --
-text       67  --
-py         75  session
-py3        87  code
-           94  output
-pycon     102  session
------------------------------------------------
+------------------------------------------------
+block     line  test     TEXT or directive
+type    number  role     quoted and one per line
+------------------------------------------------
+python       9  code
+            14  output
+python      20  code
+            26  output
+            31  --
+python      37  code
+python      44  code
+            51  output
+yaml        59  --
+text        67  --
+py          75  session
+python      87  code
+            94  output
+py         102  session
+------------------------------------------------
 7 test cases.
 1 code blocks with no output block.
 ```
@@ -317,7 +317,11 @@ with one of these:
     ```python3
     ```py3
 
-and the block contents can't start with `'>>> '`.
+plus the block contents can't start with `'>>> '`.
+
+The examples use the info_strings `python` for code and `py` for sessions
+since they render with coloring on GitHub, readthedocs, GitHub Pages,
+and Python package index.
 
 [project.md](project.md) has more examples of code and session blocks.
 
@@ -356,7 +360,7 @@ generated from the fenced code block.
 ~~~
 <!--phmdoctest-skip-->
 <!--Another HTML comment-->
-```python3
+```python
 print("Hello World!")
 ```
 Expected Output
@@ -421,7 +425,7 @@ The label directive can be placed on any fenced code block.
 Here is Python code to fetch it:
 
 <!--phmdoctest-label fetch-it-->
-```python3
+```python
 import phmdoctest.tool
 
 chooser = phmdoctest.tool.FCBChooser("doc/my_markdown_file.md")
@@ -460,7 +464,7 @@ the setup block runs.
 Here is an example setup block from 
 [setup.md](doc/setup.md):
 <!--phmdoctest-label setup-md-first-block-->
-```py3
+```python
 import math
 
 mylist = [1, 2, 3]
@@ -562,7 +566,7 @@ Here is a snippet showing how to place `phmdoctest:pass` in the code.
 The second block shows the code that is generated. Note there is no `#`
 immediately before `phmdoctest:pass`. It is not required.
 <!--phmdoctest-label pass-code-->
-```python3
+```python
 import time
 def takes_too_long():
     time.sleep(100)    # delay for awhile. phmdoctest:pass
@@ -570,7 +574,7 @@ takes_too_long()
 ```
 
 <!--phmdoctest-label pass-result-->
-```python3
+```python
 import time
 def takes_too_long():
     pass  # time.sleep(100)    # delay for awhile. phmdoctest:pass
@@ -581,7 +585,7 @@ time.sleep(99) calls were commented out. They follow and are indented more
 that the `if condition:`line with `phmdoctest:omit`.
 
 <!--phmdoctest-label omit-code-->
-```python3
+```python
 import time                      # phmdoctest:omit
 
 condition = True
@@ -591,7 +595,7 @@ if condition:       # phmdoctest:omit
 ```
 
 <!--phmdoctest-label omit-result-->
-```python3
+```python
 # import time                      # phmdoctest:omit
 
 condition = True
@@ -667,26 +671,26 @@ Produces the report
 
 <!--phmdoctest-label skip-report-->
 ```
-           doc/example2.md fenced blocks
-----------------------------------------------------
-block    line  test          TEXT or directive
-type   number  role          quoted and one per line
-----------------------------------------------------
-py3         9  code
-           14  output
-py3        20  skip-code     "Python 3.7"
-           26  skip-output
-           31  --
-py3        37  code
-py3        44  code
-           51  output
-yaml       59  --
-text       67  --
-py         75  session
-py3        87  code
-           94  output
-pycon     102  skip-session  "LAST"
-----------------------------------------------------
+            doc/example2.md fenced blocks
+-----------------------------------------------------
+block     line  test          TEXT or directive
+type    number  role          quoted and one per line
+-----------------------------------------------------
+python       9  code
+            14  output
+python      20  skip-code     "Python 3.7"
+            26  skip-output
+            31  --
+python      37  code
+python      44  code
+            51  output
+yaml        59  --
+text        67  --
+py          75  session
+python      87  code
+            94  output
+py         102  skip-session  "LAST"
+-----------------------------------------------------
 5 test cases.
 1 skipped code blocks.
 1 skipped interactive session blocks.
@@ -764,20 +768,20 @@ phmdoctest doc/setup.md --setup FIRST --teardown LAST --report
 
 <!--phmdoctest-label setup-report-->
 ```
-           doc/setup.md fenced blocks
-------------------------------------------------
-block    line  test      TEXT or directive
-type   number  role      quoted and one per line
-------------------------------------------------
-py3         9  setup     "FIRST"
-py3        20  code
-           27  output
-py3        37  code
-           42  output
-py3        47  code
-           51  output
-py3        58  teardown  "LAST"
-------------------------------------------------
+            doc/setup.md fenced blocks
+-------------------------------------------------
+block     line  test      TEXT or directive
+type    number  role      quoted and one per line
+-------------------------------------------------
+python       9  setup     "FIRST"
+python      20  code
+            27  output
+python      37  code
+            42  output
+python      47  code
+            51  output
+python      58  teardown  "LAST"
+-------------------------------------------------
 3 test cases.
 ```
 

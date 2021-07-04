@@ -2,7 +2,7 @@
 
 ## Interactive Python session (doctest)
 
-```pycon 
+```py 
 >>> print("Hello World!")
 Hello World!
 ```
@@ -10,7 +10,7 @@ Hello World!
 ## Source Code and terminal output
  
 Code:
-```python3
+```python
 from enum import Enum
 
 class Floats(Enum):

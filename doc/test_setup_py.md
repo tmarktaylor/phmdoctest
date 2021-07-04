@@ -1,5 +1,5 @@
 #### doc/test_setup.py
-```python3
+```python
 """pytest file built from doc/setup.md"""
 import pytest
 

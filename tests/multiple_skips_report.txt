@@ -1,22 +1,22 @@
-           doc\example2.md fenced blocks
----------------------------------------------------
-block    line  test         TEXT or directive
-type   number  role         quoted and one per line
----------------------------------------------------
-py3         9  skip-code    "print"
-           14  skip-output
-py3        20  skip-code    "print"
-           26  skip-output
-           31  --
-py3        37  skip-code    "print"
-py3        44  skip-code    "print"
-                            "len"
-           51  skip-output
-yaml       59  --
-text       67  --
-py3        72  skip-code    "print"
-           78  skip-output
----------------------------------------------------
+            doc\example2.md fenced blocks
+----------------------------------------------------
+block     line  test         TEXT or directive
+type    number  role         quoted and one per line
+----------------------------------------------------
+python       9  skip-code    "print"
+            14  skip-output
+python      20  skip-code    "print"
+            26  skip-output
+            31  --
+python      37  skip-code    "print"
+python      44  skip-code    "print"
+                             "len"
+            51  skip-output
+yaml        59  --
+text        67  --
+python      72  skip-code    "print"
+            78  skip-output
+----------------------------------------------------
 0 test cases.
 5 skipped code blocks.
 

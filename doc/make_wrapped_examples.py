@@ -1,5 +1,5 @@
 """Create Markdown wrappers around the project's example .py files."""
-top = "#### <put filename here>\n```python3\n"
+top = "#### <put filename here>\n```python\n"
 
 bottom = """```
 This page is created from a Markdown file that contains the contents
