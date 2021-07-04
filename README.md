@@ -35,8 +35,9 @@ examples in Markdown.
 [![](https://img.shields.io/pypi/pyversions/phmdoctest.svg)](https://pypi.python.org/pypi/phmdoctest)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
+[![Usage Test](https://github.com/tmarktaylor/phmdoctest/actions/workflows/install.yml/badge.svg)](https://github.com/tmarktaylor/phmdoctest/actions/workflows/install.yml)
+[![CI Test](https://github.com/tmarktaylor/phmdoctest/actions/workflows/ci.yml/badge.svg)](https://github.com/tmarktaylor/phmdoctest/actions/workflows/ci.yml)
 [![](https://readthedocs.org/projects/phmdoctest/badge/?version=latest)](https://phmdoctest.readthedocs.io/en/latest/?badge=latest)
-[![](https://travis-ci.com/tmarktaylor/phmdoctest.svg?branch=master)](https://travis-ci.com/tmarktaylor/phmdoctest)
 [![](https://codecov.io/gh/tmarktaylor/phmdoctest/coverage.svg?branch=master)](https://codecov.io/gh/tmarktaylor/phmdoctest?branch=master)
 
 [Readme](https://github.com/tmarktaylor/phmdoctest#readme) |
@@ -1062,6 +1063,5 @@ Please see [Contibutions Welcome](CONTRIBUTING.md)
 [8]: https://spec.commonmark.org
 [9]: https://commonmark.org
 [4]: https://docs.python.org/3/library/doctest.html
-[5]: https://docs.travis-ci.com
 [6]: https://pypi.python.org/project/coverage
 [12]: https://travis-ci.com/tmarktaylor/phmdoctest

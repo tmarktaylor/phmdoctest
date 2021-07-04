@@ -256,7 +256,7 @@ def test_project_md():
 
 
 def test_example2_report():
-    """Check example2_report.txt used in .travis.yml."""
+    """Check example2_report.txt."""
     simulator_status = verify.one_example(
         'phmdoctest doc/example2.md --skip "Python 3.7" --skip LAST --report'
         " --outfile discarded.py",

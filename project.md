@@ -3,10 +3,6 @@
 This file (project.md) has some example code and session blocks
 including a doctest directive example.
 
-It is placed at the project root level for use
-by the .travis.yml example in README.md.
-
-
 #### An example with a blank line in the output
 
 No <BLANKLINE> directive is needed in the output block of a Python
@@ -66,4 +62,3 @@ True
 ```
 
 [1]: https://raw.githubusercontent.com/tmarktaylor/phmdoctest/master/project.md
-

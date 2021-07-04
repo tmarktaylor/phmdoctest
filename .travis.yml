@@ -4,33 +4,33 @@ sudo: false
 
 matrix:
   include:
-  #  - python: 3.6
-  #    install:
-  #      &utest_install
-  #      - pip install --no-deps "."
-  #      - pip install -r requirements.txt
-  #      - pip install pytest
-  #    script:
-  #      &utest_run
-  #      - mkdir tests/tmp
-  #      - phmdoctest project.md --report --outfile tests/tmp/test_project.py
-  #      - phmdoctest doc/example1.md --report --outfile tests/tmp/test_example1.py
-  #      - phmdoctest doc/example2.md --skip "Python 3.7" --skip LAST --report --outfile tests/tmp/test_example2.py
-  #      - phmdoctest doc/setup.md --setup FIRST --teardown LAST --report --outfile tests/tmp/test_setup.py
-  #      - phmdoctest doc/setup_doctest.md -u FIRST -d LAST --setup-doctest --report --outfile tests/tmp/test_setup_doctest.py
-  #      # run the project test suite including the generated tests
-  #      - pytest --doctest-modules -vv tests
+    - python: 3.9
+      install:
+        # &utest_install
+        - pip install --no-deps "."
+        - pip install -r requirements.txt
+        - pip install pytest
+      script:
+        # &utest_run
+        - mkdir tests/tmp
+        - phmdoctest project.md --report --outfile tests/tmp/test_project.py
+        - phmdoctest doc/example1.md --report --outfile tests/tmp/test_example1.py
+        - phmdoctest doc/example2.md --skip "Python 3.7" --skip LAST --report --outfile tests/tmp/test_example2.py
+        - phmdoctest doc/setup.md --setup FIRST --teardown LAST --report --outfile tests/tmp/test_setup.py
+        - phmdoctest doc/setup_doctest.md -u FIRST -d LAST --setup-doctest --report --outfile tests/tmp/test_setup_doctest.py
+        # run the project test suite including the generated tests
+        - pytest --doctest-modules -vv tests
 
-  #      # These steps are specific to testing phmdoctest and are not
-  #      # useful to developers using phmdoctest for other projects.
-  #      # Check the generated test file against the expected file in doc folder
-  #      - cmp doc/test_example1.py tests/tmp/test_example1.py
-  #      - cmp doc/test_example2.py tests/tmp/test_example2.py
-  #      - cmp doc/test_setup.py tests/tmp/test_setup.py
-  #      - cmp doc/test_setup_doctest.py tests/tmp/test_setup_doctest.py
-  #      # check the saved report against the expected file in doc folder
-  #      - phmdoctest doc/example2.md --skip "Python 3.7" --skip LAST --report > tests/tmp/example2_report.txt
-  #      - cmp tests/example2_report.txt tests/tmp/example2_report.txt
+        # These steps are specific to testing phmdoctest and are not
+        # useful to developers using phmdoctest for other projects.
+        # Check the generated test file against the expected file in doc folder
+        - cmp doc/test_example1.py tests/tmp/test_example1.py
+        - cmp doc/test_example2.py tests/tmp/test_example2.py
+        - cmp doc/test_setup.py tests/tmp/test_setup.py
+        - cmp doc/test_setup_doctest.py tests/tmp/test_setup_doctest.py
+        # check the saved report against the expected file in doc folder
+        - phmdoctest doc/example2.md --skip "Python 3.7" --skip LAST --report > tests/tmp/example2_report.txt
+        - cmp tests/example2_report.txt tests/tmp/example2_report.txt
 
   #  - python: 3.7
   #    install: *utest_install
