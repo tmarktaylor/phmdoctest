@@ -41,7 +41,7 @@ examples in Markdown.
 [![](https://readthedocs.org/projects/phmdoctest/badge/?version=latest)](https://phmdoctest.readthedocs.io/en/latest/?badge=latest)
 [![](https://codecov.io/gh/tmarktaylor/phmdoctest/coverage.svg?branch=master)](https://codecov.io/gh/tmarktaylor/phmdoctest?branch=master)
 
-[Website](https://tmarktaylor/github.io/phmdoctest) |
+[Website](https://tmarktaylor.github.io/phmdoctest) |
 [Docs](https://phmdoctest.readthedocs.io/en/latest/) |
 [Repos](https://github.com/tmarktaylor/phmdoctest) |
 [Build][12] |
