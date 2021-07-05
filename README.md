@@ -40,7 +40,7 @@ examples in Markdown.
 [![](https://readthedocs.org/projects/phmdoctest/badge/?version=latest)](https://phmdoctest.readthedocs.io/en/latest/?badge=latest)
 [![](https://codecov.io/gh/tmarktaylor/phmdoctest/coverage.svg?branch=master)](https://codecov.io/gh/tmarktaylor/phmdoctest?branch=master)
 
-[Readme](https://github.com/tmarktaylor/phmdoctest#readme) |
+[Website](https://tmarktaylor/github.io/phmdoctest) |
 [Docs](https://phmdoctest.readthedocs.io/en/latest/) |
 [Repos](https://github.com/tmarktaylor/phmdoctest) |
 [Build][12] |
@@ -83,9 +83,13 @@ examples in Markdown.
 [Call from Python](#call-from-python) |
 [Hints](#hints) |
 [Directive hints](#directive-hints) |
-[Contributions](#contributions) |
-[Related projects](#related-projects) |
-[Recent changes](#recent-changes)
+[Related projects](#related-projects)
+
+
+
+[Changes](doc/recent_changes.md) |
+[Contributions](CONTRIBUTING.md) |
+[About](doc/about.md)
 
 
 ## Installation
@@ -1040,10 +1044,6 @@ assert simulator_status.pytest_exit_code == 0
 - There is no limit to number of blank lines after
   the directive HTML comment but before the fenced code block.
   
-## Contributions
-
-Please see [Contibutions Welcome](CONTRIBUTING.md)
-  
 ## Related projects
 - rundoc
 - byexample
@@ -1052,9 +1052,6 @@ Please see [Contibutions Welcome](CONTRIBUTING.md)
 - doxec
 - egtest
 - pytest-codeblocks
-
-## Recent changes 
-[Recent changes](doc/recent_changes.md)
 
 [3]: https://github.github.com/gfm/#fenced-code-blocks
 [11]: https://github.github.com/gfm/#info-string
