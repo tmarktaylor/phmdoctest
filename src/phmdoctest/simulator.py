@@ -93,7 +93,9 @@ def run_and_pytest(
         SimulatorStatus containing runner_status, outfile,
         pytest_exit_code, and generated JUnit XML.
     """
-    assert well_formed_command.startswith("phmdoctest ")
+    if not well_formed_command.startswith("phmdoctest "):
+        raise ValueError("phmdoctest- well_formed_command must start with phmdoctest")
+
     # trim off any trailing whitespace
     command0 = well_formed_command.rstrip()
     # chop off phmdoctest since invoking by a python function call

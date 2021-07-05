@@ -1,4 +1,5 @@
 """Third group of pytest test cases for phmdoctest."""
+import pytest
 import click
 
 import phmdoctest
@@ -162,6 +163,16 @@ def test_run_setup_example():
     stdout = simulator_status.runner_status.stdout
     assert 'python       9  setup     "FIRST"' in stdout
     assert 'python      58  teardown  "LAST"' in stdout
+
+
+def test_simulator_ill_formed_command():
+    """Make sure simulator dies with badly formed command."""
+    command = "python -m phmdoctest tests/bogus.md --outfile discarded.py"
+    with pytest.raises(ValueError) as exc_info:
+        _ = phmdoctest.simulator.run_and_pytest(
+            well_formed_command=command, pytest_options=None
+        )
+    assert "well_formed_command must start with phmdoctest" in str(exc_info.value)
 
 
 def test_simulator_setup_equals_quoted():
