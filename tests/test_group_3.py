@@ -388,7 +388,7 @@ def test_bad_skipif_minor_number():
     )
     assert simulator_status.runner_status.exit_code == 1
     stdout = simulator_status.runner_status.stdout
-    assert "line 15 must be a decimal number and greater than zero." in stdout
+    assert "line 15 must be a decimal number and >= zero." in stdout
 
     command = 'phmdoctest tests/bad_skipif_number.md --skip="palin" --outfile discarded.py'
     simulator_status = phmdoctest.simulator.run_and_pytest(
@@ -396,7 +396,7 @@ def test_bad_skipif_minor_number():
     )
     assert simulator_status.runner_status.exit_code == 1
     stdout = simulator_status.runner_status.stdout
-    assert "line 4 must be a decimal number and greater than zero." in stdout
+    assert "line 4 must be a decimal number and >= zero." in stdout
 
 
 def test_extra_setup_block():
