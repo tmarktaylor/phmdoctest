@@ -7,7 +7,8 @@ Python syntax highlighted Markdown doctest
 Command line program to test Python syntax highlighted code
 examples in Markdown.
 
-- Synthesizes a pytest test file from examples in Markdown.
+- Writes a pytest test file that tests Python examples in
+  README and other Markdown files.
 - Reads these from Markdown fenced code blocks:
   - Python interactive sessions described by [doctest][4].
   - Python source code and expected terminal output.
@@ -585,6 +586,7 @@ def takes_too_long():
     pass  # time.sleep(100)    # delay for awhile. phmdoctest:pass
 takes_too_long()
 ```
+
 Use `phmdoctest:omit` on single or multi-line statements. Note that two
 time.sleep(99) calls were commented out. They follow and are indented more
 that the `if condition:`line with `phmdoctest:omit`.
@@ -917,6 +919,7 @@ Options:
                        session block in the Markdown file is skipped.
 
   --report             Show how the Markdown fenced code blocks are used.
+
   --fail-nocode        This option sets behavior when the Markdown file has no
                        Python fenced code blocks or interactive session blocks
                        or if all such blocks are skipped. When this option is
@@ -946,20 +949,20 @@ Options:
                        --teardown if it matches either --skip or --setup, or
                        if it is a session block.
 
-  --setup-doctest      Make globals created by the --setup Python code block
-                       visible to session blocks and only when they are tested
-                       with the pytest --doctest-modules option.  Please note
-                       that pytest runs doctests in a separate context that
-                       only runs doctests. This option is ignored if there is
-                       no --setup option.
-
+--setup-doctest        Make globals created by the --setup Python code block
+                       or setup directive visible to session blocks and only
+                       when they are tested with the pytest --doctest-modules
+                       option.  Please note that pytest runs doctests in a
+                       separate context that only runs doctests. This option
+                       is ignored if there is no --setup option.
+                       
   --version            Show the version and exit.
   --help               Show this message and exit.
 ```
 
 ## Run as a Python module
 
-To run phmdoctest from the command line a Python module:
+To run phmdoctest from the command line:
 
 `python -m phmdoctest doc/example2.md --report`
 
@@ -1020,6 +1023,7 @@ assert simulator_status.pytest_exit_code == 0
   to support setup, teardown, share-names, and clear-names features. 
 
 ## Directive hints
+
 - Only put one of setup, teardown, share-names, or 
   clear-names on a code block.
 - Only one block can be setup. Only one block can be teardown.

@@ -1,10 +1,11 @@
 name: CI
 
-# Note: The toxpytest job creates a virtual environment.
-#       The coverage job does not install phmdoctest.
-#       It imports phmdoctest from the checked out
-#       src folder via $PYTHONPATH.
-#       The inspect job installs phmdoctest.
+# Notes:
+# - The venv_tests job installs phmdoctest in a virtual environment.
+# - The coverage job installs phmdoctest dependencies, but does
+#   not install phmdoctest.  It imports phmdoctest from the checked
+#   out src folder set by the environment variable PYTHONPATH.
+# - The inspect job installs phmdoctest.
 on:
   push:
   pull_request:

@@ -25,7 +25,7 @@ class Role(Enum):
 
 
 class FencedBlock:
-    """Selected fields from commonmark node plus new field role."""
+    """Augment selected fields from commonmark node."""
 
     def __init__(self, node: commonmark.node.Node) -> None:
         """Extract fields from commonmark fenced code block node."""

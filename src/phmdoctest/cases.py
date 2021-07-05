@@ -51,7 +51,7 @@ def make_label_unique(label: str, line_num: int, used: Set[str]) -> str:
 
 
 def get_skipif_minor_number(block: FencedBlock) -> int:
-    """ "Get block's first skipif minor numeric value, if it exists."""
+    """Get block's first skipif minor numeric value, if it exists."""
     # Return zero if there is no such directive.
     minor_number = 0
     for directive in block.directives:

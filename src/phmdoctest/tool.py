@@ -57,7 +57,7 @@ def labeled_fenced_code_blocks(markdown_filename: str) -> List[LabeledFCB]:
     Label directives are placed immediately before a fenced code block
     in the Markdown source file. The directive can be placed before any
     fenced code block.
-    The label directive is the HTML comment <!--phmdoctest-label VALUE-->
+    The label directive is the HTML comment ``<!--phmdoctest-label VALUE-->``
     where VALUE is typically a legal Python identifier. The space must
     be present before VALUE.
     The label directive is also used to name the test function
@@ -116,6 +116,10 @@ def fenced_code_blocks(markdown_filename: str) -> List[str]:
 
 def fenced_block_nodes(fp: IO[str]) -> List[commonmark.node.Node]:
     """Get markdown fenced code blocks as list of Node objects.
+
+    Deprecation Watch: This function may be labelled as deprecated in a
+    future version of phmdoctest.  It returns a data type defined by
+    the commonmark package.
 
     Args:
         fp

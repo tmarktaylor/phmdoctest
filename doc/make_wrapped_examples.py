@@ -26,7 +26,7 @@ It is included in the documentation as an example text file.
 def nag():
     print("If a new file...")
     print("Consider adding a test case to test_wrapped_examples.py.")
-    print("And a add to examples.rst")
+    print("And add to examples.rst")
     print()
 
 

@@ -60,6 +60,7 @@ class BlockCommenter:
     """Accumulate and comment out a block of lines with # at column_number."""
 
     def __init__(self, column_index: int):
+        """Prepare to comment out lines at column_index indent."""
         self.colno = column_index
         self.block = []  # type: List[str]
 
@@ -137,11 +138,11 @@ def apply_inline_commands(code: str) -> Tuple[str, int]:
                 commenter = None
                 lines.insert(0, line)
             else:
-                # Collect This line to comment out later.
+                # Collect this line to comment out later.
                 commenter.add(line)
 
     if commenter is not None:
-        # EOF reached while collecting lines to comment out.
+        # End of input reached while collecting lines to comment out.
         num_commented_out_sections += 1
         rewritten.extend(commenter.comment_out())
 

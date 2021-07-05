@@ -3,7 +3,7 @@ import re
 
 
 def remove_fenced_code_blocks(lines, fence="```"):
-    """ "Return lines not starting with fence or between fences."""
+    """Return lines not starting with fence or between fences."""
     skipping = False
     for line in lines:
         if skipping and line.startswith(fence):
@@ -22,7 +22,7 @@ heading_level = "## "  # note trailing space
 
 
 def make_quick_links(filename, style=None):
-    """ "Generate links for a quick links section."""
+    """Generate links for a quick links section."""
     with open(filename, encoding="utf-8") as f:
         lines = f.readlines()
     lines = [line.rstrip() for line in lines]  # lose newlines

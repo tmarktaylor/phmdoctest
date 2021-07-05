@@ -88,7 +88,7 @@ def test_requirements_file():
 
 def test_doc_requirements_file():
     """
-    Some versions are the same in doc/requirements.txt and setup.py.
+    Some versions are the same in doc/requirements.txt and setup.cfg.
 
     Click and monotable versions should be the same.
 

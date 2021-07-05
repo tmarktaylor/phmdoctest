@@ -22,7 +22,7 @@ These pages are referenced by relative links in README.md.
    directive3_report_txt.md
    test_directive3_py.md
    my_markdown_file.md
-   ../project
+   ../project.md
    setup.md
    test_setup_py.md
    setup_doctest.md

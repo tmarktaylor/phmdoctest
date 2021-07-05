@@ -79,7 +79,7 @@ def test_test_directive2_py_md():
     )
 
 
-# directive2 files
+# directive3 files
 
 
 def test_directive3_raw_md():
