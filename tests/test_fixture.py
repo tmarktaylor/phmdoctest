@@ -84,16 +84,16 @@ def test_update_item_removals(managenamespace):
 def test_check_attribute_name_asserts(managenamespace):
     """Update asserts if an item is in the original module namespace."""
     items = {"verify": None}
-    with pytest.raises(AssertionError) as exc_info:
+    with pytest.raises(AttributeError) as exc_info:
         managenamespace(operation="update", additions=items)
-    want = "Not allowed to replace module level name verify because"
+    want = "phmdoctest- Not allowed to replace module level name verify because"
     assert want in str(exc_info.value)
 
 
 def test_illegal_operation(managenamespace):
     """Update asserts if operation in not 'update', 'copy', or 'clear'."""
     items = {"E": None, "F": None}
-    with pytest.raises(AssertionError) as exc_info:
+    with pytest.raises(ValueError) as exc_info:
         managenamespace(operation="bogus", additions=items)
-    want = 'operation="bogus" is not allowed'
+    want = 'phmdoctest- operation="bogus" is not allowed'
     assert want in str(exc_info.value)
