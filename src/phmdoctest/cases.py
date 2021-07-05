@@ -59,13 +59,14 @@ def get_skipif_minor_number(block: FencedBlock) -> int:
             value = directive.value
             try:
                 minor_number = int(value, 10)
-                assert minor_number > 0
-            except (AssertionError, ValueError):
+                if minor_number < 0:
+                    raise ValueError("phmdoctest- must be >= 0")
+            except ValueError:
                 lines = [
                     Marker.PYTEST_SKIPIF.value + "{}-->".format(value),
                     (
                         "at markdown file line {} ".format(directive.line)
-                        + "must be a decimal number and greater than zero."
+                        + "must be a decimal number and >= zero."
                     ),
                 ]
                 message = "\n".join(lines)
@@ -229,7 +230,6 @@ def test_case(block: FencedBlock, used_names: Set[str]) -> str:
         if block.output:
             output_identifier = "_output_" + str(block.output.line)
         function_name = code_identifier + output_identifier
-    assert function_name.isidentifier(), "must be a valid python identifier"
     code, num_commented_out_sections = apply_inline_commands(block.contents)
     if num_commented_out_sections:
         function_name += "_{}".format(num_commented_out_sections)
