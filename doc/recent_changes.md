@@ -1,4 +1,10 @@
 ## Recent changes
+1.2.1 - 2021-07-06
+
+- Bugfix- #16, #15, Issue- Simulator subprocess failed on win venv.
+- Code Quality fixes: assert --> raise.
+- Make fenced code block info_strings compatible with GitHub pages.
+
 1.2.0 - 2021-06-09
 
 - Add inline annotations.
