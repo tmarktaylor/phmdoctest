@@ -115,5 +115,8 @@ def managenamespace(request):
             check_integrity()
             show_namespace()
         else:
-            raise ValueError('phmdoctest- operation="{}" is not allowed'.format(operation))
+            raise ValueError(
+                'phmdoctest- operation="{}" is not allowed'.format(operation)
+            )
+
     return manager
