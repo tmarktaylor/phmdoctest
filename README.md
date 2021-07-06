@@ -1043,7 +1043,6 @@ assert simulator_status.pytest_exit_code == 0
 - The setup, teardown, share-names, and clear-names directives
   have logging. To see the log messages,
   run pytest with the option:
-
   `--log-cli-level=DEBUG --color=yes`
 - There is no limit to number of blank lines after
   the directive HTML comment but before the fenced code block.
