@@ -53,8 +53,19 @@ jobs:
         coverage run --branch --source=src -m pytest -vv tests
         coverage run --branch --source=src --append -m phmdoctest --help
         coverage report --show-missing
+        coverage xml
       env:
         PYTHONPATH: ${{ github.workspace }}/src
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v1
+      # if: success()
+      # Just upload ubuntu-latest
+      if: ${{ success() && ( matrix.os == 'ubuntu-latest' ) }}
+      continue-on-error: true
+      with:
+        file: coverage.xml
+        flags: pytest,${{ matrix.os }}
+        fail_ci_if_error: false
 
   inspect:
     runs-on: ubuntu-latest
