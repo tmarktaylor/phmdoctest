@@ -11,7 +11,7 @@ the Raw button.
 First a normal test case with no directives.
 This generates a test case.  The name `not_shared` is local to
 the function test_code_13_output_17().
-```py3
+```python
 not_shared = "Hello World!"
 print(not_shared)
 ```
@@ -21,7 +21,7 @@ Hello World!
 
 This verifies `not_shared` is not visible.
 <!--phmdoctest-label test_not_visible-->
-```py3
+```python
 try:
     print(not_shared)
 except NameError:
@@ -39,7 +39,7 @@ Place the `<!--phmdoctest-share-names-->` directive in the Markdown file.
 
 <!--phmdoctest-label test_directive_share_names-->
 <!--phmdoctest-share-names-->
-```py3
+```python
 import string
 
 x, y, z = 77, 88, 99
@@ -51,7 +51,7 @@ grades = ["A", "B", "C"]
 ```
 
 #### This test case shows the shared names are visible.
-```py3
+```python
 print("string.digits=", string.digits)
 print(incrementer(10))
 print(grades)
@@ -68,12 +68,12 @@ string.digits= 0123456789
 #### This test case modifies grades.
 The objects created by the share-names code block can be modified
 and blocks run afterward will see the changes.  
-```py3
+```python
 grades.append("D")
 ```
 
 #### This test case sees the modified grades.
-```py3
+```python
 print(grades == ["A", "B", "C", "D"])
 ```
 expected output:
@@ -83,7 +83,7 @@ True
 
 #### This test case shares another name.
 <!--phmdoctest-share-names-->
-```py3
+```python
 hex_digits = string.hexdigits
 print(hex_digits)
 ```
@@ -106,7 +106,7 @@ The clearing does not happen until after the test case is run.
 This test case is the same as the previous test case to show
 that mylist is still visible.
 <!--phmdoctest-clear-names-->
-```py3
+```python
 print("Names are cleared after the code runs.")
 print(grades == ["A", "B", "C", "D"])
 print(hex_digits)
@@ -119,7 +119,7 @@ True
 ```
 
 Here we show that grades and digits are no longer visible.
-```py3
+```python
 try:
     print(grades)
 except NameError:

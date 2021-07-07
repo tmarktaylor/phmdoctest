@@ -5,7 +5,7 @@ terminal output print statements are needed in the
 source code to produce the expected output.
 
 Example code adapted from the Python Tutorial:
-```py3
+```python
 squares = [1, 4, 9, 16, 25]
 print(squares)
 ```
@@ -16,7 +16,7 @@ expected output:
 
 #### Another fenced code block expected output block pair.
 Example code adapted from What's new in Python:
-```py3
+```python
 # Formatted string literals require Python 3.7
 name = "Fred"
 print(f"He said his name is {name}.")
@@ -33,14 +33,14 @@ doesn't have an info string
 
 #### Here are two Python code blocks in a row and one output block at the end.
 The first one:
-```py3
+```python
 a, b = 0, 1
 while a < 1000:
     print(a, end=",")
     a, b = b, a + b
 ```
 The second one. This means the preceding code block has no output block.
-```py3
+```python
 words = ["cat", "window", "defenestrate"]
 for w in words:
     print(w, len(w))
@@ -83,7 +83,7 @@ no need for an empty line at the end of the session.
 #### One more code plus expected output pair.
 
 Example borrowed from Python Standard Library datetime documentation.
-```py3
+```python
 from datetime import date
 
 d = date.fromordinal(730920)  # 730920th day after 1. 1. 0001
@@ -98,7 +98,7 @@ print(d)
 
 Example borrowed from Python Standard Library 
 fractions documentation.
-```pycon
+```py
 >>> from fractions import Fraction
 >>> Fraction(16, -10)
 Fraction(-8, 5)

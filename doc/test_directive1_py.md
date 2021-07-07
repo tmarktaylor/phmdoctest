@@ -1,5 +1,5 @@
 #### doc/test_directive1.py
-```python3
+```python
 """pytest file built from doc/directive1.md"""
 import sys
 

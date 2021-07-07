@@ -44,6 +44,8 @@ def one_example(
     # check that the phmdoctest command succeeded
     exit_code = simulator_status.runner_status.exit_code
     assert exit_code == 0, exit_code
+    if pytest_options is None:
+        assert simulator_status.pytest_exit_code is None
 
     # check the OUTFILE against the expected value
     if want_file_name is not None:

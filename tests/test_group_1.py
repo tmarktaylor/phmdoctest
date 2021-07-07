@@ -88,7 +88,7 @@ def test_requirements_file():
 
 def test_doc_requirements_file():
     """
-    Some versions are the same in doc/requirements.txt and setup.py.
+    Some versions are the same in doc/requirements.txt and setup.cfg.
 
     Click and monotable versions should be the same.
 
@@ -256,7 +256,7 @@ def test_project_md():
 
 
 def test_example2_report():
-    """Check example2_report.txt used in .travis.yml."""
+    """Check example2_report.txt."""
     simulator_status = verify.one_example(
         'phmdoctest doc/example2.md --skip "Python 3.7" --skip LAST --report'
         " --outfile discarded.py",
@@ -264,6 +264,7 @@ def test_example2_report():
         pytest_options=None,
     )
     assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code is None
     stdout = simulator_status.runner_status.stdout
     with open("tests/example2_report.txt", "r", encoding="utf-8") as f:
         want = f.read()

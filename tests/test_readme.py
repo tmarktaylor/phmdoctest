@@ -87,6 +87,8 @@ def test_report():
     simulator_status = phmdoctest.simulator.run_and_pytest(
         report_command, pytest_options=None
     )
+    assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code is None
     got = simulator_status.runner_status.stdout
     verify.a_and_b_are_the_same(want, got)
 
@@ -317,6 +319,8 @@ def test_usage():
     simulator_status = phmdoctest.simulator.run_and_pytest(
         "phmdoctest --help", pytest_options=None
     )
+    assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code is None
     want1 = labeled.contents(label="usage")
     want2 = re.sub(r"\s+", " ", want1)
 
@@ -324,21 +328,6 @@ def test_usage():
     got2 = got1.replace("entry-point", "phmdoctest", 1)
     got3 = re.sub(r"\s+", " ", got2)
     verify.a_and_b_are_the_same(want2, got3)
-
-
-def test_yaml():
-    """Show the 2 lines are in both Markdown example and .travis.yml."""
-    # Note the lines are indented 8 spaces in both files, so they must have
-    # the same indent here.
-    expected = """
-        - mkdir tests/tmp
-        - phmdoctest project.md --report --outfile tests/tmp/test_project.py
-        """
-    markdown_example_text = labeled.contents(label="yaml")
-    with open(".travis.yml", "r", encoding="utf-8") as f:
-        travis_text = f.read()
-    assert expected in travis_text
-    assert expected in markdown_example_text
 
 
 # Developers: Changes here must be mirrored in a Markdown FCB in README.md.

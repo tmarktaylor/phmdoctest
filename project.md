@@ -3,10 +3,6 @@
 This file (project.md) has some example code and session blocks
 including a doctest directive example.
 
-It is placed at the project root level for use
-by the .travis.yml example in README.md.
-
-
 #### An example with a blank line in the output
 
 No <BLANKLINE> directive is needed in the output block of a Python
@@ -31,7 +27,7 @@ Blank lines in the expected output must be replaced with `<BLANKLINE>`.
 To see the `<BLANKLINE>` navigate to [project.md unrendered][1]. 
 
 
-```pycon
+```py
 >>> print('Hello\n\nWorld!')
 Hello
 <BLANKLINE>
@@ -46,7 +42,7 @@ expected exception and use of the doctest directive
 To see the doctest directive navigate to [project.md unrendered][1]. 
 
 
-```pycon
+```py
 >>> int('def')    #doctest:+IGNORE_EXCEPTION_DETAIL   
 Traceback (most recent call last):
     ...
@@ -66,4 +62,3 @@ True
 ```
 
 [1]: https://raw.githubusercontent.com/tmarktaylor/phmdoctest/master/project.md
-

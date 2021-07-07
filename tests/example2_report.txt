@@ -1,23 +1,23 @@
-           doc/example2.md fenced blocks
-----------------------------------------------------
-block    line  test          TEXT or directive
-type   number  role          quoted and one per line
-----------------------------------------------------
-py3         9  code
-           14  output
-py3        20  skip-code     "Python 3.7"
-           26  skip-output
-           31  --
-py3        37  code
-py3        44  code
-           51  output
-yaml       59  --
-text       67  --
-py         75  session
-py3        87  code
-           94  output
-pycon     102  skip-session  "LAST"
-----------------------------------------------------
+            doc/example2.md fenced blocks
+-----------------------------------------------------
+block     line  test          TEXT or directive
+type    number  role          quoted and one per line
+-----------------------------------------------------
+python       9  code
+            14  output
+python      20  skip-code     "Python 3.7"
+            26  skip-output
+            31  --
+python      37  code
+python      44  code
+            51  output
+yaml        59  --
+text        67  --
+py          75  session
+python      87  code
+            94  output
+py         102  skip-session  "LAST"
+-----------------------------------------------------
 5 test cases.
 1 skipped code blocks.
 1 skipped interactive session blocks.

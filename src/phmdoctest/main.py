@@ -97,7 +97,8 @@ import phmdoctest.tool
     "--setup-doctest",
     is_flag=True,
     help=(
-        "Make globals created by the --setup Python code block visible to"
+        "Make globals created by the --setup Python code block"
+        " or setup directive visible to"
         " session blocks and only when they are tested with the pytest"
         " --doctest-modules option.  Please note that pytest runs"
         " doctests in a separate context that only runs doctests."

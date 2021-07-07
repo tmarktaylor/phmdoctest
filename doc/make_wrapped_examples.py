@@ -1,5 +1,5 @@
 """Create Markdown wrappers around the project's example .py files."""
-top = "#### <put filename here>\n```python3\n"
+top = "#### <put filename here>\n```python\n"
 
 bottom = """```
 This page is created from a Markdown file that contains the contents
@@ -26,7 +26,7 @@ It is included in the documentation as an example text file.
 def nag():
     print("If a new file...")
     print("Consider adding a test case to test_wrapped_examples.py.")
-    print("And a add to examples.rst")
+    print("And add to examples.rst")
     print()
 
 

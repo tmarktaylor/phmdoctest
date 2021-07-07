@@ -1,4 +1,4 @@
-# phmdoctest 1.2.0
+# phmdoctest 1.2.1
 
 ## Introduction
 
@@ -7,7 +7,8 @@ Python syntax highlighted Markdown doctest
 Command line program to test Python syntax highlighted code
 examples in Markdown.
 
-- Synthesizes a pytest test file from examples in Markdown.
+- Writes a pytest test file that tests Python examples in
+  README and other Markdown files.
 - Reads these from Markdown fenced code blocks:
   - Python interactive sessions described by [doctest][4].
   - Python source code and expected terminal output.
@@ -35,11 +36,12 @@ examples in Markdown.
 [![](https://img.shields.io/pypi/pyversions/phmdoctest.svg)](https://pypi.python.org/pypi/phmdoctest)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
+[![Usage Test](https://github.com/tmarktaylor/phmdoctest/actions/workflows/install.yml/badge.svg)](https://github.com/tmarktaylor/phmdoctest/actions/workflows/install.yml)
+[![CI Test](https://github.com/tmarktaylor/phmdoctest/actions/workflows/ci.yml/badge.svg)](https://github.com/tmarktaylor/phmdoctest/actions/workflows/ci.yml)
 [![](https://readthedocs.org/projects/phmdoctest/badge/?version=latest)](https://phmdoctest.readthedocs.io/en/latest/?badge=latest)
-[![](https://travis-ci.org/tmarktaylor/phmdoctest.svg?branch=master)](https://travis-ci.org/tmarktaylor/phmdoctest)
 [![](https://codecov.io/gh/tmarktaylor/phmdoctest/coverage.svg?branch=master)](https://codecov.io/gh/tmarktaylor/phmdoctest?branch=master)
 
-[Readme](https://github.com/tmarktaylor/phmdoctest#readme) |
+[Website](https://tmarktaylor.github.io/phmdoctest) |
 [Docs](https://phmdoctest.readthedocs.io/en/latest/) |
 [Repos](https://github.com/tmarktaylor/phmdoctest) |
 [Build][12] |
@@ -78,14 +80,17 @@ examples in Markdown.
 [Execution context](#execution-context) |
 [Send outfile to stdout](#send-outfile-to-stdout) |
 [Usage](#usage) |
-[Run on Travis CI](#run-on-travis-ci) |
 [Run as a Python module](#run-as-a-python-module) |
 [Call from Python](#call-from-python) |
 [Hints](#hints) |
 [Directive hints](#directive-hints) |
-[Contributions](#contributions) |
-[Related projects](#related-projects) |
-[Recent changes](#recent-changes)
+[Related projects](#related-projects)
+
+
+
+[Changes](doc/recent_changes.md) |
+[Contributions](CONTRIBUTING.md) |
+[About](doc/about.md)
 
 
 ## Installation
@@ -116,7 +121,7 @@ phmdoctest tests/one_mark_skip.md --outfile test_one_mark_skip.py
 
 creates the python source code file shown here...
 <!--phmdoctest-label directive-example-outfile-->
-```python3
+```python
 """pytest file built from tests/one_mark_skip.md"""
 import pytest
 
@@ -158,7 +163,7 @@ shown in raw form here...
 
 ## Interactive Python session (doctest)
 
-```pycon 
+```py 
 >>> print("Hello World!")
 Hello World!
 ```
@@ -166,7 +171,7 @@ Hello World!
 ## Source Code and terminal output
  
 Code:
-```python3
+```python
 from enum import Enum
 
 class Floats(Enum):
@@ -275,25 +280,25 @@ The `test role` column shows how each fenced code block is tested.
 <!--phmdoctest-label example2-report-->
 ```
          doc/example2.md fenced blocks
------------------------------------------------
-block    line  test     TEXT or directive
-type   number  role     quoted and one per line
------------------------------------------------
-py3         9  code
-           14  output
-py3        20  code
-           26  output
-           31  --
-py3        37  code
-py3        44  code
-           51  output
-yaml       59  --
-text       67  --
-py         75  session
-py3        87  code
-           94  output
-pycon     102  session
------------------------------------------------
+------------------------------------------------
+block     line  test     TEXT or directive
+type    number  role     quoted and one per line
+------------------------------------------------
+python       9  code
+            14  output
+python      20  code
+            26  output
+            31  --
+python      37  code
+python      44  code
+            51  output
+yaml        59  --
+text        67  --
+py          75  session
+python      87  code
+            94  output
+py         102  session
+------------------------------------------------
 7 test cases.
 1 code blocks with no output block.
 ```
@@ -318,7 +323,11 @@ with one of these:
     ```python3
     ```py3
 
-and the block contents can't start with `'>>> '`.
+plus the block contents can't start with `'>>> '`.
+
+The examples use the info_strings `python` for code and `py` for sessions
+since they render with coloring on GitHub, readthedocs, GitHub Pages,
+and Python package index.
 
 [project.md](project.md) has more examples of code and session blocks.
 
@@ -357,7 +366,7 @@ generated from the fenced code block.
 ~~~
 <!--phmdoctest-skip-->
 <!--Another HTML comment-->
-```python3
+```python
 print("Hello World!")
 ```
 Expected Output
@@ -422,7 +431,7 @@ The label directive can be placed on any fenced code block.
 Here is Python code to fetch it:
 
 <!--phmdoctest-label fetch-it-->
-```python3
+```python
 import phmdoctest.tool
 
 chooser = phmdoctest.tool.FCBChooser("doc/my_markdown_file.md")
@@ -461,7 +470,7 @@ the setup block runs.
 Here is an example setup block from 
 [setup.md](doc/setup.md):
 <!--phmdoctest-label setup-md-first-block-->
-```py3
+```python
 import math
 
 mylist = [1, 2, 3]
@@ -563,7 +572,7 @@ Here is a snippet showing how to place `phmdoctest:pass` in the code.
 The second block shows the code that is generated. Note there is no `#`
 immediately before `phmdoctest:pass`. It is not required.
 <!--phmdoctest-label pass-code-->
-```python3
+```python
 import time
 def takes_too_long():
     time.sleep(100)    # delay for awhile. phmdoctest:pass
@@ -571,18 +580,19 @@ takes_too_long()
 ```
 
 <!--phmdoctest-label pass-result-->
-```python3
+```python
 import time
 def takes_too_long():
     pass  # time.sleep(100)    # delay for awhile. phmdoctest:pass
 takes_too_long()
 ```
+
 Use `phmdoctest:omit` on single or multi-line statements. Note that two
 time.sleep(99) calls were commented out. They follow and are indented more
 that the `if condition:`line with `phmdoctest:omit`.
 
 <!--phmdoctest-label omit-code-->
-```python3
+```python
 import time                      # phmdoctest:omit
 
 condition = True
@@ -592,7 +602,7 @@ if condition:       # phmdoctest:omit
 ```
 
 <!--phmdoctest-label omit-result-->
-```python3
+```python
 # import time                      # phmdoctest:omit
 
 condition = True
@@ -668,26 +678,26 @@ Produces the report
 
 <!--phmdoctest-label skip-report-->
 ```
-           doc/example2.md fenced blocks
-----------------------------------------------------
-block    line  test          TEXT or directive
-type   number  role          quoted and one per line
-----------------------------------------------------
-py3         9  code
-           14  output
-py3        20  skip-code     "Python 3.7"
-           26  skip-output
-           31  --
-py3        37  code
-py3        44  code
-           51  output
-yaml       59  --
-text       67  --
-py         75  session
-py3        87  code
-           94  output
-pycon     102  skip-session  "LAST"
-----------------------------------------------------
+            doc/example2.md fenced blocks
+-----------------------------------------------------
+block     line  test          TEXT or directive
+type    number  role          quoted and one per line
+-----------------------------------------------------
+python       9  code
+            14  output
+python      20  skip-code     "Python 3.7"
+            26  skip-output
+            31  --
+python      37  code
+python      44  code
+            51  output
+yaml        59  --
+text        67  --
+py          75  session
+python      87  code
+            94  output
+py         102  skip-session  "LAST"
+-----------------------------------------------------
 5 test cases.
 1 skipped code blocks.
 1 skipped interactive session blocks.
@@ -765,20 +775,20 @@ phmdoctest doc/setup.md --setup FIRST --teardown LAST --report
 
 <!--phmdoctest-label setup-report-->
 ```
-           doc/setup.md fenced blocks
-------------------------------------------------
-block    line  test      TEXT or directive
-type   number  role      quoted and one per line
-------------------------------------------------
-py3         9  setup     "FIRST"
-py3        20  code
-           27  output
-py3        37  code
-           42  output
-py3        47  code
-           51  output
-py3        58  teardown  "LAST"
-------------------------------------------------
+            doc/setup.md fenced blocks
+-------------------------------------------------
+block     line  test      TEXT or directive
+type    number  role      quoted and one per line
+-------------------------------------------------
+python       9  setup     "FIRST"
+python      20  code
+            27  output
+python      37  code
+            42  output
+python      47  code
+            51  output
+python      58  teardown  "LAST"
+-------------------------------------------------
 3 test cases.
 ```
 
@@ -909,6 +919,7 @@ Options:
                        session block in the Markdown file is skipped.
 
   --report             Show how the Markdown fenced code blocks are used.
+
   --fail-nocode        This option sets behavior when the Markdown file has no
                        Python fenced code blocks or interactive session blocks
                        or if all such blocks are skipped. When this option is
@@ -938,51 +949,20 @@ Options:
                        --teardown if it matches either --skip or --setup, or
                        if it is a session block.
 
-  --setup-doctest      Make globals created by the --setup Python code block
-                       visible to session blocks and only when they are tested
-                       with the pytest --doctest-modules option.  Please note
-                       that pytest runs doctests in a separate context that
-                       only runs doctests. This option is ignored if there is
-                       no --setup option.
-
+--setup-doctest        Make globals created by the --setup Python code block
+                       or setup directive visible to session blocks and only
+                       when they are tested with the pytest --doctest-modules
+                       option.  Please note that pytest runs doctests in a
+                       separate context that only runs doctests. This option
+                       is ignored if there is no --setup option.
+                       
   --version            Show the version and exit.
   --help               Show this message and exit.
 ```
 
-## Run on Travis CI  
-
-The partial script shown below is for Python 3.6 on [Travis CI][5].
-The script steps are:
-
-- Install phmdoctest and pytest.
-- Create a new directory to take the generated test file.
-- Run phmdoctest to generate the test file and print the report.
-- Run pytest suite.
-
-Writing the generated test files to a new directory
-assures an existing test file is not overwritten by mistake.
-
-<!--phmdoctest-label yaml-->
-```yaml
-dist: xenial
-language: python
-sudo: false
-
-matrix:
-  include:
-    - python: 3.6
-      install:
-        - pip install phmdoctest
-        - pip install pytest
-      script:
-        - mkdir tests/tmp
-        - phmdoctest project.md --report --outfile tests/tmp/test_project.py
-        - pytest --doctest-modules -vv tests
-```
-
 ## Run as a Python module
 
-To run phmdoctest from the command line a Python module:
+To run phmdoctest from the command line:
 
 `python -m phmdoctest doc/example2.md --report`
 
@@ -1043,6 +1023,7 @@ assert simulator_status.pytest_exit_code == 0
   to support setup, teardown, share-names, and clear-names features. 
 
 ## Directive hints
+
 - Only put one of setup, teardown, share-names, or 
   clear-names on a code block.
 - Only one block can be setup. Only one block can be teardown.
@@ -1062,14 +1043,9 @@ assert simulator_status.pytest_exit_code == 0
 - The setup, teardown, share-names, and clear-names directives
   have logging. To see the log messages,
   run pytest with the option:
-
   `--log-cli-level=DEBUG --color=yes`
 - There is no limit to number of blank lines after
   the directive HTML comment but before the fenced code block.
-  
-## Contributions
-
-Please see [Contibutions Welcome](CONTRIBUTING.md)
   
 ## Related projects
 - rundoc
@@ -1080,9 +1056,6 @@ Please see [Contibutions Welcome](CONTRIBUTING.md)
 - egtest
 - pytest-codeblocks
 
-## Recent changes 
-[Recent changes](doc/recent_changes.md)
-
 [3]: https://github.github.com/gfm/#fenced-code-blocks
 [11]: https://github.github.com/gfm/#info-string
 [10]: https://phmdoctest.readthedocs.io/en/latest/doc/api.html
@@ -1090,6 +1063,5 @@ Please see [Contibutions Welcome](CONTRIBUTING.md)
 [8]: https://spec.commonmark.org
 [9]: https://commonmark.org
 [4]: https://docs.python.org/3/library/doctest.html
-[5]: https://docs.travis-ci.com
 [6]: https://pypi.python.org/project/coverage
-[12]: https://travis-ci.org/tmarktaylor/phmdoctest
+[12]: https://travis-ci.com/tmarktaylor/phmdoctest

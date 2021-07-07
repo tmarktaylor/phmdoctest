@@ -12,11 +12,11 @@ def managenamespace(request):
     """Create and manipulate namespace implemented in the module."""
     logging.debug("managenamespace-")
     already_exists = (
-        "Not allowed to replace module level name {} because\n"
+        "phmdoctest- Not allowed to replace module level name {} because\n"
         "it pre-exists in the module at pytest time."
     )
-    no_originals = "no original module attributes allowed in namespace."
-    no_extras = "current attributes == original + namespace."
+    no_originals = "phmdoctest- no original module attributes allowed in namespace."
+    no_extras = "phmdoctest- current attributes == original + namespace."
     m = request.module
     original_attributes = set([name for name, _ in inspect.getmembers(m)])
     namespace_names = set()
@@ -27,15 +27,16 @@ def managenamespace(request):
         It is an error to overwrite any of the
         the module attributes present in the source file.
         """
-        assert name not in original_attributes, already_exists.format(name)
+        if name in original_attributes:
+            raise AttributeError(already_exists.format(name))
 
     def check_integrity():
         """Check module's attributes are original or in the namespace."""
         current_attributes = set([name for name, _ in inspect.getmembers(m)])
-        assert original_attributes.isdisjoint(namespace_names), no_originals
-        assert current_attributes == original_attributes.union(
-            namespace_names
-        ), no_extras
+        if not original_attributes.isdisjoint(namespace_names):
+            raise AttributeError(no_originals)
+        if current_attributes != original_attributes.union(namespace_names):
+            raise AttributeError(no_extras)
 
     def show_namespace():
         """Log the names currently in the namespace."""
@@ -76,8 +77,10 @@ def managenamespace(request):
                 shallow_copy[name] = getattr(m, name)
             return shallow_copy
         elif operation == "update":
-            assert additions is not None, "need additions to do an update"
-            assert isinstance(additions, dict), "must be a mapping"
+            if additions is None:
+                raise ValueError("phmdoctest- need additions to do an update")
+            if not isinstance(additions, dict):
+                raise TypeError("phmdoctest- must be a mapping")
             # Remove some items from additions that don't belong or
             # can't belong in the namespace.
             # Items that don't belong are the fixtures used by the test
@@ -96,7 +99,7 @@ def managenamespace(request):
             #     sys
             # These imports may be at the top level of the generated test
             # file.  If they are present in additions they will
-            # cause check_attribute_name() to assert.
+            # cause check_attribute_name() to raise an exception.
             # sys is imported for the phmdoctest-mark.skipif<3. directive.
             # Users might have one or both of them in their code block.
             _ = additions.pop("pytest", None)
@@ -112,6 +115,8 @@ def managenamespace(request):
             check_integrity()
             show_namespace()
         else:
-            assert False, 'operation="{}" is not allowed'.format(operation)
+            raise ValueError(
+                'phmdoctest- operation="{}" is not allowed'.format(operation)
+            )
 
     return manager

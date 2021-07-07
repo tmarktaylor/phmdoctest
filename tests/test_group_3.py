@@ -1,4 +1,5 @@
 """Third group of pytest test cases for phmdoctest."""
+import pytest
 import click
 
 import phmdoctest
@@ -15,6 +16,7 @@ def test_missing_setup_for_setup_doctest():
         well_formed_command=command, pytest_options=None
     )
     assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code is None
     stdout = simulator_status.runner_status.stdout
     # no blocks set to role setup
     assert not ("  setup" in stdout)
@@ -29,6 +31,7 @@ def test_no_match_for_setup():
         well_formed_command=command, pytest_options=None
     )
     assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code is None
     stdout = simulator_status.runner_status.stdout
     # no blocks set to role setup
     assert not ("  setup" in stdout)
@@ -42,6 +45,7 @@ def test_too_many_matches_for_setup():
         well_formed_command=command, pytest_options=None
     )
     assert simulator_status.runner_status.exit_code == 1
+    assert simulator_status.pytest_exit_code is None
     stdout = simulator_status.runner_status.stdout
     assert "Error: More than one block matched command line" in stdout
     assert "--setup or -u." in stdout
@@ -56,6 +60,7 @@ def test_setup_is_not_code_block():
         well_formed_command=command, pytest_options=None
     )
     assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code is None
     stdout = simulator_status.runner_status.stdout
     assert not ("  setup" in stdout)
     assert "No setup block found." in stdout
@@ -68,6 +73,7 @@ def test_setup_is_not_skipped_block():
         well_formed_command=command, pytest_options=None
     )
     assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code is None
     stdout = simulator_status.runner_status.stdout
     assert not ("  setup" in stdout)
     assert "No setup block found." in stdout
@@ -80,6 +86,7 @@ def test_setup_has_output_block():
         well_formed_command=command, pytest_options=None
     )
     assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code is None
     stdout = simulator_status.runner_status.stdout
     assert 'python      22  setup       "19"' in stdout
     assert "            29  del-output" in stdout
@@ -93,6 +100,7 @@ def test_no_match_for_teardown():
         well_formed_command=command, pytest_options=None
     )
     assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code is None
     stdout = simulator_status.runner_status.stdout
     # no blocks set to role setup
     assert not ("  teardown" in stdout)
@@ -107,6 +115,7 @@ def test_too_many_matches_for_teardown():
         well_formed_command=command, pytest_options=None
     )
     assert simulator_status.runner_status.exit_code == 1
+    assert simulator_status.pytest_exit_code is None
     stdout = simulator_status.runner_status.stdout
     assert "Error: More than one block matched command line" in stdout
     assert "--teardown or -d." in stdout
@@ -121,6 +130,7 @@ def test_teardown_is_same_as_setup_block():
         well_formed_command=command, pytest_options=None
     )
     assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code is None
     stdout = simulator_status.runner_status.stdout
     assert not ("  teardown" in stdout)
     assert "No teardown block found." in stdout
@@ -133,6 +143,7 @@ def test_teardown_is_not_code_block():
         well_formed_command=command, pytest_options=None
     )
     assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code is None
     stdout = simulator_status.runner_status.stdout
     assert not ("  teardown" in stdout)
     assert "No teardown block found." in stdout
@@ -150,8 +161,18 @@ def test_run_setup_example():
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
     stdout = simulator_status.runner_status.stdout
-    assert 'py3         9  setup     "FIRST"' in stdout
-    assert 'py3        58  teardown  "LAST"' in stdout
+    assert 'python       9  setup     "FIRST"' in stdout
+    assert 'python      58  teardown  "LAST"' in stdout
+
+
+def test_simulator_ill_formed_command():
+    """Make sure simulator dies with badly formed command."""
+    command = "python -m phmdoctest tests/bogus.md --outfile discarded.py"
+    with pytest.raises(ValueError) as exc_info:
+        _ = phmdoctest.simulator.run_and_pytest(
+            well_formed_command=command, pytest_options=None
+        )
+    assert "well_formed_command must start with phmdoctest" in str(exc_info.value)
 
 
 def test_simulator_setup_equals_quoted():
@@ -166,7 +187,7 @@ def test_simulator_setup_equals_quoted():
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
     stdout = simulator_status.runner_status.stdout
-    assert 'py3         9  setup     "import math"' in stdout
+    assert 'python       9  setup     "import math"' in stdout
 
 
 def test_simulator_setup_space_quoted():
@@ -181,7 +202,7 @@ def test_simulator_setup_space_quoted():
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
     stdout = simulator_status.runner_status.stdout
-    assert 'py3         9  setup     "import math"' in stdout
+    assert 'python       9  setup     "import math"' in stdout
 
 
 def test_simulator_teardown_equals_quoted():
@@ -196,7 +217,7 @@ def test_simulator_teardown_equals_quoted():
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
     stdout = simulator_status.runner_status.stdout
-    assert 'py3        58  teardown  "not emptied"' in stdout
+    assert 'python      58  teardown  "not emptied"' in stdout
 
 
 def test_simulator_teardown_space_quoted():
@@ -211,7 +232,7 @@ def test_simulator_teardown_space_quoted():
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
     stdout = simulator_status.runner_status.stdout
-    assert 'py3        58  teardown  "not emptied"' in stdout
+    assert 'python      58  teardown  "not emptied"' in stdout
 
 
 def test_teardown_without_setup():
@@ -226,8 +247,8 @@ def test_teardown_without_setup():
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
     stdout = simulator_status.runner_status.stdout
-    assert 'py3        87  teardown     "import date"' in stdout
-    assert "           94  del-output" in stdout
+    assert 'python      87  teardown     "import date"' in stdout
+    assert "            94  del-output" in stdout
 
 
 def test_run_setup_doctest_example():
@@ -242,8 +263,8 @@ def test_run_setup_doctest_example():
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
     stdout = simulator_status.runner_status.stdout
-    assert 'py3         9  setup     "FIRST"' in stdout
-    assert 'py3        86  teardown  "LAST"' in stdout
+    assert 'python       9  setup     "FIRST"' in stdout
+    assert 'python      86  teardown  "LAST"' in stdout
 
 
 def test_setup_no_teardown():
@@ -306,6 +327,7 @@ def test_empty_code_blocks_report():
         well_formed_command=command, pytest_options=None
     )
     assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code is None
     stdout = simulator_status.runner_status.stdout
     with open("tests/empty_code_report.txt", "r", encoding="utf-8") as f:
         want = f.read()
@@ -360,13 +382,23 @@ def test_same_label_twice():
 
 def test_bad_skipif_minor_number():
     """Skipif directive has non-numeric minor number."""
-    command = "phmdoctest tests/bad_skipif_number.md --outfile discarded.py"
+    command = 'phmdoctest tests/bad_skipif_number.md --skip="eric_idle" --outfile discarded.py'
     simulator_status = phmdoctest.simulator.run_and_pytest(
-        well_formed_command=command, pytest_options=["--doctest-modules", "-v"]
+        well_formed_command=command, pytest_options=None
     )
     assert simulator_status.runner_status.exit_code == 1
     stdout = simulator_status.runner_status.stdout
-    assert "line 4 must be a decimal number and greater than zero." in stdout
+    assert "line 15 must be a decimal number and >= zero." in stdout
+
+    command = (
+        'phmdoctest tests/bad_skipif_number.md --skip="palin" --outfile discarded.py'
+    )
+    simulator_status = phmdoctest.simulator.run_and_pytest(
+        well_formed_command=command, pytest_options=None
+    )
+    assert simulator_status.runner_status.exit_code == 1
+    stdout = simulator_status.runner_status.stdout
+    assert "line 4 must be a decimal number and >= zero." in stdout
 
 
 def test_extra_setup_block():
