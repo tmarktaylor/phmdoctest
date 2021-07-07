@@ -53,6 +53,7 @@ jobs:
         coverage run --branch --source=src -m pytest -vv tests
         coverage run --branch --source=src --append -m phmdoctest --help
         coverage report --show-missing
+        coverage xml
       env:
         PYTHONPATH: ${{ github.workspace }}/src
     - name: Upload coverage to Codecov
