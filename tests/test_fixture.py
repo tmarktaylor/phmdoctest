@@ -8,22 +8,16 @@ import verify
 
 
 # Note:
-# The two check_integrity() assertions listed here.
-# 1.   assert original_attributes.isdisjoint(namespace_names), no_originals
-# 2.   assert current_attributes == original_attributes.union(
-#          namespace_names), no_extras
+# The two check_integrity() exceptions listed here.
+# 1.   raise AttributeError(no_originals)
+# 2.   raise AttributeError(no_extras)
+#
 # Require manual testing.
-# Edit fixture.py and run pytest on this file.
+# Edit fixture.py and run pytest on this file to inject the error.
 #
-# 1. namespace_names.add('verify')    # add this line to fail the 1st assertion
-#    assert original_attributes.isdisjoint(namespace_names), no_originals
-#    assert current_attributes == original_attributes.union(
-#        namespace_names), no_extras
+# 1. namespace_names.add('verify')    # add this line above the 1st raise.
 #
-# 2. namespace_names.add('bogus')    # add this line to fail the 2nd assertion
-#    assert original_attributes.isdisjoint(namespace_names), no_originals
-#    assert current_attributes == original_attributes.union(
-#        namespace_names), no_extras
+# 2. namespace_names.add('bogus')    # add this line above the 2nd raise.
 
 
 def test_managenamespace_outfile():

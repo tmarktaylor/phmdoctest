@@ -1,5 +1,5 @@
 ## Recent changes
-1.2.1 - 2021-07-06
+1.2.1 - 2021-07-07
 
 - Bugfix- #16, #15, Issue- Simulator subprocess failed on win venv.
 - Code Quality fixes: assert --> raise.
