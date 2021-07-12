@@ -103,24 +103,25 @@ def test_doc_requirements_file():
     pinned to different versions in doc/requirements.txt and setup.py
     it is not tested here.
     """
+    packages = ["Click", "monotable", "commonmark"]
+    setup_versions = {}
     with open("requirements.txt", "r", encoding="utf-8") as f:
-        setup_requirements = f.read()
-        for line in setup_requirements.splitlines():
-            if line.startswith("Click"):
-                setup_click = line.replace(" ", "")
-            if line.startswith("monotable"):
-                setup_monotable = line.replace(" ", "")
+        setup_requirements = f.read().splitlines()
+    for line in setup_requirements:
+        for package in packages:
+            if line.startswith(package):
+                setup_versions[package] = line
 
+    doc_versions = {}
     with open("doc/requirements.txt", "r", encoding="utf-8") as f:
-        doc_requirements = f.read()
-        for line in doc_requirements.splitlines():
-            if line.startswith("Click"):
-                doc_click = line.replace(" ", "")
-            if line.startswith("monotable"):
-                doc_monotable = line.replace(" ", "")
+        doc_requirements = f.read().splitlines()
+    for line in doc_requirements:
+        for package in packages:
+            if line.startswith(package):
+                doc_versions[package] = line
 
-    assert setup_click == doc_click
-    assert setup_monotable == doc_monotable
+    for package in packages:
+        assert setup_versions[package] == doc_versions[package]
 
 
 def test_empty_output_block_report():
