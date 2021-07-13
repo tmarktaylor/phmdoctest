@@ -21,6 +21,20 @@ def remove_fenced_code_blocks(lines, fence="```"):
 heading_level = "## "  # note trailing space
 
 
+def make_label(title):
+    """Make the [] part of a link.  Rewrite if last word is 'option'."""
+    # Special handling if the last word of the title is option.
+    # The word option indicates the preceding word should have the
+    # prefix '--' in the link label since it is a command line option.
+    # Titles with '--' seem to break on GitHub pages.
+    parts = title.split()
+    if parts[-1] == "option":
+        parts.pop(-1)
+        parts[-1] = "--" + parts[-1]
+    title = " ".join(parts)
+    return "[" + title + "]"
+
+
 def make_quick_links(filename, style=None):
     """Generate links for a quick links section."""
     with open(filename, encoding="utf-8") as f:
@@ -34,8 +48,9 @@ def make_quick_links(filename, style=None):
     links = []
     for line in lines:
         if line.startswith(heading_level):
+            assert "--" not in line, "Please rewrite to avert breakage on Pages."
             title = line.replace(heading_level, "")
-            label = "[" + title + "]"
+            label = make_label(title)
             link = title.lower()
             if style == "github":
                 link = link.replace(" ", "-")

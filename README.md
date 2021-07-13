@@ -53,7 +53,7 @@ examples in Markdown.
 [Installation](#installation) |
 [Sample Usage](#sample-usage) |
 [Sample usage without directives](#sample-usage-without-directives) |
-[--report](#--report) |
+[--report](#report-option) |
 [Identifying blocks](#identifying-blocks) |
 [Directives](#directives) |
 [skip](#skip) |
@@ -69,12 +69,12 @@ examples in Markdown.
 [setup and teardown example](#setup-and-teardown-example) |
 [share-names clear-names example](#share-names-clear-names-example) |
 [Inline annotations](#inline-annotations) |
-[skipping blocks with --skip](#skipping-blocks-with---skip) |
-[--skip](#--skip) |
-[-s short form of --skip](#-s-short-form-of---skip) |
-[--fail-nocode](#--fail-nocode) |
-[--setup](#--setup) |
-[--teardown](#--teardown) |
+[skipping blocks with --skip](#skipping-blocks-with-skip-option) |
+[--skip](#skip-option) |
+[short form of --skip](#short-form-of-skip-option) |
+[--fail-nocode](#fail-nocode-option) |
+[--setup](#setup-option) |
+[--teardown](#teardown-option) |
 [Setup example](#setup-example) |
 [Setup for sessions](#setup-for-sessions) |
 [Execution context](#execution-context) |
@@ -263,7 +263,7 @@ One test case function is generated for each:
 The `--report` option below shows the blocks discovered and
 how they are tested.
    
-## --report
+## report option
 
 To see the [GFM fenced code blocks][3] in the MARKDOWN_FILE use the 
 `--report` option like this:
@@ -631,7 +631,7 @@ phmdoctest doc/inline_example.md --outfile test_inline_example.py
 ```
 
 
-## skipping blocks with --skip
+## skipping blocks with skip option
 
 If you don't want to generate test cases for Python
 blocks precede the block with a **skip** directive or
@@ -665,9 +665,9 @@ Only Python blocks are counted.
 - `--skip SECOND` skips the second Python block.
 - `--skip LAST` skips the final Python block.
 
-## --skip
+## skip option
 
-This command
+This command using `--skip`:
 
 <!--phmdoctest-label skip-command-->
 ```
@@ -715,9 +715,9 @@ LAST          102
 and creates the output file [test_example2.py](doc/test_example2_py.md)
 
 
-## -s short form of --skip
+## short form of skip option
 
-This is the same command as above using the short `-s` form of the --skip option
+This is the same command as above using the short `-s` form of the `--skip` option
 in two places.
 It produces the same report and outfile.
 <!--phmdoctest-label short-skip-command-->
@@ -725,9 +725,9 @@ It produces the same report and outfile.
 phmdoctest doc/example2.md -s "Python 3.7" -sLAST --report --outfile test_example2.py
 ```
 
-## --fail-nocode
+## fail-nocode option
 
-This option produces a pytest file that will always
+The `--fail-nocode` option produces a pytest file that will always
 fail when no Python code or session blocks are found.
 
 If no Python code or session blocks are found in the
@@ -741,7 +741,7 @@ If the option `--fail-nocode` is passed the
 function is `def test_nothing_fails()` which raises an
 assertion. 
 
-## --setup
+## setup option
 
 A single Python code block can assign names visible to
 other code blocks by giving the `--setup TEXT` option.
@@ -755,7 +755,7 @@ The rules for `TEXT` are the same as for `--skip TEXT` plus...
 - It is ok if the block has an output block. It will be ignored.
 
 
-## --teardown
+## teardown option
 
 A single Python code block can supply code run by the pytest
 `teardown_module()` fixture. Use the `--teardown TEXT` option.
