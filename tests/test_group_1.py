@@ -63,6 +63,10 @@ class TestSameVersions:
         metadata_version = config["metadata"]["version"]
         assert metadata_version == self.package_version
 
+    def test_deploy_github_action(self):
+        """Check the ref: value in the GitHub deploy.yml action."""
+        self.verify_found_in_file(".github/workflows/deploy.yml", "\n        ref: v{}")
+
 
 def test_requirements_file():
     """setup.cfg install_requires == requirements.txt.
