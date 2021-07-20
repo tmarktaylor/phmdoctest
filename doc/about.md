@@ -1,4 +1,4 @@
-## About the documentation
+# About the documentation
 
 The documentation is built around README.md at the project root.
 README.md serves as the:
@@ -16,7 +16,7 @@ The documentation is constructed to achieve:
 - Building a static copy of the documentation for offline use.
 - No visible raw ReStructured text in the README rendered by Github.
 
-### Implementation
+## Implementation
 
 - GitHub pages hosts the project website.
 - GitHub hosts the repository and renders README.md.
@@ -29,7 +29,7 @@ The documentation is constructed to achieve:
   - recent_changes.md
   - CONTRIBUTING.md
 
-### Tools
+## Tools
 
 - GitHub Pages
 - Sphinx
@@ -37,7 +37,7 @@ The documentation is constructed to achieve:
 
 recommonmark enables Sphinx to parse Markdown files.
 
-### Files
+## Files
 
 These files are at the project root:
 

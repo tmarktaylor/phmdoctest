@@ -1,5 +1,5 @@
 """Create Markdown wrappers around the project's example .py files."""
-top = "#### <put filename here>\n```python\n"
+top = "# <put filename here>\n```python\n"
 
 bottom = """```
 This page is created from a Markdown file that contains the contents
@@ -7,7 +7,7 @@ of a python source file in a syntax highlighted fenced code block.
 It is included in the documentation as an example python file.
 """
 
-raw_top = "#### <put filename here>\n~~~\n"
+raw_top = "# <put filename here>\n~~~\n"
 
 raw_bottom = """~~~
 This page is created from a Markdown file that contains the contents

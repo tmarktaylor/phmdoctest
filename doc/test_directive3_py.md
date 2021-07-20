@@ -1,4 +1,4 @@
-#### doc/test_directive3.py
+# doc/test_directive3.py
 ```
 """pytest file built from doc/directive3.md"""
 import pytest
@@ -116,4 +116,3 @@ def test_code_121():
 This page is created from a Markdown file that contains the contents
 of a python source file in a syntax highlighted fenced code block.
 It is included in the documentation as an example python file.
-

@@ -30,7 +30,7 @@ examples in Markdown.
   - extract testsuite tree and list of failing trees from JUnit XML. *(tool.py)*
   
 
-##### master branch status
+### master branch status
 [![](https://img.shields.io/pypi/l/phmdoctest.svg)](https://github.com/tmarktaylor/phmdoctest/blob/master/LICENSE.txt)
 [![](https://img.shields.io/pypi/v/phmdoctest.svg)](https://pypi.python.org/pypi/phmdoctest)
 [![](https://img.shields.io/pypi/pyversions/phmdoctest.svg)](https://pypi.python.org/pypi/phmdoctest)
@@ -421,7 +421,7 @@ phmdoctest. The directive value can be any string.
 
 <!--phmdoctest-label my-markdown-file-->
 ~~~
-### This is file doc/my_markdown_file.md
+# This is file doc/my_markdown_file.md
 
 <!--phmdoctest-label my-fenced-code-block-->
 ```
@@ -834,7 +834,7 @@ When run without `--setup`
   - Sessions are run in a separate doctest execution context.
   - Otherwise sessions are not run.
 
-#### With `--setup`
+### With `--setup`
 
 - Names assigned by setup code are visible to code blocks.
 - Code blocks can modify the objects created by the setup code. 
@@ -846,7 +846,7 @@ When run without `--setup`
   - the names assigned by the setup code block 
     are `are not` visible to the sessions.
 
-#### With `share-names`
+### With `share-names`
 - Only following code blocks can modify the shared objects.
 - Shared objects will **not** be visible to sessions 
   if pytest is run with `--doctest-modules`.
@@ -854,7 +854,7 @@ When run without `--setup`
   - Shared objects will no longer be visible.
   - Names assigned by setup code will no longer be visible.
   
-#### With `--setup` and `--setup-doctest`
+### With `--setup` and `--setup-doctest`
 Same as the setup section plus:
 - names assigned by the setup code block 
   are visible to the sessions.
@@ -868,7 +868,7 @@ Same as the setup section plus:
   to the entire test suite via the Pytest doctest_namespace
   fixture.  See hint near the end [Hints](#Hints).
 
-#### Pytest live logging demos
+### Pytest live logging demos
 The live logging demos reveal pytest execution contexts. 
 Pytest Live Logs show the
 execution order of setup_module(), test cases, sessions, and

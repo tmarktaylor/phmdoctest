@@ -1,4 +1,4 @@
-#### doc/directive3_report.txt
+# doc/directive3_report.txt
 ~~~
              doc/directive3.md fenced blocks
 ---------------------------------------------------------

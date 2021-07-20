@@ -1,4 +1,4 @@
-#### doc/test_example2.py
+# doc/test_example2.py
 ```python
 """pytest file built from doc/example2.md"""
 from phmdoctest.functions import _phm_compare_exact

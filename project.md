@@ -1,9 +1,9 @@
-### Examples of code and session blocks
+# Examples of code and session blocks
 
 This file (project.md) has some example code and session blocks
 including a doctest directive example.
 
-#### An example with a blank line in the output
+## An example with a blank line in the output
 
 No <BLANKLINE> directive is needed in the output block of a Python
 code block output block pair.
@@ -21,7 +21,7 @@ Hello
 World!
 ```
 
-#### Interactive Python session requires `<BLANKINE>` in the expected output 
+## Interactive Python session requires `<BLANKINE>` in the expected output 
 
 Blank lines in the expected output must be replaced with `<BLANKLINE>`.
 To see the `<BLANKLINE>` navigate to [project.md unrendered][1]. 
@@ -34,7 +34,7 @@ Hello
 World!
 ```
 
-#### Interactive Python session with doctest directive 
+## Interactive Python session with doctest directive 
 
 Here is an interactive Python session showing an
 expected exception and use of the doctest directive
@@ -49,7 +49,7 @@ Traceback (most recent call last):
 ValueError:
 ```
 
-#### Session with `py` as the fenced code block info_string
+## Session with `py` as the fenced code block info_string
 
 ```py
 >>> coffee = 5

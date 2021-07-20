@@ -1,4 +1,4 @@
-#### doc/test_directive1.py
+# doc/test_directive1.py
 ```python
 """pytest file built from doc/directive1.md"""
 import sys

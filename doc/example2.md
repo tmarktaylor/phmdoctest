@@ -1,5 +1,5 @@
 # This is Markdown file example2.md
-#### Fenced code block expected output block pair.
+## Fenced code block expected output block pair.
 In order for phmdoctest to work with Python source code and
 terminal output print statements are needed in the
 source code to produce the expected output.
@@ -14,7 +14,7 @@ expected output:
 [1, 4, 9, 16, 25]
 ```
 
-#### Another fenced code block expected output block pair.
+## Another fenced code block expected output block pair.
 Example code adapted from What's new in Python:
 ```python
 # Formatted string literals require Python 3.7
@@ -26,12 +26,12 @@ expected output:
 He said his name is Fred.
 ```
 
-#### Here is a second fenced code block with no info string.
+## Here is a second fenced code block with no info string.
 ```
 doesn't have an info string
 ```
 
-#### Here are two Python code blocks in a row and one output block at the end.
+## Here are two Python code blocks in a row and one output block at the end.
 The first one:
 ```python
 a, b = 0, 1
@@ -53,7 +53,7 @@ window 6
 defenestrate 12
 ```
 
-#### A fenced code block with yaml info string.
+## A fenced code block with yaml info string.
 
 ```yaml
 dist: xenial
@@ -61,13 +61,13 @@ language: python
 sudo: false
 ```
 
-#### A fenced block with text info string
+## A fenced block with text info string
 
 ```text
 some text
 ```
 
-#### A doctest session
+## A doctest session
 Here is a Python interactive session.  It is described by
 the Python Standard Library module doctest.  Note there is
 no need for an empty line at the end of the session. 
@@ -80,7 +80,7 @@ no need for an empty line at the end of the session.
 12
 ```
 
-#### One more code plus expected output pair.
+## One more code plus expected output pair.
 
 Example borrowed from Python Standard Library datetime documentation.
 ```python
@@ -94,7 +94,7 @@ print(d)
 2002-03-11
 ```
 
-#### Another doctest session (skipped in test_example2.py)
+## Another doctest session (skipped in test_example2.py)
 
 Example borrowed from Python Standard Library 
 fractions documentation.

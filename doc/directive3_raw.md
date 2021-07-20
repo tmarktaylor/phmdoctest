@@ -1,4 +1,4 @@
-#### doc/directive3.md
+# doc/directive3.md
 ~~~
 # This is Markdown file directive3.md
 
@@ -30,7 +30,7 @@ else:
     assert False, "did not get expected NameError"
 ```
 
-#### Share the names assigned here with later Python code blocks. 
+## Share the names assigned here with later Python code blocks. 
 The share-names directive makes the names assigned here
 global to the test module.  The names are visible to all Python code blocks
 occurring later in the Markdown source file. The code assigns the 
@@ -50,7 +50,7 @@ def incrementer(x):
 grades = ["A", "B", "C"]
 ```
 
-#### This test case shows the shared names are visible.
+## This test case shows the shared names are visible.
 ```python
 print("string.digits=", string.digits)
 print(incrementer(10))
@@ -65,14 +65,14 @@ string.digits= 0123456789
 77 88 99
 ```
 
-#### This test case modifies grades.
+## This test case modifies grades.
 The objects created by the share-names code block can be modified
 and blocks run afterward will see the changes.  
 ```python
 grades.append("D")
 ```
 
-#### This test case sees the modified grades.
+## This test case sees the modified grades.
 ```python
 print(grades == ["A", "B", "C", "D"])
 ```
@@ -81,7 +81,7 @@ expected output:
 True
 ```
 
-#### This test case shares another name.
+## This test case shares another name.
 <!--phmdoctest-share-names-->
 ```python
 hex_digits = string.hexdigits
@@ -95,7 +95,7 @@ have an output block.
 0123456789abcdefABCDEF
 ```
 
-#### Use clear-names directive to un-share.
+## Use clear-names directive to un-share.
 
 First notice that hex_digits shared by the last test case
 is visible.

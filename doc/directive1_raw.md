@@ -1,4 +1,4 @@
-#### doc/directive1.md
+# doc/directive1.md
 ~~~
 # This is Markdown file directive1.md
 

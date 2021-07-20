@@ -1,4 +1,4 @@
-#### doc/test_setup.py
+# doc/test_setup.py
 ```python
 """pytest file built from doc/setup.md"""
 import pytest
