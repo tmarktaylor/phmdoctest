@@ -1,0 +1,7 @@
+build: off
+
+install:
+- pip install tox
+
+test_script:
+- tox -e example

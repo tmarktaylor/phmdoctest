@@ -1,7 +1,7 @@
 """First group of pytest test cases for phmdoctest."""
 import configparser
 import copy
-import re
+import os
 
 import pytest
 
@@ -19,6 +19,10 @@ import verify
 # The call to invoke_and_pytest() will start pytest in a
 # subprocess.
 # Pytest captures stdout and so does CliRunner.invoke().
+
+# To skip tests with @pytest.mark.skipif(skip_selected_tests),
+# set the environment variable PHMDOCTEST_SKIP_TESTS to any value.
+skip_selected_tests = True if os.environ.get("PHMDOCTEST_SKIP_TESTS", False) else False
 
 
 class TestSameVersions:
@@ -249,6 +253,7 @@ def test_pytest_session_fails():
     assert simulator_status.pytest_exit_code == 1
 
 
+@pytest.mark.skipif(skip_selected_tests, reason="added separately to test suite")
 def test_project_md():
     """Make sure that project.md generates a file that passes pytest."""
     simulator_status = verify.one_example(
