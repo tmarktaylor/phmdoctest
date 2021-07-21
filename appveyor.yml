@@ -1,8 +1,10 @@
 build: off
 
 install:
-- cmd: c:\python39\python.exe -m pip install --upgrade pip
-- cmd: c:\python39\python.exe -m pip install tox
+- cmd: set PATH=c:\python39;c:\python39\Scripts;%PATH%
+- cmd: pip install --upgrade pip
+- cmd: pip install tox
+- cmd: pip freeze
 
 test_script:
 - tox -e example
