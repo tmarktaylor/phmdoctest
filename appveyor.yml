@@ -1,11 +1,8 @@
-environment:
-  matrix:
-  - TOXENV: py39
-
 build: off
 
 install:
-- pip install tox
+- cmd: c:\python39\python.exe -m pip install --upgrade pip
+- cmd: c:\python39\python.exe -m pip install tox
 
 test_script:
 - tox -e example
