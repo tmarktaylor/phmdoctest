@@ -5,11 +5,12 @@ install:
 # It is advisable to install in a virtual environment.
 # Use the pre-installed python image to create it.
 # https://www.appveyor.com/docs/windows-images-software#python
-- cmd: C:\Python39-x64\python.exe -m venv .\virtualenv
-- cmd: .\virtualenv\Scripts\activate
-- cmd: pip install --upgrade pip
-- cmd: pip install -r requirements.txt
-- cmd: pip install "pytest>=5"
+- cmd: C:\Python39-x64\python.exe -m venv virtualenv
+- cmd: virtualenv\Scripts\activate
+- cmd: python -m pip --version
+- cmd: python -m pip install --upgrade pip
+- cmd: python -m pip install -r requirements.txt
+- cmd: python -m pip install "pytest>=5"
 
 test_script:
 # Put the local phmdoctest package (in the cloned repository) on PYTHONPATH.
