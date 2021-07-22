@@ -1,9 +1,22 @@
+# Results at https://ci.appveyor.com/project/tmarktaylor/phmdoctest
 build: off
 
 install:
-- cmd: c:\python39\python.exe -m pip install --upgrade pip
-- cmd: c:\python39\python.exe -m pip install tox
+# It is advisable to install in a virtual environment.
+# Use the pre-installed python image to create it.
+# https://www.appveyor.com/docs/windows-images-software#python
+- cmd: C:\Python39-x64\python.exe -m venv .\virtualenv
+- cmd: .\virtualenv\Scripts\activate
+- cmd: pip install --upgrade pip
+- cmd: pip install -r requirements.txt
+- cmd: pip install "pytest>=5"
 
 test_script:
-- cmd: set PATH=c:\python39;c:\python39\Scripts;%PATH%
-- tox -e example
+# Put the local phmdoctest package (in the cloned repository) on PYTHONPATH.
+# Create directory "tmp" for the generated pytest file.
+# Run phmdoctest to generate the test file and print the report.
+# Run the phmdoctest test suite including the generated pytest file in "tmp".
+- cmd: set PYTHONPATH=src
+- cmd: mkdir tests/tmp
+- cmd: phmdoctest project.md --report --outfile tests/tmp/test_project.py
+- cmd: pytest --doctest-modules -vv tests
