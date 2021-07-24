@@ -96,20 +96,13 @@ def test_requirements_file():
 
 def test_doc_requirements_file():
     """
-    Some versions are the same in doc/requirements.txt and setup.cfg.
-
-    Click and monotable versions should be the same.
-
-    For the Sphinx documentation build on readthedocs.org (RTD)
-    specific versions are pinned by the file doc/requirements.txt.
-
+    For the Sphinx documentation builds on GitHUb and readthedocs.org (RTD)
+    versions are described by the file doc/requirements.txt.
     For Sphinx autodoc the phmdoctest dependencies Click and monotable
     are installed so that the RTD build can import phmdoctest to look
     for docstrings.
-
-    Note that commonmark is also a phmdoctest dependency. Because it is
-    pinned to different versions in doc/requirements.txt and setup.py
-    it is not tested here.
+    Make sure the docs build install the same versions listed by
+    requirements.txt at the repository root.
     """
     packages = ["Click", "monotable", "commonmark"]
     setup_versions = {}

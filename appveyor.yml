@@ -3,7 +3,7 @@ build: off
 
 install:
 # It is advisable to install in a virtual environment.
-# Use the pre-installed python image to create the virtual environment
+# Use the pre-installed python image to create the virtual environment.
 # https://www.appveyor.com/docs/windows-images-software#python
 - cmd: C:\Python39-x64\python.exe -m venv virtualenv
 - cmd: virtualenv\Scripts\activate

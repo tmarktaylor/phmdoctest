@@ -18,7 +18,7 @@ def remove_fenced_code_blocks(lines, fence="```"):
             yield line
 
 
-heading_level = "## "  # note trailing space
+header_level = "## "  # note trailing space
 
 
 def make_label(title):
@@ -47,9 +47,9 @@ def make_quick_links(filename, style=None):
     lines = remove_fenced_code_blocks(lines)
     links = []
     for line in lines:
-        if line.startswith(heading_level):
+        if line.startswith(header_level):
             assert "--" not in line, "Please rewrite to avert breakage on Pages."
-            title = line.replace(heading_level, "")
+            title = line.replace(header_level, "")
             label = make_label(title)
             link = title.lower()
             if style == "github":

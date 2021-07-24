@@ -885,8 +885,8 @@ Same as the setup section plus:
   to the entire test suite via the Pytest doctest_namespace
   fixture.  See hint near the end [Hints](#Hints).
 
-### Pytest live logging demos
-The live logging demos reveal pytest execution contexts. 
+### Pytest live logging demo
+The live logging demos reveals pytest execution contexts. 
 Pytest Live Logs show the
 execution order of setup_module(), test cases, sessions, and
 teardown_module().
@@ -985,9 +985,10 @@ To run phmdoctest from the command line:
 To call phmdoctest from within a Python script
 `phmdoctest.simulator` offers the function `run_and_pytest()`.
 It simulates running phmdoctest from the command line.
-- useful during development
 - creates the --outfile in a temporary directory
-- optionally runs pytest on the outfile 
+- optionally runs pytest on the outfile
+- pytest can return a JUnit XML report
+- useful during development to prevent use of stale --outfile
 
 Please see the [Latest Development tools API section][10] or
 the docstring of the function `run_and_pytest()` in the file `simulator.py.` 
