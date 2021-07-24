@@ -1082,4 +1082,4 @@ assert simulator_status.pytest_exit_code == 0
 [6]: https://pypi.python.org/project/coverage
 [12]: https://travis-ci.com/tmarktaylor/phmdoctest
 [13]: https://ci.appveyor.com/project/tmarktaylor/phmdoctest
-[14]: https://travis-ci.com/tmarktaylor/monotable
+[14]: https://travis-ci.org/tmarktaylor/monotable
