@@ -359,7 +359,7 @@ def test_usage():
 def simulator_example_code():
     import phmdoctest.simulator
 
-    command = "phmdoctest doc/example1.md --report --outfile test_me.py"
+    command = "phmdoctest doc/example1.md --report --outfile temporary.py"
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command, pytest_options=["--doctest-modules", "-v"]
     )

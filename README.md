@@ -998,7 +998,7 @@ pytest_options are passed as a list of strings as shown below.
 ```python
 import phmdoctest.simulator
 
-command = "phmdoctest doc/example1.md --report --outfile test_me.py"
+command = "phmdoctest doc/example1.md --report --outfile temporary.py"
 simulator_status = phmdoctest.simulator.run_and_pytest(
     well_formed_command=command, pytest_options=["--doctest-modules", "-v"]
 )
