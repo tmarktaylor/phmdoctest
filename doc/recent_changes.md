@@ -11,7 +11,7 @@
 - Reformat code style with black.
 - Rework setup.py/setup.cfg.
 - Remove tox.
-- Fix bad travis example in README.md.
+- Fix bad CI example in README.md.
 
 1.1.1 - 2021-05-14
 
@@ -45,7 +45,7 @@
 0.0.5 - 2020-04-20
 
 - Bugfix- Issue- Won't fail if Python code block doesn't print.
-- Bugfix- Issue- README Travis CI example missing "install:".
+- Bugfix- Issue- README CI example missing "install:".
 - Add Development tools API section to the documentation.
 - Pin phmdoctest dependency version ranges in setup.py.
 

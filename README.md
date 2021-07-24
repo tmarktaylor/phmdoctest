@@ -44,7 +44,7 @@ examples in Markdown.
 [Website](https://tmarktaylor.github.io/phmdoctest) |
 [Docs](https://phmdoctest.readthedocs.io/en/latest/) |
 [Repos](https://github.com/tmarktaylor/phmdoctest) |
-[Build][12] |
+[pytest][13] |
 [Codecov](https://codecov.io/gh/tmarktaylor/phmdoctest?branch=master) |
 [License](https://github.com/tmarktaylor/phmdoctest/blob/master/LICENSE.txt)
 
@@ -873,10 +873,7 @@ The live logging demos reveal pytest execution contexts.
 Pytest Live Logs show the
 execution order of setup_module(), test cases, sessions, and
 teardown_module().
-The demos are in one of the Travis CI builds.
-- Look for the build log here [Build][12].
-- Go to last job called Pytest Live Log Demo.
-- Go to the Job Log tab.
+The demo output is [Build][12] in the Job Log tab.
 
 There are 2 more demo invocations in the workflow action
 called Pytest Live Log Demo.  
@@ -1065,3 +1062,5 @@ assert simulator_status.pytest_exit_code == 0
 [4]: https://docs.python.org/3/library/doctest.html
 [6]: https://pypi.python.org/project/coverage
 [12]: https://travis-ci.com/tmarktaylor/phmdoctest
+[13]: https://ci.appveyor.com/project/tmarktaylor/phmdoctest
+[14]: https://travis-ci.com/tmarktaylor/monotable
