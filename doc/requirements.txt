@@ -2,6 +2,5 @@ Click >= 7.1.1
 monotable >= 2.1.1
 myst-parser == 0.15.1
 sphinx == 4.1.0
-sphinx_rtd_theme == 0.5.1
 commonmark >= 0.9.1
 pytest >= 5
