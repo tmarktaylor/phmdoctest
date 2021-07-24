@@ -52,6 +52,7 @@ examples in Markdown.
 [Introduction](#introduction) |
 [Installation](#installation) |
 [Sample Usage](#sample-usage) |
+[CI usage](#ci-usage) |
 [Sample usage without directives](#sample-usage-without-directives) |
 [--report](#report-option) |
 [Identifying blocks](#identifying-blocks) |
@@ -151,6 +152,22 @@ test_one_mark_skip.py::test_example SKIPPED
 - List of  [Directives](#directives)
 - Directives are not required.
 
+## CI usage
+
+Test Python examples in README.md in Continuous Integration scripts.
+The pytest test suite is in the tests folder.
+
+<!--phmdoctest-label ci-example-->
+```bash
+mkdir tests/tmp
+phmdoctest README.md --report --outfile tests/tmp/test_readme.py
+pytest --doctest-modules -vv tests
+```
+
+This console shows testing Python examples in project.md. 
+Look for the tmp tests at bottom. [Windows Usage on Appveyor][13]. 
+
+No changes to README.md are needed [here, look in any build][14].
 
 ## Sample usage without directives
 

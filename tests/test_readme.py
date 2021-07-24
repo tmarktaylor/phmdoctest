@@ -46,6 +46,29 @@ def test_directive_example():
     assert simulator_status.pytest_exit_code == 0
 
 
+def test_ci_example():
+    """The bash lines in README are also in workflows/install.yml.
+
+    The fenced code block in README.md uses a different filename than
+    install.yml.  We need to replace README.md with project.md.
+    We need to replace test_readme.py with test_project.py.
+    """
+
+    # The goal of this test is fail if either install.yml
+    # or the fenced code block example is changed in one, but not
+    # both places.
+    fcb = labeled.contents(label="ci-example")
+    fcb_lower_case = fcb.lower()
+    fcb_lines = fcb_lower_case.splitlines()
+    edited_lines_in_fcb = [line.replace("readme", "project") for line in fcb_lines]
+    with open(".github/workflows/install.yml", "r", encoding="utf-8") as fp:
+        lines_in_file = fp.read().splitlines()
+    stripped_lines_in_file = [line.strip() for line in lines_in_file]
+    assert len(edited_lines_in_fcb) == 3
+    for line in edited_lines_in_fcb:
+        assert line in stripped_lines_in_file, "line must be somewhere in file"
+
+
 def test_raw_example1_md():
     """README raw markdown is same as file doc/example1.md."""
     want = labeled.contents(label="example1-raw")
