@@ -1,6 +1,6 @@
 # This is Markdown file setup_with_inline.md
 
-This test shows that inline annotations are processed in
+This test shows that inline annotations get processed in
 --setup and --teardown blocks.
 
 #### This will be the setup code.
@@ -17,7 +17,7 @@ def raiser():
 
 #### This test case shows the setup names are visible
 
-- The assert in raiser() did not happen.
+- The assertion in raiser() did not happen.
 - mylist is visible.
 ```py3
 

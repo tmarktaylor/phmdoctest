@@ -16,6 +16,5 @@ python      64  teardown  -teardown
 -------------------------------------------------
 3 test cases.
 ~~~
-This page is created from a text file that contains the contents
-of a plain text file in a fenced code block.
+The above fenced code block contains the contents of a plain text file.
 It is included in the documentation as an example text file.

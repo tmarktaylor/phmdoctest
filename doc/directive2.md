@@ -1,12 +1,12 @@
 # This is Markdown file directive2.md
 
 Directives are HTML comments and are not rendered.
-To see the directives press Edit on Github and then
+To see the directives press Edit on GitHub and then
 the Raw button.
 
 ## This will be marked as the setup code.
 The setup logic makes the names assigned here global to the test module.
-The code assigns the names math, mylist, a, b, and the function doubler().
+The code assigns the **names** math, mylist, a, b, and the function doubler().
 Setup code does not have an output block.
 Note the `<!--phmdoctest-setup-->` directive in the Markdown file.
 <!--phmdoctest-setup-->

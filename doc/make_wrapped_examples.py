@@ -2,23 +2,21 @@
 top = "# <put filename here>\n```python\n"
 
 bottom = """```
-This page is created from a Markdown file that contains the contents
-of a python source file in a syntax highlighted fenced code block.
+The above syntax highlighted fenced code block contains the
+contents of a python source file.
 It is included in the documentation as an example python file.
 """
 
 raw_top = "# <put filename here>\n~~~\n"
 
 raw_bottom = """~~~
-This page is created from a Markdown file that contains the contents
-of a Markdown source file in a fenced code block.
+The above fenced code block contains the contents of a Markdown file.
 It shows the HTML comments which are not visible in rendered Markdown.
 It is included in the documentation as an example raw Markdown file.
 """
 
 text_bottom = """~~~
-This page is created from a text file that contains the contents
-of a plain text file in a fenced code block.
+The above fenced code block contains the contents of a plain text file.
 It is included in the documentation as an example text file.
 """
 

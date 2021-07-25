@@ -58,6 +58,6 @@ def test_code_87_output_94(capsys):
 """
     _phm_compare_exact(a=_phm_expected_str, b=capsys.readouterr().out)
 ```
-This page is created from a Markdown file that contains the contents
-of a python source file in a syntax highlighted fenced code block.
+The above syntax highlighted fenced code block contains the
+contents of a python source file.
 It is included in the documentation as an example python file.

@@ -1,7 +1,7 @@
 # This is Markdown file example2.md
 ## Fenced code block expected output block pair.
 In order for phmdoctest to work with Python source code and
-terminal output print statements are needed in the
+terminal output add print statements to the
 source code to produce the expected output.
 
 Example code adapted from the Python Tutorial:
@@ -45,7 +45,7 @@ words = ["cat", "window", "defenestrate"]
 for w in words:
     print(w, len(w))
 ```
-And the expected output block for the second code block:
+The expected output block for the second code block:
 
 ```
 cat 3

@@ -1,20 +1,19 @@
 # About the documentation
 
-The documentation is built around README.md at the project root.
-README.md serves as the:
+README.md at the project root serves as the:
 
 - project home page
 - PYPI long description
 - user manual
 
-The documentation is constructed to achieve:
+Design considerations:
 
 - Most text is in the README.
 - Python Package Index long description taken from the README.
-- README is at the Github repository root.
+- README is at the GitHub repository root.
 - Examples in the README are fully syntax highlighted.
 - Building a static copy of the documentation for offline use.
-- No visible raw ReStructured text in the README rendered by Github.
+- No visible raw ReStructured text in the README rendered by GitHub.
 
 ## Implementation
 
@@ -49,8 +48,8 @@ These files are at the project root:
 
 GitHub page build consumes _config.yml. 
 
-Since conf.py is at the project root the entire project is
-searched by Sphinx for document source files.  Additional
+Since conf.py is at the project root Sphinx searches the entire
+project is for document source files.  Additional
 **exclude_patterns** keep out unwanted document source files.
 
 The files below in the doc folder are not part of the documentation:
@@ -61,6 +60,5 @@ The files below in the doc folder are not part of the documentation:
 
 ### Read the Docs hosting
 
-The Sphinx documentation is hosted by readthedocs.org.
-The documentation build dependencies are listed in
-**doc/requirements.txt**.
+readthedocs.org hosts the Sphinx documentation.
+**doc/requirements.txt** lists the build dependencies.

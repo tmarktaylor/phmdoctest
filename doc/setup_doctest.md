@@ -2,7 +2,7 @@
 
 ## This will be the setup code.
 The setup logic makes the names assigned here global to the test module.
-The code assigns the names math, mylist, a, b, and the function doubler().
+The code assigns the **names** math, mylist, a, b, and the function doubler().
 Use phmdoctest --setup FIRST to select it.
 Setup code does not have an output block.
 ```python
@@ -52,18 +52,18 @@ True
 ```
 
 ## The names created by the setup code are optionally visible to sessions.
-When running phmdoctest setup names are made visible to sessions 
+When running phmdoctest setup names become visible to sessions 
 by using these options:
 - --setup specifies a code block that initializes variables. 
 - --setup-doctest injects the setup variables into the doctest namespace. 
 
 Run the generated test file with pytest.
 - Specify --doctest-modules to run the sessions.
-- Sessions are run in a separate context from the Python code/output block
-  pairs.  The setup and teardown is repeated.
+- Sessions run in a separate context from the Python code/output block
+  pairs.  The setup and teardown get repeated.
   
-55 is appended to mylist. Note that the 4 appended by the
-test case above is not there.  This is because the sessions are
+The value 55 is appended to mylist. Note that the 4 appended by the
+test case above is not there.  This is because the sessions
 run in a separate context.
 ```py
 >>> mylist.append(55)

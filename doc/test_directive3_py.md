@@ -1,5 +1,5 @@
 # doc/test_directive3.py
-```
+```python
 """pytest file built from doc/directive3.md"""
 import pytest
 
@@ -113,6 +113,6 @@ def test_code_121():
 
     # Caution- no assertions.
 ```
-This page is created from a Markdown file that contains the contents
-of a python source file in a syntax highlighted fenced code block.
+The above syntax highlighted fenced code block contains the
+contents of a python source file.
 It is included in the documentation as an example python file.

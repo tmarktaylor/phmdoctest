@@ -3,7 +3,7 @@
 # This is Markdown file directive3.md
 
 Directives are HTML comments and are not rendered.
-To see the directives press Edit on Github and then
+To see the directives press Edit on GitHub and then
 the Raw button.
 
 ## share-names and clear-names directives.
@@ -102,7 +102,7 @@ is visible.
 The clear-names directive un-shares any previously shared names.
 The names will no longer be visible to Python code
 blocks occurring later in the Markdown source file.
-The clearing does not happen until after the test case is run.
+The clearing does not happen until after the test case runs.
 This test case is the same as the previous test case to show
 that mylist is still visible.
 <!--phmdoctest-clear-names-->
@@ -134,7 +134,6 @@ else:
     assert False, "expected NameError for hex_digits"
 ```
 ~~~
-This page is created from a Markdown file that contains the contents
-of a Markdown source file in a fenced code block.
+The above fenced code block contains the contents of a Markdown file.
 It shows the HTML comments which are not visible in rendered Markdown.
 It is included in the documentation as an example raw Markdown file.

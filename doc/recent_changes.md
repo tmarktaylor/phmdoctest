@@ -11,7 +11,7 @@
 - Reformat code style with black.
 - Rework setup.py/setup.cfg.
 - Remove tox.
-- Fix bad CI example in README.md.
+- Fix bad example in README.md.
 
 1.1.1 - 2021-05-14
 

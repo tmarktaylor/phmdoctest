@@ -3,12 +3,12 @@
 # This is Markdown file directive2.md
 
 Directives are HTML comments and are not rendered.
-To see the directives press Edit on Github and then
+To see the directives press Edit on GitHub and then
 the Raw button.
 
 ## This will be marked as the setup code.
 The setup logic makes the names assigned here global to the test module.
-The code assigns the names math, mylist, a, b, and the function doubler().
+The code assigns the **names** math, mylist, a, b, and the function doubler().
 Setup code does not have an output block.
 Note the `<!--phmdoctest-setup-->` directive in the Markdown file.
 <!--phmdoctest-setup-->
@@ -67,7 +67,6 @@ mylist.clear()
 assert not mylist, "mylist was not emptied"
 ```
 ~~~
-This page is created from a Markdown file that contains the contents
-of a Markdown source file in a fenced code block.
+The above fenced code block contains the contents of a Markdown file.
 It shows the HTML comments which are not visible in rendered Markdown.
 It is included in the documentation as an example raw Markdown file.

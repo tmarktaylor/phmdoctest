@@ -5,7 +5,7 @@ including a doctest directive example.
 
 ## An example with a blank line in the output
 
-No <BLANKLINE> directive is needed in the output block of a Python
+Note no <BLANKLINE> directive in the output block of a Python
 code block output block pair.
  
 ```python
