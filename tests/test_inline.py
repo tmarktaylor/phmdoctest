@@ -18,12 +18,12 @@ def test_starts_with_comment():
 
 
 def test_not_starts_with_comment():
-    assert phmdoctest.inline.starts_with_comment("a#") == False
-    assert phmdoctest.inline.starts_with_comment("a #") == False
-    assert phmdoctest.inline.starts_with_comment(" b #") == False
-    assert phmdoctest.inline.starts_with_comment("  b #") == False
-    assert phmdoctest.inline.starts_with_comment("   c #") == False
-    assert phmdoctest.inline.starts_with_comment("\t \n    z# \n") == False
+    assert phmdoctest.inline.starts_with_comment("a#") is False
+    assert phmdoctest.inline.starts_with_comment("a #") is False
+    assert phmdoctest.inline.starts_with_comment(" b #") is False
+    assert phmdoctest.inline.starts_with_comment("  b #") is False
+    assert phmdoctest.inline.starts_with_comment("   c #") is False
+    assert phmdoctest.inline.starts_with_comment("\t \n    z# \n") is False
 
 
 def test_num_newlines_at_end():
@@ -54,24 +54,24 @@ def test_num_indented():
 
 
 def test_is_blank():
-    assert phmdoctest.inline.isblank("") == True
-    assert phmdoctest.inline.isblank(" ") == True
-    assert phmdoctest.inline.isblank("\t ") == True
-    assert phmdoctest.inline.isblank(" \n ") == True
-    assert phmdoctest.inline.isblank("\t\t\t\t") == True
-    assert phmdoctest.inline.isblank("A") == False
-    assert phmdoctest.inline.isblank("A ") == False
-    assert phmdoctest.inline.isblank(" Z") == False
-    assert phmdoctest.inline.isblank("       A") == False
-    assert phmdoctest.inline.isblank("A       ") == False
-    assert phmdoctest.inline.isblank("       Z") == False
+    assert phmdoctest.inline.isblank("") is True
+    assert phmdoctest.inline.isblank(" ") is True
+    assert phmdoctest.inline.isblank("\t ") is True
+    assert phmdoctest.inline.isblank(" \n ") is True
+    assert phmdoctest.inline.isblank("\t\t\t\t") is True
+    assert phmdoctest.inline.isblank("A") is False
+    assert phmdoctest.inline.isblank("A ") is False
+    assert phmdoctest.inline.isblank(" Z") is False
+    assert phmdoctest.inline.isblank("       A") is False
+    assert phmdoctest.inline.isblank("A       ") is False
+    assert phmdoctest.inline.isblank("       Z") is False
 
 
 def test_is_empty_comment():
-    assert phmdoctest.inline.is_empty_comment("#") == True
-    assert phmdoctest.inline.is_empty_comment("#    ") == True
-    assert phmdoctest.inline.is_empty_comment("    #    ") == True
-    assert phmdoctest.inline.is_empty_comment("        #") == True
+    assert phmdoctest.inline.is_empty_comment("#") is True
+    assert phmdoctest.inline.is_empty_comment("#    ") is True
+    assert phmdoctest.inline.is_empty_comment("    #    ") is True
+    assert phmdoctest.inline.is_empty_comment("        #") is True
 
 
 # Note: The code examples should conform to the Black code style.
