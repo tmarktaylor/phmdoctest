@@ -383,6 +383,6 @@ def test_quick_links():
     filename = "README.md"
     with open(filename, "r", encoding="utf-8") as f:
         readme = f.read()
-        github_links = quick_links.make_quick_links(filename, style="github")
+        github_links = quick_links.make_quick_links(filename)
         # There must be at least one blank line after the last link.
         assert github_links + "\n\n" in readme

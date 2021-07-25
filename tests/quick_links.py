@@ -35,7 +35,7 @@ def make_label(title):
     return "[" + title + "]"
 
 
-def make_quick_links(filename, style=None):
+def make_quick_links(filename):
     """Generate links for a quick links section."""
     with open(filename, encoding="utf-8") as f:
         lines = f.readlines()
@@ -52,36 +52,14 @@ def make_quick_links(filename, style=None):
             title = line.replace(header_level, "")
             label = make_label(title)
             link = title.lower()
-            if style == "github":
-                link = link.replace(" ", "-")
-            else:
-                # note- this only worked in the Sphinx 1.8.5 docs
-                some_punctuation = ","
-                link = re.sub("[" + some_punctuation + "]", "", link)
-                link = link.replace("-", " ")
-                # convert runs of space to single dash
-                link = re.sub("[ ]+", "-", link)
-                # remove runs of - at the start of a line
-                link = re.sub("^[-]+", "", link)
-
+            link = link.replace(" ", "-")
             link = "(#" + link + ")"
             links.append(label + link)
     return " |\n".join(links)
 
 
-# def make_sphinx_readme(readme_filename, sphinx_readme_filename):
-#     """Write a copy README.md with new quick links for Sphinx on RTD."""
-#     with open(readme_filename, 'r', encoding='utf-8') as f1:
-#         readme = f1.read()
-#         github_links = make_quick_links(readme_filename, style='github')
-#         sphinx_links = make_quick_links(readme_filename)
-#         sphinx_readme = readme.replace(github_links, sphinx_links)
-#     with open(sphinx_readme_filename, 'w', encoding='utf-8') as f2:
-#         f2.write(sphinx_readme)
-
-
 if __name__ == "__main__":
-    text = make_quick_links("../README.md", style="github")
+    text = make_quick_links("../README.md")
     print(text)
     print()
     num_links = text.count("\n") + 1
