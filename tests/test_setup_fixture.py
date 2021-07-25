@@ -28,7 +28,7 @@ def test_setup_teardown_fixture(_phm_setup_teardown, managenamespace):
 
     # See an update reflected in a copy.
     logging.debug("tests- trying an update, then a copy.")
-    more_items = {"zero": 0, "one": 1, "myset": set([7, 8, 9])}
+    more_items = {"zero": 0, "one": 1, "myset": {7, 8, 9}}
     managenamespace(operation="update", additions=more_items)
     copy_of_more_items = managenamespace(operation="copy")
     assert more_items == copy_of_more_items
@@ -44,4 +44,4 @@ def test_setup_teardown_fixture(_phm_setup_teardown, managenamespace):
 
     # Try update, but additions is not a mapping
     with pytest.raises(TypeError):
-        managenamespace(operation="update", additions=set([1, 2, 3]))
+        managenamespace(operation="update", additions={1, 2, 3})

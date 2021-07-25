@@ -138,7 +138,7 @@ def setup_and_teardown_fixture(
 
     if setup_block:
         comment = "# setup code line {}.\n".format(setup_block.line)
-        code, _ = apply_inline_commands((setup_block.contents))
+        code, _ = apply_inline_commands(setup_block.contents)
         full_code = comment + code
         indented_code = textwrap.indent(full_code, "    ")
         src = src.replace("    # <setup code here>\n", indented_code, 1)

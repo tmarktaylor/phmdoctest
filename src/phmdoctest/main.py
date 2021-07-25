@@ -24,7 +24,7 @@ import phmdoctest.tool
 @click.option(
     "--outfile",
     nargs=1,
-    help=('Write generated test case file to path TEXT. "-"' " writes to stdout."),
+    help='Write generated test case file to path TEXT. "-"' " writes to stdout.",
 )
 @click.option(
     "-s",
