@@ -11,7 +11,7 @@ install:
 - cmd: python -m pip install --upgrade pip
 - cmd: python -m pip install --no-deps "."
 - cmd: python -m pip install -r requirements.txt
-- cmd: python -m pip install "pytest>=5"
+- cmd: python -m pip install "pytest>=6"
 
 test_script:
 # Create directory "tmp" for the generated pytest file.  Use Windows backslash.
