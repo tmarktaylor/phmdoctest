@@ -4,10 +4,10 @@ build: off
 install:
 # It is advisable to install in a virtual environment.
 # Use the pre-installed python image to create the virtual environment.
-# https://docs/python.org/3.9/library/venv.html
+# https://packaging.python.org/guides/installing-using-pip-and-virtual-environments
 # https://www.appveyor.com/docs/windows-images-software#python
 - cmd: py -m venv env
-- cmd: .env\Scripts\activate
+- cmd: .\env\Scripts\activate
 - cmd: where python
 - cmd: python -m pip install --upgrade pip
 - cmd: python -m pip --version
