@@ -151,7 +151,8 @@ test_one_mark_skip.py::test_example SKIPPED
 - The **mark.skip** directive adds the @pytest.mark.skip() line.
 - The label directive names the test case function.
 - List of  [Directives](#directives)
-- Directives are optional.
+- Directives are optional. 
+- Markdown edits are optional.
 
 ## CI usage
 
@@ -166,9 +167,9 @@ pytest --doctest-modules -vv tests
 ```
 
 This console shows testing Python examples in project.md. 
-Look for the tmp tests at bottom. [Windows Usage on Appveyor][13]. 
+Look for the tmp tests at the bottom. [Windows Usage on Appveyor][13]. 
 
-No changes to README.md are needed [here, look in any build][14].
+No changes to README.md are needed [here, look in the last job log][14].
 
 ## Sample usage without directives
 
