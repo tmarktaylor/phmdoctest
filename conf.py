@@ -57,6 +57,7 @@ exclude_patterns = [
     "tests",
     "src",
     ".tox",
+    "env",
     ".pytest_cache",
     "_build",
     "Thumbs.db",
