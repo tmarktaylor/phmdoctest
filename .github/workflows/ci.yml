@@ -35,7 +35,6 @@ jobs:
         source ${{ github.workspace }}/env/bin/activate
         python -m pip --version
       if: startswith(runner.os, 'Linux') || startswith(runner.os, 'macOS')
-
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip

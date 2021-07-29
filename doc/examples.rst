@@ -6,6 +6,7 @@ These pages are referenced by relative links in README.md.
 .. toctree::
    :maxdepth: 0
 
+   actions_usage.md
    example1.md
    example2.md
    test_example2_py.md

@@ -157,7 +157,8 @@ test_one_mark_skip.py::test_example SKIPPED
 ## CI usage
 
 Test Python examples in README.md in Continuous Integration scripts.
-The pytest test suite is in the **tests** folder.
+In this snippet for Linux the pytest test suite is in the
+**tests** folder.
 
 <!--phmdoctest-label ci-example-->
 ```bash
@@ -168,6 +169,10 @@ pytest --doctest-modules -vv tests
 
 This console shows testing Python examples in project.md. 
 Look for the tmp tests at the bottom. [Windows Usage on Appveyor][13]. 
+
+See this excerpt from ci.yml [Actions usage example](doc/actions_usage.md).
+It runs on Windows, Linux, and macOS. Please find the phmdoctest command
+at the bottom. 
 
 No changes to README.md are needed [here, look in the last job log][14].
 

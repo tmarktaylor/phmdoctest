@@ -69,6 +69,19 @@ def test_ci_example():
         assert line in stripped_lines_in_file, "line must be somewhere in file"
 
 
+def test_actions_usage_md():
+    """Cut and paste from ci.yml to actions_usage.md is the same."""
+    blocks = phmdoctest.tool.fenced_code_blocks("doc/actions_usage.md")
+    got = blocks[0]
+    with open(".github/workflows/ci.yml", "r", encoding="utf-8") as f:
+        whole_file = f.read()
+    m = re.search(
+        pattern=r"(jobs:.*\n)\n  coverage:", string=whole_file, flags=re.DOTALL
+    )
+    want = m.group(1)
+    verify.a_and_b_are_the_same(a=want, b=got)
+
+
 def test_raw_example1_md():
     """README raw markdown is same as file doc/example1.md."""
     want = labeled.contents(label="example1-raw")
