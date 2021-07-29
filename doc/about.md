@@ -49,7 +49,7 @@ These files are at the project root:
 GitHub page build consumes _config.yml. 
 
 Since conf.py is at the project root Sphinx searches the entire
-project is for document source files.  Additional
+project for document source files.  Additional
 **exclude_patterns** keep out unwanted document source files.
 
 The files below in the doc folder are not part of the documentation:
