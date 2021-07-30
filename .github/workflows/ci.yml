@@ -49,13 +49,11 @@ jobs:
         pytest --doctest-modules -vv tests
 
   coverage:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python 3.x
+      id: set-up-python-3x
       uses: actions/setup-python@v2
       with:
         python-version: 3.x
@@ -76,13 +74,12 @@ jobs:
         PYTHONPATH: ${{ github.workspace }}/src
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
-      # if: success()
-      # Just upload ubuntu-latest
-      if: ${{ success() && ( matrix.os == 'ubuntu-latest' ) }}
+      # todo- 1) see if it works on develop branch. 2) need to see how setup-python formats python-version output.
+      if: success() && ((github.ref == 'refs/heads/master') || (github.ref == 'refs/heads/develop'))
       continue-on-error: true
       with:
         file: coverage.xml
-        flags: pytest,${{ matrix.os }}
+        flags: pytest,${{ steps.set-up-python-3x.python-version }},ubuntu-latest
         fail_ci_if_error: false
 
   inspect:
