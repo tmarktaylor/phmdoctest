@@ -1019,6 +1019,11 @@ assert simulator_status.pytest_exit_code == 0
   Use `-` for MARKDOWN_FILE.
 - Write the test file to a temporary directory so that
   it is always up to date.
+- In CI scripts the following shell command will create the temporary
+  directory **tmp** in the **tests** folder on Windows, Linux, and macOS.
+  ```bash
+  python -c "from pathlib import Path; d = Path('tests') / 'tmp'; d.mkdir()"
+  ```
 - It is easy to use --output by mistake instead of `--outfile`.
 - If Python code block has no output, put assert statements in the code.
 - Use pytest option `--doctest-modules` to test the sessions. 
@@ -1042,7 +1047,15 @@ assert simulator_status.pytest_exit_code == 0
   fixture.  Try using a separate pytest command to test
   just the phmdoctest test.
 - The module **phmdoctest.fixture** is imported at pytest time
-  to support setup, teardown, share-names, and clear-names features. 
+  to support setup, teardown, share-names, and clear-names features.
+- If the --outfile is written into a folder that pre-exists in the
+  repository, consider adding the outfile name to .gitignore. If
+  the outfile name later changes, the change will be needed in
+  .gitignore too.
+  ```
+  # Reserved for generated test file. 
+  tests/test_readme.py
+  ```
 
 ## Directive hints
 
