@@ -32,7 +32,6 @@ jobs:
         python -m pip install "pytest>=6"
     - name: Tests
       run: |
-        # The next line creates the tmp subdirectory in tests.
         python -c "from pathlib import Path; d = Path('tests') / 'tmp'; d.mkdir()"
         phmdoctest project.md --report --outfile tests/tmp/test_project.py
         pytest --doctest-modules -vv tests
