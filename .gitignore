@@ -18,6 +18,9 @@ MANIFEST
 # reserved for virtual environment
 env
 
+# reserved for generated test files
+tests/tmp
+
 .cache
 .coverage
 .pypirc
