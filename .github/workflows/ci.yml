@@ -43,7 +43,6 @@ jobs:
         python -m pip install "pytest>=6"
     - name: Tests
       run: |
-        # The next line creates the tmp subdirectory in tests.
         python -c "from pathlib import Path; d = Path('tests') / 'tmp'; d.mkdir()"
         phmdoctest project.md --report --outfile tests/tmp/test_project.py
         pytest --doctest-modules -vv tests
@@ -53,7 +52,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python 3.x
-      id: set-up-python-3x
+      id: setuppython
       uses: actions/setup-python@v2
       with:
         python-version: 3.x
@@ -74,12 +73,11 @@ jobs:
         PYTHONPATH: ${{ github.workspace }}/src
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
-      # todo- 1) see if it works on develop branch. 2) need to see how setup-python formats python-version output.
       if: success() && ((github.ref == 'refs/heads/master') || (github.ref == 'refs/heads/develop'))
       continue-on-error: true
       with:
         file: coverage.xml
-        flags: pytest,${{ steps.set-up-python-3x.outputs.python-version }},ubuntu-latest
+        flags: pytest,python-${{ steps.setuppython.outputs.python-version }},ubuntu-latest
         fail_ci_if_error: false
 
   inspect:
