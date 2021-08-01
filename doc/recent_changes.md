@@ -1,4 +1,8 @@
 # Recent changes
+1.x.x - 2021-TBD
+
+- Restored tox.ini since 1.2.1, no longer used in test suite.
+
 1.2.1 - 2021-07-07
 
 - Bugfix- #16, #15, Issue- Simulator subprocess failed on win venv.

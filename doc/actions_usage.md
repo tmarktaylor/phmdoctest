@@ -29,7 +29,7 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install --no-deps "."
         python -m pip install -r requirements.txt
-        python -m pip install "pytest>=6"
+        python -m pip install -r tests/requirements.txt
     - name: Tests
       run: |
         python -c "from pathlib import Path; d = Path('tests') / 'tmp'; d.mkdir()"

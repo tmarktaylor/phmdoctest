@@ -9,7 +9,7 @@ matrix:
     #    # &utest_install
     #    - pip install --no-deps "."
     #    - pip install -r requirements.txt
-    #    - pip install pytest
+    #    - pip install -r tests/requirements.txt
     #  script:
     #    # &utest_run
     #    - mkdir tests/tmp
@@ -53,7 +53,7 @@ matrix:
       install:
        - pip install --no-deps "."
        - pip install -r requirements.txt
-       - pip install pytest
+       - pip install -r tests/requirements.txt
 
       script:
         # Show setup, teardown, and doctests pytest run time order using

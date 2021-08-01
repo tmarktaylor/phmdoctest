@@ -13,7 +13,7 @@ install:
 - cmd: python -m pip --version
 - cmd: python -m pip install --no-deps "."
 - cmd: python -m pip install -r requirements.txt
-- cmd: python -m pip install "pytest>=6"
+- cmd: python -m pip install -r tests/requirements.txt
 
 test_script:
 # Create directory "tmp" for the generated pytest file.  Use Windows backslash.
