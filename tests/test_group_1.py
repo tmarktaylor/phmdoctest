@@ -4,6 +4,7 @@ import copy
 import os
 
 import pytest
+import yaml
 
 import phmdoctest
 import phmdoctest.cases
@@ -77,7 +78,7 @@ def test_requirements_file():
 
     Whitespace should not be significant.
     The config file parser returns a string for the key
-    "install_requires". The string has embedded newlines.
+    "install_requires". The key value string has embedded newlines.
     The string starts with a blank first line.
     The comment lines are removed from requirements.txt.
     All the blanks are removed from each line.
@@ -123,6 +124,42 @@ def test_doc_requirements_file():
 
     for package in packages:
         assert setup_versions[package] == doc_versions[package]
+
+
+def test_extras_requires_test_key():
+    """setup.cfg extras_require test key is up to date with tests/requirements.txt.
+
+    Only the test key is checked.
+    The key should have at least all the requirements from the
+    requirements file.  It can have more.
+    Whitespace should not be significant.
+    The config file parser returns a string for the key
+    The key value string has embedded newlines.
+    The string starts with a blank first line.
+    The comment lines are removed from tests/requirements.txt.
+    All the blanks are removed from each line.
+    """
+    config = configparser.ConfigParser()
+    config.read("setup.cfg")
+    config_lines = config["options.extras_require"]["test"].splitlines()
+    config_items = set(config_lines)
+    with open("tests/requirements.txt", "r", encoding="utf-8") as f:
+        text = f.read()
+    lines = text.splitlines()
+    lines = [line for line in lines if not line.startswith("#")]
+    requirements_lines = [line.replace(" ", "") for line in lines if line]
+    requirements_items = set(requirements_lines)
+    assert requirements_items.issubset(config_items)
+
+
+def test_readthedocs_python_version():
+    """The build docs Python version == workflow step Python version."""
+    rtd = yaml.safe_load(open(".readthedocs.yml", "r", encoding="utf-8"))
+    workflow = yaml.safe_load(open(".github/workflows/ci.yml", "r", encoding="utf-8"))
+    step = workflow["jobs"]["docs"]["steps"][1]
+    assert "Setup Python" in step["name"]
+    workflow_version = step["with"]["python-version"]
+    assert rtd["python"]["version"] == workflow_version
 
 
 def test_empty_output_block_report():
