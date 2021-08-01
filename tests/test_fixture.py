@@ -1,10 +1,10 @@
 """Tests for managenamespace fixture in fixture.py."""
+import pprint
 import sys
 
 import pytest
 
 from phmdoctest.fixture import managenamespace
-import verify
 
 
 # Note:
@@ -20,7 +20,7 @@ import verify
 # 2. namespace_names.add('bogus')    # add this line above the 2nd raise.
 
 
-def test_managenamespace_outfile():
+def test_managenamespace_outfile(example_tester):
     """Show that managenamespace.md generates test_managenamespace.py."""
 
     # Generate an outfile from tests/managenamespace.md and
@@ -34,7 +34,7 @@ def test_managenamespace_outfile():
     # and import sys in the example code is needed to test
     # that line of code.
     command = "phmdoctest tests/managenamespace.md --outfile discarded.py"
-    _ = verify.one_example(
+    _ = example_tester(
         command, want_file_name="tests/test_managenamespace.py", pytest_options=None
     )
 
@@ -77,10 +77,13 @@ def test_update_item_removals(managenamespace):
 
 def test_check_attribute_name_asserts(managenamespace):
     """Update asserts if an item is in the original module namespace."""
-    items = {"verify": None}
+    # This test requires import pprint at the top of this file so that
+    # the update operation below will attempt to replace the pprint
+    # name in the module.
+    items = {"pprint": None}
     with pytest.raises(AttributeError) as exc_info:
         managenamespace(operation="update", additions=items)
-    want = "phmdoctest- Not allowed to replace module level name verify because"
+    want = "phmdoctest- Not allowed to replace module level name pprint because"
     assert want in str(exc_info.value)
 
 

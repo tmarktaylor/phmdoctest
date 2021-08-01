@@ -12,7 +12,6 @@ from phmdoctest.fenced import Role
 import phmdoctest.main
 import phmdoctest.simulator
 import phmdoctest.tool
-import verify
 
 
 # Caution:
@@ -162,9 +161,9 @@ def test_readthedocs_python_version():
     assert rtd["python"]["version"] == workflow_version
 
 
-def test_empty_output_block_report():
+def test_empty_output_block_report(example_tester, checker):
     """Empty output block get del'd."""
-    simulator_status = verify.one_example(
+    simulator_status = example_tester(
         "phmdoctest tests/empty_output_block.md" " --report --outfile discarded.py",
         want_file_name=None,
         pytest_options=["--doctest-modules", "-v"],
@@ -174,12 +173,12 @@ def test_empty_output_block_report():
     stdout = simulator_status.runner_status.stdout
     with open("tests/empty_output_report.txt", "r", encoding="utf-8") as f:
         want = f.read()
-    verify.a_and_b_are_the_same(a=want, b=stdout)
+    checker(a=want, b=stdout)
 
 
-def test_empty_code_block_report():
+def test_empty_code_block_report(example_tester, checker):
     """Empty code block and associated output block get del'd."""
-    simulator_status = verify.one_example(
+    simulator_status = example_tester(
         "phmdoctest tests/empty_code_block.md" " --report --outfile discarded.py",
         want_file_name=None,
         pytest_options=["--doctest-modules", "-v"],
@@ -189,12 +188,12 @@ def test_empty_code_block_report():
     stdout = simulator_status.runner_status.stdout
     with open("tests/empty_code_report.txt", "r", encoding="utf-8") as f:
         want = f.read()
-    verify.a_and_b_are_the_same(a=want, b=stdout)
+    checker(a=want, b=stdout)
 
 
-def test_no_markdown_fenced_code_blocks():
+def test_no_markdown_fenced_code_blocks(example_tester):
     """Show --report works when there is nothing to report."""
-    simulator_status = verify.one_example(
+    simulator_status = example_tester(
         "phmdoctest tests/no_fenced_code_blocks.md" " --report --outfile discarded.py",
         want_file_name=None,
         pytest_options=["--doctest-modules", "-v"],
@@ -248,34 +247,12 @@ def test_skip_same_block_twice():
     assert simulator_status.pytest_exit_code == 0
 
 
-def test_pytest_really_fails():
-    """Make sure pytest fails due to incorrect expected output in the .md.
-
-    Generate a pytest that will assert.
-    """
-    simulator_status = verify.one_example(
-        "phmdoctest tests/unexpected_output.md --outfile discarded.py",
-        want_file_name=None,
-        pytest_options=["--doctest-modules", "-v"],
-        junit_family=verify.JUNIT_FAMILY,
-    )
-    assert simulator_status.pytest_exit_code == 1
-    # Look at the returned JUnit XML to see that the test failed at the
-    # point and for the reason we expected.
-    # Note that the parsed XML values are all strings.
-    suite, fails = phmdoctest.tool.extract_testsuite(simulator_status.junit_xml)
-    assert suite.attrib["tests"] == "1"
-    assert suite.attrib["errors"] == "0"
-    assert suite.attrib["failures"] == "1"
-    assert fails[0].attrib["name"] == "test_code_4_output_17"
-
-
-def test_pytest_session_fails():
+def test_pytest_session_fails(example_tester):
     """Make sure pytest fails due to incorrect session output in the .md file.
 
     Generate a pytest that fails pytest.
     """
-    simulator_status = verify.one_example(
+    simulator_status = example_tester(
         "phmdoctest tests/bad_session_output.md --outfile discarded.py",
         want_file_name=None,
         pytest_options=["--doctest-modules", "-v"],
@@ -284,9 +261,9 @@ def test_pytest_session_fails():
 
 
 @pytest.mark.skipif(skip_selected_tests, reason="added separately to test suite")
-def test_project_md():
+def test_project_md(example_tester):
     """Make sure that project.md generates a file that passes pytest."""
-    simulator_status = verify.one_example(
+    simulator_status = example_tester(
         "phmdoctest project.md --outfile discarded.py",
         want_file_name=None,
         pytest_options=["--doctest-modules", "-v"],
@@ -295,9 +272,9 @@ def test_project_md():
     assert simulator_status.pytest_exit_code == 0
 
 
-def test_example2_report():
+def test_example2_report(example_tester, checker):
     """Check example2_report.txt."""
-    simulator_status = verify.one_example(
+    simulator_status = example_tester(
         'phmdoctest doc/example2.md --skip "Python 3.7" --skip LAST --report'
         " --outfile discarded.py",
         want_file_name=None,
@@ -308,15 +285,15 @@ def test_example2_report():
     stdout = simulator_status.runner_status.stdout
     with open("tests/example2_report.txt", "r", encoding="utf-8") as f:
         want = f.read()
-    verify.a_and_b_are_the_same(a=want, b=stdout)
+    checker(a=want, b=stdout)
 
 
-def test_setup_with_inline():
+def test_setup_with_inline(example_tester):
     """Do inline annotations in setup and teardown blocks."""
     command = (
         "phmdoctest tests/setup_with_inline.md -u FIRST -d LAST --outfile discarded.py"
     )
-    simulator_status = verify.one_example(
+    simulator_status = example_tester(
         well_formed_command=command,
         want_file_name="tests/test_setup_with_inline.py",
         pytest_options=["--doctest-modules", "-v"],
@@ -330,7 +307,6 @@ def test_blanklines_in_output():
     simulator_status = phmdoctest.simulator.run_and_pytest(
         well_formed_command=command,
         pytest_options=["--doctest-modules", "-v"],
-        junit_family=verify.JUNIT_FAMILY,
     )
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0

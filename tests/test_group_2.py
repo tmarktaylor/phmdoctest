@@ -3,7 +3,6 @@ import phmdoctest
 import phmdoctest.cases
 import phmdoctest.main
 import phmdoctest.simulator
-import verify
 
 
 def test_skip_first():
@@ -144,7 +143,7 @@ def test_multiple_skips_report():
     assert "len           44" in stdout
 
 
-def test_one_skip_many_matches():
+def test_one_skip_many_matches(checker):
     """Every block matches the skip pattern presenting multi-line report."""
     command = "phmdoctest tests/twentysix_session_blocks.md" ' --skip=">>>" --report'
     simulator_status = phmdoctest.simulator.run_and_pytest(
@@ -156,7 +155,7 @@ def test_one_skip_many_matches():
 
     with open("tests/twentysix_report.txt", "r", encoding="utf-8") as f:
         want = f.read()
-    verify.a_and_b_are_the_same(want, stdout)
+    checker(want, stdout)
 
 
 def test_no_output_blocks():

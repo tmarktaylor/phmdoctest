@@ -2,7 +2,9 @@
 import pytest
 
 import phmdoctest.tool
-import verify
+
+
+JUNIT_FAMILY = "xunit2"  # Pytest output format for JUnit XML file.
 
 
 @pytest.mark.parametrize(
@@ -32,13 +34,13 @@ def test_chooser_did_not_find():
     assert contents == ""
 
 
-def test_no_fails_junit_xml():
+def test_no_fails_junit_xml(example_tester):
     """Generate JUnit XML from pytest with no failures."""
-    simulator_status = verify.one_example(
+    simulator_status = example_tester(
         "phmdoctest project.md --outfile discarded.py",
         want_file_name=None,
         pytest_options=["--doctest-modules", "-v"],
-        junit_family=verify.JUNIT_FAMILY,
+        junit_family=JUNIT_FAMILY,
     )
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
@@ -50,3 +52,25 @@ def test_no_fails_junit_xml():
     assert suite.attrib["errors"] == "0"
     assert suite.attrib["failures"] == "0"
     assert len(fails) == 0
+
+
+def test_pytest_really_fails(example_tester):
+    """Make sure pytest fails due to incorrect expected output in the .md.
+
+    Generate a pytest that will assert.
+    """
+    simulator_status = example_tester(
+        "phmdoctest tests/unexpected_output.md --outfile discarded.py",
+        want_file_name=None,
+        pytest_options=["--doctest-modules", "-v"],
+        junit_family=JUNIT_FAMILY,
+    )
+    assert simulator_status.pytest_exit_code == 1
+    # Look at the returned JUnit XML to see that the test failed at the
+    # point and for the reason we expected.
+    # Note that the parsed XML values are all strings.
+    suite, fails = phmdoctest.tool.extract_testsuite(simulator_status.junit_xml)
+    assert suite.attrib["tests"] == "1"
+    assert suite.attrib["errors"] == "0"
+    assert suite.attrib["failures"] == "1"
+    assert fails[0].attrib["name"] == "test_code_4_output_17"

@@ -6,7 +6,6 @@ import phmdoctest
 import phmdoctest.cases
 import phmdoctest.main
 import phmdoctest.simulator
-import verify
 
 
 def test_missing_setup_for_setup_doctest():
@@ -320,7 +319,7 @@ def test_no_code_blocks():
     assert "def test_nothing_passes()" in simulator_status.outfile
 
 
-def test_empty_code_blocks_report():
+def test_empty_code_blocks_report(checker):
     """Report counts empty code and output blocks."""
     command = "phmdoctest tests/empty_code_block.md --report"
     simulator_status = phmdoctest.simulator.run_and_pytest(
@@ -331,7 +330,7 @@ def test_empty_code_blocks_report():
     stdout = simulator_status.runner_status.stdout
     with open("tests/empty_code_report.txt", "r", encoding="utf-8") as f:
         want = f.read()
-    verify.a_and_b_are_the_same(want, stdout)
+    checker(want, stdout)
 
 
 def test_missing_markdown_file():

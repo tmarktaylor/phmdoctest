@@ -3,7 +3,6 @@ import ast
 import pytest
 
 import phmdoctest.inline
-import verify
 
 
 def test_starts_with_comment():
@@ -77,7 +76,7 @@ def test_is_empty_comment():
 # Note: The code examples should conform to the Black code style.
 # There should be at least 2 spaces before the inline "#".
 # There should be 1 space after a start of line # character.
-def test_omit_one_line():
+def test_omit_one_line(checker):
     code = """\
 def myfunc():
     import math
@@ -96,7 +95,7 @@ def myfunc():
 
     got, num_changed_sections = phmdoctest.inline.apply_inline_commands(code)
     assert num_changed_sections == 1
-    verify.a_and_b_are_the_same(want, got)
+    checker(want, got)
     # Make sure the example code and expected result are legal Python.
     # Be aware that this test case will be run on all Python versions
     # supported by phmdoctest.
@@ -104,7 +103,7 @@ def myfunc():
     ast.parse(want)
 
 
-def test_pass_on_last_line():
+def test_pass_on_last_line(checker):
     code = """\
 def myfunc():
     import math
@@ -123,12 +122,12 @@ def myfunc():
 
     got, num_changed_sections = phmdoctest.inline.apply_inline_commands(code)
     assert num_changed_sections == 1
-    verify.a_and_b_are_the_same(want, got)
+    checker(want, got)
     ast.parse(code)
     ast.parse(want)
 
 
-def test_omit_line_before_blank():
+def test_omit_line_before_blank(checker):
     code = """\
 def myfunc():
     import math
@@ -163,12 +162,12 @@ def myfunc():
 
     got, num_changed_sections = phmdoctest.inline.apply_inline_commands(code)
     assert num_changed_sections == 1
-    verify.a_and_b_are_the_same(want, got)
+    checker(want, got)
     ast.parse(code)
     ast.parse(want)
 
 
-def test_omit_if_at_bottom():
+def test_omit_if_at_bottom(checker):
     code = """\
 def myfunc():
     import math
@@ -221,12 +220,12 @@ def myfunc():
 
     got, num_changed_sections = phmdoctest.inline.apply_inline_commands(code)
     assert num_changed_sections == 1
-    verify.a_and_b_are_the_same(want, got)
+    checker(want, got)
     ast.parse(code)
     ast.parse(want)
 
 
-def test_blankline_in_omitted_pass_ignored():
+def test_blankline_in_omitted_pass_ignored(checker):
     code = """\
 def myfunc():
     import math
@@ -279,12 +278,12 @@ if __name__ == "__main__":
 
     got, num_changed_sections = phmdoctest.inline.apply_inline_commands(code)
     assert num_changed_sections == 1
-    verify.a_and_b_are_the_same(want, got)
+    checker(want, got)
     ast.parse(code)
     ast.parse(want)
 
 
-def test_omit_to_end():
+def test_omit_to_end(checker):
     code = """\
 def myfunc():
     import math
@@ -323,12 +322,12 @@ def myfunc():
 
     got, num_changed_sections = phmdoctest.inline.apply_inline_commands(code)
     assert num_changed_sections == 1
-    verify.a_and_b_are_the_same(want, got)
+    checker(want, got)
     ast.parse(code)
     ast.parse(want)
 
 
-def test_pass_on_first_line():
+def test_pass_on_first_line(checker):
     code = """\
 def myfunc():
     import math    # phmdoctest:pass
@@ -381,12 +380,12 @@ if __name__ == "__main__":
 
     got, num_changed_sections = phmdoctest.inline.apply_inline_commands(code)
     assert num_changed_sections == 1
-    verify.a_and_b_are_the_same(want, got)
+    checker(want, got)
     ast.parse(code)
     ast.parse(want)
 
 
-def test_omit_on_elif():
+def test_omit_on_elif(checker):
     code = """\
 a = 50
 if a < 5:
@@ -413,7 +412,7 @@ else:
 
     got, num_changed_sections = phmdoctest.inline.apply_inline_commands(code)
     assert num_changed_sections == 1
-    verify.a_and_b_are_the_same(want, got)
+    checker(want, got)
     ast.parse(code)
     ast.parse(want)
 
@@ -432,7 +431,7 @@ def session_commented_elif_passes():
     """
 
 
-def test_pass_needed():
+def test_pass_needed(checker):
     code = """\
 a = 10
 if a < 5:
@@ -459,12 +458,12 @@ else:
 
     got, num_changed_sections = phmdoctest.inline.apply_inline_commands(code)
     assert num_changed_sections == 1
-    verify.a_and_b_are_the_same(want, got)
+    checker(want, got)
     ast.parse(code)
     ast.parse(want)
 
 
-def test_omit_else():
+def test_omit_else(checker):
     code = """\
 a = 10
 if a < 5:
@@ -483,12 +482,12 @@ if a < 5:
 
     got, num_changed_sections = phmdoctest.inline.apply_inline_commands(code)
     assert num_changed_sections == 1
-    verify.a_and_b_are_the_same(want, got)
+    checker(want, got)
     ast.parse(code)
     ast.parse(want)
 
 
-def test_omit_if_with_else():
+def test_omit_if_with_else(checker):
     """It is possible to break the code with a misplaced :omit.
     Here the if part is commented out.
     The commenting stops at the else since it is at the same
@@ -513,7 +512,7 @@ else:
 
     got, num_changed_sections = phmdoctest.inline.apply_inline_commands(code)
     assert num_changed_sections == 1
-    verify.a_and_b_are_the_same(want, got)
+    checker(want, got)
     ast.parse(code)
     with pytest.raises(SyntaxError):
         ast.parse(want)
@@ -573,7 +572,7 @@ def session_passes():
     """
 
 
-def test_no_inline_commands():
+def test_no_inline_commands(checker):
     code = """\
 def myfunc():
     import math
@@ -626,6 +625,6 @@ if __name__ == "__main__":
 
     got, num_changed_sections = phmdoctest.inline.apply_inline_commands(code)
     assert num_changed_sections == 0
-    verify.a_and_b_are_the_same(want, got)
+    checker(want, got)
     ast.parse(code)
     ast.parse(want)
