@@ -1,0 +1,7 @@
+flake8
+pep8-naming
+mypy
+typing
+check-manifest
+twine
+black
