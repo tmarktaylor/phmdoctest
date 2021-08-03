@@ -72,7 +72,7 @@ class TestSameVersions:
         self.verify_found_in_file(".github/workflows/deploy.yml", "\n        ref: v{}")
 
 
-def extract_items(text: str) -> set:
+def string_to_dependencies(text: str) -> set:
     """Return the set of pip dependencies from a multi-line string.
 
     Whitespace and empty lines are not significant.
@@ -83,19 +83,48 @@ def extract_items(text: str) -> set:
     collapsed_lines = [line.replace(" ", "") for line in lines if line]
     items = set(collapsed_lines)
     if "" in items:
-        items.remove("")    # empty string from blank lines
+        items.remove("")  # empty string from blank lines
     return items
 
 
-def test_requirements_file():
-    """setup.cfg install_requires == requirements.txt."""
+def setup_dependencies(section, option) -> set:
+    """Extract set of dependencies from setup.cfg section/option."""
     config = configparser.ConfigParser()
-    config.read("setup.cfg")
-    config_items = extract_items(config["options"]["install_requires"])
-    with open("requirements.txt", "r", encoding="utf-8") as f:
+    config.read("setup.cfg", encoding="utf-8")
+    text = config.get(section, option)
+    return string_to_dependencies(text)
+
+
+def file_dependencies(filename: str) -> set:
+    """Extract set of dependencies from a requirements.txt file."""
+    with open(filename, "r", encoding="utf-8") as f:
         text = f.read()
-    requirements_items = extract_items(text)
-    assert config_items == requirements_items
+    return string_to_dependencies(text)
+
+
+def test_install_requires():
+    """setup.cfg install_requires == requirements.txt."""
+    setup_values = setup_dependencies("options", "install_requires")
+    requirements_values = file_dependencies("requirements.txt")
+    assert setup_values == requirements_values
+
+
+def test_extras_require_test():
+    """setup.cfg extras_require|test key is up to date with tests/requirements.txt.
+
+    The test key should have at least all the requirements from the
+    requirements file.  It can have more.
+    """
+    setup_values = setup_dependencies("options.extras_require", "test")
+    requirements_values = file_dependencies("tests/requirements.txt")
+    assert requirements_values.issubset(setup_values)
+
+
+def test_extras_require_inspect():
+    """setup.cfg extras_require|inspect key == tests/requirements_inspect.txt."""
+    setup_values = setup_dependencies("options.extras_require", "inspect")
+    requirements_values = file_dependencies("tests/requirements_inspect.txt")
+    assert setup_values == requirements_values
 
 
 def test_doc_requirements_file():
@@ -127,32 +156,6 @@ def test_doc_requirements_file():
 
     for package in packages:
         assert setup_versions[package] == doc_versions[package]
-
-
-def test_extras_requires_test_key():
-    """setup.cfg extras_require test key is up to date with tests/requirements.txt.
-
-    The test key should have at least all the requirements from the
-    requirements file.  It can have more.
-    """
-    config = configparser.ConfigParser()
-    config.read("setup.cfg")
-    config_items = extract_items(config["options.extras_require"]["test"])
-    with open("tests/requirements.txt", "r", encoding="utf-8") as f:
-        text = f.read()
-    requirements_items = extract_items(text)
-    assert requirements_items.issubset(config_items)
-
-
-def test_extras_requires_inspect_key():
-    """setup.cfg extras_require inspect key == tests/requirements_inspect.txt."""
-    config = configparser.ConfigParser()
-    config.read("setup.cfg")
-    config_items = extract_items(config["options.extras_require"]["inspect"])
-    with open("tests/requirements_inspect.txt", "r", encoding="utf-8") as f:
-        text = f.read()
-    requirements_items = extract_items(text)
-    assert config_items == requirements_items
 
 
 def test_readthedocs_python_version():
