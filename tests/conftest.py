@@ -12,6 +12,8 @@ import phmdoctest.simulator
 
 @pytest.fixture(scope="session")
 def checker():
+    """Return Callable(str, str) that runs difflib.ndiff. Multi-line str's ok."""
+
     def a_and_b_are_the_same(a, b):
         """Compare function with assert and line by line ndiff stdout."""
         a_lines = a.splitlines()
@@ -28,6 +30,8 @@ def checker():
 
 @pytest.fixture(scope="session")
 def example_tester(checker):
+    """Return Callable that runs a phmdoctest command and checks the --outfile."""
+
     def one_example(
         well_formed_command, want_file_name=None, pytest_options=None, junit_family=""
     ):
