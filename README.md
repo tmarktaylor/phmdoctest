@@ -890,7 +890,7 @@ Same as the setup section plus:
   a session.
 - Names assigned by the setup code block are globally visible
   to the entire test suite via the Pytest doctest_namespace
-  fixture.  See hint near the end [Hints](#Hints).
+  fixture.  See hint near the end [Hints](#hints).
 
 ### Pytest live logging demo
 The live logging demos reveals pytest execution contexts. 
