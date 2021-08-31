@@ -20,14 +20,14 @@ sys.path.insert(0, py_sources_path)
 
 # This file is placed in the project root directory rather than /doc.
 
-# Configuration for Sphinx 1.8.5
+# Configuration for Sphinx
 
 project = "phmdoctest"
 copyright = "2021, Mark Taylor"
 author = "Mark Taylor"
 
 # The full version, including alpha/beta/rc tags
-release = "1.2.1"
+release = "1.3.0"
 
 
 # -- General configuration ---------------------------------------------------

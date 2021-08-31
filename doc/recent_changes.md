@@ -1,6 +1,7 @@
 # Recent changes
-1.x.x - 2021-TBD
+1.3.0 - 2021-TBD
 
+- Add markdown_tester fixture.  Add main.testfile(). 
 - Restored tox.ini since 1.2.1, no longer used in test suite.
 
 1.2.1 - 2021-07-07

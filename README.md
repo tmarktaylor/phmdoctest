@@ -1,4 +1,4 @@
-# phmdoctest 1.2.1
+# phmdoctest 1.3.0
 
 ## Introduction
 
