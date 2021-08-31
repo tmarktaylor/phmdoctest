@@ -122,7 +122,7 @@ def test_skip_matches_start_of_contents():
         '  --skip="words =" --report --outfile discarded.py'
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
-        well_formed_command=command, pytest_options=["--doctest-modules", "-vv"]
+        well_formed_command=command, pytest_options=["--doctest-modules", "-v"]
     )
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
