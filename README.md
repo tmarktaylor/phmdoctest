@@ -1022,7 +1022,7 @@ assert simulator_status.pytest_exit_code == 0
 - In CI scripts the following shell command will create the temporary
   directory **tmp** in the **tests** folder on Windows, Linux, and macOS.
   ```bash
-  python -c "from pathlib import Path; d = Path('tests') / 'tmp'; d.mkdir()"
+  python -c "from pathlib import Path; d = Path('tests') / 'tmp'; d.mkdir(mode=0o600)"
   ```
 - It is easy to use --output by mistake instead of `--outfile`.
 - If Python code block has no output, put assert statements in the code.
