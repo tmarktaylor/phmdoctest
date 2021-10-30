@@ -1083,6 +1083,15 @@ assert simulator_status.pytest_exit_code == 0
   just the phmdoctest test.
 - The module **phmdoctest.fixture** is imported at pytest time
   to support setup, teardown, share-names, and clear-names features.
+- The phmdoctest Markdown parser finds fenced code blocks enclosed by
+  html `<details>` and `</details>` tags.
+  The tags may require a preceding and trailing blank line.
+- Try piping phmdoctest standard output into PYPI Pygments to
+  colorize the generated test file.
+  ```shell
+  python -m phmdoctest project.md --outfile - | pygmentize
+  ```
+    
 - If the --outfile is written into a folder that pre-exists in the
   repository, consider adding the outfile name to .gitignore. If
   the outfile name later changes, the change will be needed in
@@ -1124,6 +1133,7 @@ assert simulator_status.pytest_exit_code == 0
 - sybil
 - doxec
 - egtest
+- pytest-phmdoctest
 - pytest-codeblocks
 
 [3]: https://github.github.com/gfm/#fenced-code-blocks
