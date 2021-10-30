@@ -37,7 +37,7 @@ user='eric_idle'
     _phm_compare_exact(a=_phm_expected_str, b=capsys.readouterr().out)
 
 
-def test_print_coffee():
+def doctest_print_coffee():
     r"""
     >>> print("coffee")
     coffee
