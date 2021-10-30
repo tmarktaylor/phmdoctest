@@ -81,7 +81,7 @@ def labeled_fenced_code_blocks(markdown_filename: str) -> List[LabeledFCB]:
           starts.
         - contents is the fenced code block contents as a string.
     """
-    with open(markdown_filename, encoding="utf-8") as fp:
+    with open(markdown_filename, "r", encoding="utf-8") as fp:
         nodes = fenced_block_nodes(fp)
         labeled_blocks = []
         for node in nodes:
@@ -109,7 +109,7 @@ def fenced_code_blocks(markdown_filename: str) -> List[str]:
         List of strings, one for the contents of each Markdown
         fenced code block.
     """
-    with open(markdown_filename, encoding="utf-8") as fp:
+    with open(markdown_filename, "r", encoding="utf-8") as fp:
         nodes = fenced_block_nodes(fp)
         return [node.literal for node in nodes]
 
