@@ -1,4 +1,6 @@
 """Create Markdown wrappers around the project's example .py files."""
+from pathlib import Path
+
 top = "# <put filename here>\n```python\n"
 
 bottom = """```
@@ -23,31 +25,31 @@ It is included in the documentation as an example text file.
 
 def nag():
     print("If a new file...")
-    print("Consider adding a test case to test_wrapped_examples.py.")
+    print("Consider adding a test case to test_wrapped_snippets.py.")
     print("And add to examples.rst")
     print()
 
 
 def prompt_to_write_file(outfile_name, text):
     if input("ok to write " + outfile_name + " [Y/n]? >> ") == "Y":
-        with open(outfile_name, "w", encoding="utf-8") as f:
-            print("writing", outfile_name)
-            f.write(text)
+        print("writing", outfile_name)
+        _ = Path("outfile_name").write_text(text, encoding="utf-8")
 
 
-def wrap_one_file(name):
+def wrap_one_file(name, outname=None):
     text = top.replace("<put filename here>", name)
-    with open(name, "r", encoding="utf-8") as f:
-        text += f.read()
+    text += Path(name).read_text(encoding="utf-8")
     text += bottom
-    outfile_name = name.replace(".py", "_py.md")
+    if outname is not None:
+        outfile_name = outname
+    else:
+        outfile_name = name.replace(".py", "_py.md")
     prompt_to_write_file(outfile_name, text)
 
 
 def wrap_raw_markdown(name):
     text = raw_top.replace("<put filename here>", name)
-    with open(name, "r", encoding="utf-8") as f:
-        text += f.read()
+    text += Path(name).read_text(encoding="utf-8")
     text += raw_bottom
     outfile_name = name.replace(".md", "_raw.md")
     prompt_to_write_file(outfile_name, text)
@@ -55,8 +57,7 @@ def wrap_raw_markdown(name):
 
 def wrap_text(name):
     text = raw_top.replace("<put filename here>", name)
-    with open(name, "r", encoding="utf-8") as f:
-        text += f.read()
+    text += Path(name).read_text(encoding="utf-8")
     text += text_bottom
     outfile_name = name.replace(".txt", "_txt.md")
     prompt_to_write_file(outfile_name, text)
@@ -64,7 +65,7 @@ def wrap_text(name):
 
 def main():
     nag()
-    # also add a test case to test_wrapped_examples.py.
+    # also add a test case to test_wrapped_snippets.py.
     wrap_one_file("doc/test_example2.py")
     wrap_one_file("doc/test_setup.py")
     wrap_one_file("doc/test_setup_doctest.py")
@@ -82,6 +83,7 @@ def main():
     wrap_text("doc/directive3_report.txt")
 
     wrap_one_file("doc/test_inline_example.py")
+    wrap_one_file("tests/project_test.py", outname="doc/project_test_py.md")
 
 
 if __name__ == "__main__":
