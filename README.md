@@ -4,15 +4,15 @@
 
 Python syntax highlighted Markdown doctest
 
-Command line program to test Python syntax highlighted code
-examples in Markdown.
+Command line program and Python library to test Python syntax
+highlighted code examples in Markdown.
 
-- Writes a pytest test file that tests Python examples in
+- Creates a [pytest][15] Python module that tests Python examples in
   README and other Markdown files.
 - Reads these from Markdown fenced code blocks:
   - Python interactive sessions described by [doctest][4].
   - Python source code and expected terminal output.
-- The test cases get run later by calling pytest.  
+- The test cases get run later by running pytest.  
 - Simple use case is possible with no Markdown edits at all.
 - More features selected by adding HTML comment **directives**
   to the Markdown.
@@ -25,12 +25,17 @@ examples in Markdown.
 - Select Python source code blocks as setup and teardown code.
 - Setup applies to code blocks and optionally to session blocks.
 - An included Python library: [Latest Development tools API][10].
-  - functions to read fenced code blocks from Markdown. *(tool.py)*
-  - runs phmdoctest and can run pytest too. *(simulator.py)*
-  - extract testsuite tree and list of failing trees from JUnit XML. *(tool.py)*
+  - Python function returns test file in a string. *(testfile() in main.py)*
+  - Two pytest fixtures. *(tester.py)*
+    1) Runs phmdoctest.main.testfile(). Needed when using fixture 2).
+    2) Run a pytest file with pytest's pytester in its isolated environment.  
+  - Runs phmdoctest and can run pytest too. *(simulator.py)*
+  - Functions to read fenced code blocks from Markdown. *(tool.py)*
+  - Extract testsuite tree and list of failing trees from JUnit XML. *(tool.py)*
+- Available soon as a pytest plugin.  
   
 
-### master branch status
+### default branch status
 [![](https://img.shields.io/pypi/l/phmdoctest.svg)](https://github.com/tmarktaylor/phmdoctest/blob/master/LICENSE.txt)
 [![](https://img.shields.io/pypi/v/phmdoctest.svg)](https://pypi.python.org/pypi/phmdoctest)
 [![](https://img.shields.io/pypi/pyversions/phmdoctest.svg)](https://pypi.python.org/pypi/phmdoctest)
@@ -52,9 +57,9 @@ examples in Markdown.
 
 [Introduction](#introduction) |
 [Installation](#installation) |
-[Sample Usage](#sample-usage) |
+[Sample usage](#sample-usage) |
+[Sample Usage with HTML comment directives](#sample-usage-with-html-comment-directives) |
 [CI usage](#ci-usage) |
-[Sample usage without directives](#sample-usage-without-directives) |
 [--report](#report-option) |
 [Identifying blocks](#identifying-blocks) |
 [Directives](#directives) |
@@ -83,7 +88,9 @@ examples in Markdown.
 [Send outfile to stdout](#send-outfile-to-stdout) |
 [Usage](#usage) |
 [Run as a Python module](#run-as-a-python-module) |
-[Call from Python](#call-from-python) |
+[Python API](#python-api) |
+[pytest fixtures](#pytest-fixtures) |
+[Simulate command line](#simulate-command-line) |
 [Hints](#hints) |
 [Directive hints](#directive-hints) |
 [Related projects](#related-projects)
@@ -100,83 +107,7 @@ It is advisable to install in a virtual environment.
 
     python -m pip install phmdoctest
 
-## Sample Usage
-
-Given the Markdown file shown in raw form here...
-<!--phmdoctest-label directive-example-raw-->
-~~~
-<!--phmdoctest-mark.skip-->
-<!--phmdoctest-label test_example-->
-```python
-print("Hello World!")
-```
-```
-incorrect expected output
-```
-~~~
-
-the command...
-<!--phmdoctest-label directive-example-command-->
-```
-phmdoctest tests/one_mark_skip.md --outfile test_one_mark_skip.py
-```
-
-creates the python source code file shown here...
-<!--phmdoctest-label directive-example-outfile-->
-```python
-"""pytest file built from tests/one_mark_skip.md"""
-import pytest
-
-from phmdoctest.functions import _phm_compare_exact
-
-
-@pytest.mark.skip()
-def test_example(capsys):
-    print("Hello World!")
-
-    _phm_expected_str = """\
-incorrect expected output
-"""
-    _phm_compare_exact(a=_phm_expected_str, b=capsys.readouterr().out)
-```
-
-Run the --outfile with pytest...
-```
-$ pytest -vv test_one_mark_skip.py
-
-test_one_mark_skip.py::test_example SKIPPED 
-```
-
-- The HTML comments in the Markdown are phmdoctest **directives**.
-- The **mark.skip** directive adds the @pytest.mark.skip() line.
-- The label directive names the test case function.
-- List of  [Directives](#directives)
-- Directives are optional. 
-- Markdown edits are optional.
-
-## CI usage
-
-Test Python examples in README.md in Continuous Integration scripts.
-In this snippet for Linux the pytest test suite is in the
-**tests** folder.
-
-<!--phmdoctest-label ci-example-->
-```bash
-mkdir tests/tmp
-phmdoctest README.md --report --outfile tests/tmp/test_readme.py
-pytest --doctest-modules -vv tests
-```
-
-This console shows testing Python examples in project.md. 
-Look for the tmp tests at the bottom. [Windows Usage on Appveyor][13]. 
-
-See this excerpt from ci.yml [Actions usage example](doc/actions_usage.md).
-It runs on Windows, Linux, and macOS. Please find the phmdoctest command
-at the bottom. 
-
-No changes to README.md are needed [here, look in the last job log][14].
-
-## Sample usage without directives
+## Sample usage
 
 Given the Markdown file [example1.md](doc/example1.md)
 shown in raw form here...
@@ -286,6 +217,82 @@ One test case function gets generated for each:
 
 The `--report` option below shows the blocks discovered and
 how they are tested.
+
+## Sample Usage with HTML comment directives
+
+Given the Markdown file shown in raw form here...
+<!--phmdoctest-label directive-example-raw-->
+~~~
+<!--phmdoctest-mark.skip-->
+<!--phmdoctest-label test_example-->
+```python
+print("Hello World!")
+```
+```
+incorrect expected output
+```
+~~~
+
+the command...
+<!--phmdoctest-label directive-example-command-->
+```
+phmdoctest tests/one_mark_skip.md --outfile test_one_mark_skip.py
+```
+
+creates the python source code file shown here...
+<!--phmdoctest-label directive-example-outfile-->
+```python
+"""pytest file built from tests/one_mark_skip.md"""
+import pytest
+
+from phmdoctest.functions import _phm_compare_exact
+
+
+@pytest.mark.skip()
+def test_example(capsys):
+    print("Hello World!")
+
+    _phm_expected_str = """\
+incorrect expected output
+"""
+    _phm_compare_exact(a=_phm_expected_str, b=capsys.readouterr().out)
+```
+
+Run the --outfile with pytest...
+```
+$ pytest -vv test_one_mark_skip.py
+
+test_one_mark_skip.py::test_example SKIPPED 
+```
+
+- The HTML comments in the Markdown are phmdoctest **directives**.
+- The **mark.skip** directive adds the @pytest.mark.skip() line.
+- The label directive names the test case function.
+- List of  [Directives](#directives)
+- Directives are optional. 
+- Markdown edits are optional.
+
+## CI usage
+
+Test Python examples in README.md in Continuous Integration scripts.
+In this snippet for Linux the pytest test suite is in the
+**tests** folder.
+
+<!--phmdoctest-label ci-example-->
+```bash
+mkdir tests/tmp
+phmdoctest README.md --report --outfile tests/tmp/test_readme.py
+pytest --doctest-modules -vv tests
+```
+
+This console shows testing Python examples in project.md. 
+Look for the tmp tests at the bottom. [Windows Usage on Appveyor][13]. 
+
+See this excerpt from ci.yml [Actions usage example](doc/actions_usage.md).
+It runs on Windows, Linux, and macOS. Please find the phmdoctest command
+at the bottom. 
+
+No changes to README.md are needed [here, look in the last job log][14].
    
 ## report option
 
@@ -826,7 +833,7 @@ creates the test file
 
 ## Setup for sessions
 The pytest option `--doctest-modules` is required to 
-run doctest on sessions.  Pytest runs doctests in
+run doctest on sessions.  pytest runs doctests in
 a separate context.
 For more on this see [Execution context](#execution-context) below.
 
@@ -850,7 +857,7 @@ It creates the test file
 
 When run without `--setup`
 
-- Pytest and doctest determine the order of test case execution.
+- pytest and doctest determine the order of test case execution.
 - phmdoctest assumes test code and session execution is in file order.
 - Test case order is not significant.
 - Code and expected output run within a function body of a pytest test case.
@@ -889,18 +896,16 @@ Same as the setup section plus:
 - A session can't affect a code block, and a code block can't affect
   a session.
 - Names assigned by the setup code block are globally visible
-  to the entire test suite via the Pytest doctest_namespace
+  to the entire test suite via the pytest doctest_namespace
   fixture.  See hint near the end [Hints](#hints).
 
-### Pytest live logging demo
+### pytest live logging demo
 The live logging demos reveals pytest execution contexts. 
-Pytest Live Logs show the
+pytest Live Logs show the
 execution order of setup_module(), test cases, sessions, and
 teardown_module().
-The demo output is [Build][12] in the Job Log tab.
-
-There are 2 more demo invocations in the workflow action
-called Pytest Live Log Demo.  
+There are 2 demo invocations in the workflow action
+called pytest Live Log Demo.  GitHub login required.
 
 
 ## Send outfile to stdout
@@ -987,15 +992,45 @@ To run phmdoctest from the command line:
 
 `python -m phmdoctest doc/example2.md --report`
 
-## Call from Python
+ 
+## Python API
 
-To call phmdoctest from within a Python script
-`phmdoctest.simulator` offers the function `run_and_pytest()`.
-It simulates running phmdoctest from the command line.
-- creates the --outfile in a temporary directory
+Call **main.testfile()** to generate a pytest file in memory.
+Please see the Python API [here][10].
+The example generates a pytest file from doc/setup.md and
+compares the result to doc/test_setup.py.
+<!--phmdoctest-label main-testfile-->
+```python
+from pathlib import Path
+import phmdoctest.main
+
+generated_testfile = phmdoctest.main.testfile(
+    "doc/setup.md",
+    setup="FIRST",
+    teardown="LAST",
+)
+expected = Path("doc/test_setup.py").read_text(encoding="utf-8")
+assert expected == generated_testfile
+```
+
+## pytest fixtures
+
+Use the first pytest fixture to generate a test file.
+The test file is temporary. The second fixture runs 
+the test file in the pytester environment. 
+[Fixture API][10]. | [Example](doc/project_test_py.md).
+See more uses in tests/test_examples.py.
+
+## Simulate command line
+
+To simulate a command line call to phmdoctest from
+within a Python script `phmdoctest.simulator` offers the
+function `run_and_pytest()`.
+- it creates the --outfile in a temporary directory
 - optionally runs pytest on the outfile
 - pytest can return a JUnit XML report
-- useful during development to prevent use of stale --outfile
+- useful during development to validate the command line
+  and prevent use of a stale --outfile
 
 Please see the [Latest Development tools API section][10] or
 the docstring of the function `run_and_pytest()` in the file `simulator.py.` 
@@ -1043,7 +1078,7 @@ assert simulator_status.pytest_exit_code == 0
   start the value with `test_`.
 - With the `--setup-doctest` option, names assigned by the setup code
   block are globally visible to the entire test suite.
-  This is due to the scope of the Pytest doctest_namespace
+  This is due to the scope of the pytest doctest_namespace
   fixture.  Try using a separate pytest command to test
   just the phmdoctest test.
 - The module **phmdoctest.fixture** is imported at pytest time
@@ -1099,6 +1134,6 @@ assert simulator_status.pytest_exit_code == 0
 [9]: https://commonmark.org
 [4]: https://docs.python.org/3/library/doctest.html
 [6]: https://pypi.python.org/project/coverage
-[12]: https://travis-ci.com/tmarktaylor/phmdoctest
 [13]: https://ci.appveyor.com/project/tmarktaylor/phmdoctest
 [14]: https://travis-ci.org/tmarktaylor/monotable
+[15]: https://docs.pytest.org/en/stable
