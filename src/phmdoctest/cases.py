@@ -311,13 +311,15 @@ def build_test_cases(args: Args, blocks: List[FencedBlock]) -> str:
     # Sequence number to order sessions.
     session_counter = itertools.count(1)
 
-    # collect the generated code in a single string
-    # repr escapes back slashes from win filesystem paths
-    # so it can be part of the generated test module docstring.
-    quoted_markdown_path = repr(click.format_filename(args.markdown_file))
-    markdown_path = quoted_markdown_path[1:-1]
-    docstring_text = "pytest file built from {}".format(markdown_path)
-    generated = StringIO()
+    # create the generated test file docstring.
+    built_from = args.built_from
+    if not built_from:
+        # repr escapes back slashes from win filesystem paths
+        # so it can be part of the generated test module docstring.
+        quoted_path = repr(click.format_filename(args.markdown_file))
+        built_from = quoted_path[1:-1]
+    docstring_text = "pytest file built from {}".format(built_from)
+    generated = StringIO()  # collect the generated code in a single string
     generated.write('"""' + docstring_text + '"""\n')
 
     setup_block = get_block_with_role(blocks, Role.SETUP)

@@ -1,14 +1,18 @@
 # Recent changes
 1.3.0 - 2021-TBD
 
-- Add markdown_tester fixture.  Add main.testfile(). 
-- Restored tox.ini since 1.2.1, no longer used in test suite.
+- Add main.testfile().
+- Add testfile_creator and testfile_tester fixtures. 
+- Tox no longer used in test suite.
+- Drop Python 3.7 add Python 3.10.
+- Loosen doc dependencies.
 
 1.2.1 - 2021-07-07
 
 - Bugfix- #16, #15, Issue- Simulator subprocess failed on win venv.
 - Code Quality fixes: assert --> raise.
 - Make fenced code block info_strings compatible with GitHub pages.
+- Restored tox.ini.
 
 1.2.0 - 2021-06-09
 

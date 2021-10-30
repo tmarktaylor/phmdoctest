@@ -1,12 +1,37 @@
 .. toctree::
    :maxdepth: 2
 
-Development tools API
-~~~~~~~~~~~~~~~~~~~~~
+Development tools API for version 1.3.0
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-Read contents of Markdown fenced code blocks
-============================================
+Python API to generate a pytest file.
+=====================================
+.. module:: phmdoctest.main
+
+.. autofunction:: testfile
+
+
+Test with Pytest fixtures.
+==========================
+
+.. module:: phmdoctest.tester
+
+.. autofunction:: testfile_creator
+
+.. autofunction:: testfile_tester
+
+
+Simulate the command line.
+==========================
+
+.. module:: phmdoctest.simulator
+
+.. autofunction:: run_and_pytest
+
+
+Read contents of Markdown fenced code blocks.
+=============================================
 
 .. module:: phmdoctest.tool
 
@@ -21,15 +46,7 @@ Read contents of Markdown fenced code blocks
 .. autofunction:: fenced_block_nodes
 
 
-Get elements from test suite JUnit XML output
-=============================================
+Get elements from test suite JUnit XML output.
+==============================================
 
 .. autofunction:: extract_testsuite
-
-
-Test phmdoctest from within a python script
-===========================================
-
-.. module:: phmdoctest.simulator
-
-.. autofunction:: run_and_pytest

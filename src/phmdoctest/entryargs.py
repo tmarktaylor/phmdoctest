@@ -1,4 +1,4 @@
-"""Click processed command line arguments collected into a single type."""
+"""Click processed command line arguments and more."""
 
 from collections import namedtuple
 
@@ -13,6 +13,7 @@ Args = namedtuple(
         "setup",
         "teardown",
         "setup_doctest",
+        "built_from",
     ],
 )
 """Command line arguments with some renames."""
