@@ -1,6 +1,7 @@
 """pytest test cases for examples in fenced code blocks in README.md."""
 
 import inspect
+from pathlib import Path
 import re
 import textwrap
 
@@ -35,9 +36,8 @@ def example_code_checker(callable_function, example_string, checker_function):
 def test_directive_example_raw(checker):
     """README raw markdown is same as the disk file."""
     want = labeled.contents(label="directive-example-raw")
-    with open("tests/one_mark_skip.md", "r", encoding="utf-8") as fp:
-        got = fp.read()
-        checker(want, got)
+    got = Path("tests/one_mark_skip.md").read_text(encoding="utf-8")
+    checker(want, got)
 
 
 def test_directive_example(example_tester, checker):
@@ -73,8 +73,8 @@ def test_ci_example():
     fcb_lower_case = fcb.lower()
     fcb_lines = fcb_lower_case.splitlines()
     edited_lines_in_fcb = [line.replace("readme", "project") for line in fcb_lines]
-    with open(".github/workflows/install.yml", "r", encoding="utf-8") as fp:
-        lines_in_file = fp.read().splitlines()
+    whole_file = Path(".github/workflows/install.yml").read_text(encoding="utf-8")
+    lines_in_file = whole_file.splitlines()
     stripped_lines_in_file = [line.strip() for line in lines_in_file]
     assert len(edited_lines_in_fcb) == 3
     for line in edited_lines_in_fcb:
@@ -85,8 +85,7 @@ def test_actions_usage_md(checker):
     """Cut and paste from ci.yml to actions_usage.md is the same."""
     blocks = phmdoctest.tool.fenced_code_blocks("doc/actions_usage.md")
     got = blocks[0]
-    with open(".github/workflows/ci.yml", "r", encoding="utf-8") as f:
-        whole_file = f.read()
+    whole_file = Path(".github/workflows/ci.yml").read_text(encoding="utf-8")
     m = re.search(
         pattern=r"(jobs:.*\n)\n  coverage:", string=whole_file, flags=re.DOTALL
     )
@@ -97,9 +96,8 @@ def test_actions_usage_md(checker):
 def test_raw_example1_md(checker):
     """README raw markdown is same as file doc/example1.md."""
     want = labeled.contents(label="example1-raw")
-    with open("doc/example1.md", "r", encoding="utf-8") as fp:
-        got = fp.read()
-        checker(want, got)
+    got = Path("doc/example1.md").read_text(encoding="utf-8")
+    checker(want, got)
 
 
 def test_example1(example_tester, checker):
@@ -115,9 +113,8 @@ def test_example1(example_tester, checker):
     )
     # Make sure the copy of test_example1.py in README.md
     # is the same as the disk file.
-    with open("doc/test_example1.py", "r", encoding="utf-8") as fp:
-        got = fp.read()
-        checker(want, got)
+    got = Path("doc/test_example1.py").read_text(encoding="utf-8")
+    checker(want, got)
 
     # Run again and call pytest to make sure the file works with pytest.
     simulator_status = example_tester(
@@ -165,8 +162,7 @@ def test_fcb_chooser(capsys, checker):
     # 1. The .md shown in the fenced code block is the same
     #    as the file on disk.
     want = labeled.contents(label="my-markdown-file")
-    with open("doc/my_markdown_file.md", "r", encoding="utf-8") as fp:
-        got = fp.read()
+    got = Path("doc/my_markdown_file.md").read_text(encoding="utf-8")
     checker(want, got)
 
     # 2. The Python code example in the fenced code block is the same as
@@ -207,9 +203,7 @@ def test_directive1_example(example_tester, checker):
     _ = example_tester(
         directive_command, want_file_name="doc/test_directive1.py", pytest_options=None
     )
-
-    with open("doc/directive1_report.txt") as f:
-        want = f.read()
+    want = Path("doc/directive1_report.txt").read_text(encoding="utf-8")
     simulator_status = example_tester(
         report_command, want_file_name=None, pytest_options=None
     )
@@ -228,9 +222,7 @@ def test_directive2_example(example_tester, checker):
     _ = example_tester(
         directive_command, want_file_name="doc/test_directive2.py", pytest_options=None
     )
-
-    with open("doc/directive2_report.txt") as f:
-        want = f.read()
+    want = Path("doc/directive2_report.txt").read_text(encoding="utf-8")
     simulator_status = example_tester(
         report_command, want_file_name=None, pytest_options=None
     )
@@ -249,9 +241,7 @@ def test_directive3_example(example_tester, checker):
     _ = example_tester(
         directive_command, want_file_name="doc/test_directive3.py", pytest_options=None
     )
-
-    with open("doc/directive3_report.txt") as f:
-        want = f.read()
+    want = Path("doc/directive3_report.txt").read_text(encoding="utf-8")
     simulator_status = example_tester(
         report_command, want_file_name=None, pytest_options=None
     )
@@ -338,8 +328,7 @@ def test_outfile_to_stdout(example_tester, checker):
     simulator_status = example_tester(
         outfile_command1, want_file_name=None, pytest_options=None
     )
-    with open("doc/test_example2.py", "r", encoding="utf-8") as fp:
-        want = fp.read()
+    want = Path("doc/test_example2.py").read_text(encoding="utf-8")
     got1 = simulator_status.runner_status.stdout
     checker(want, got1)
 
@@ -375,10 +364,48 @@ def test_usage(checker):
     checker(want2, got3)
 
 
-# Developers: Changes here must be mirrored in a Markdown FCB in README.md.
+def test_testfile(checker):
+    """Assure the guts of the callable_function are same as in Markdown."""
+    example_code_checker(
+        callable_function=test_testfile_example_code,
+        example_string=labeled.contents(label="main-testfile"),
+        checker_function=checker,
+    )
+
+
 # Runnable version of example code in README.md.
-# The guts of this function are an exact copy of example in README.md.
-def simulator_example_code():
+# The guts of this function are an exact copy of the example
+# in README.md with label main-testfile.
+# Note that this file is collected and run by pytest.
+# Show main.testfile() usage. Verify correct file is generated.
+def test_testfile_example_code():
+    from pathlib import Path
+    import phmdoctest.main
+
+    generated_testfile = phmdoctest.main.testfile(
+        "doc/setup.md",
+        setup="FIRST",
+        teardown="LAST",
+    )
+    expected = Path("doc/test_setup.py").read_text(encoding="utf-8")
+    assert expected == generated_testfile
+
+
+def test_simulator(checker):
+    """Assure the guts of callable_function are same as in Markdown."""
+    example_code_checker(
+        callable_function=test_simulator_example_code,
+        example_string=labeled.contents(label="simulator"),
+        checker_function=checker,
+    )
+
+
+# Runnable version of example code in README.md.
+# The guts of this function are an exact copy of the example
+# in README.md with label simulator.
+# Note that this file is collected and run by pytest.
+# Show simulator.run_and_pytest() usage.
+def test_simulator_example_code():
     import phmdoctest.simulator
 
     command = "phmdoctest doc/example1.md --report --outfile temporary.py"
@@ -389,26 +416,13 @@ def simulator_example_code():
     assert simulator_status.pytest_exit_code == 0
 
 
-def test_simulator(checker):
-    """Assure the guts of the function are same as in Markdown."""
-    example_code_checker(
-        callable_function=simulator_example_code,
-        example_string=labeled.contents(label="simulator"),
-        checker_function=checker,
-    )
-
-    # also make sure the code runs with no assertions
-    simulator_example_code()
-
-
 def test_quick_links():
     """Make sure the README.md quick links are up to date."""
     filename = "README.md"
-    with open(filename, "r", encoding="utf-8") as f:
-        readme = f.read()
-        github_links = make_quick_links(filename)
-        # There must be at least one blank line after the last link.
-        assert github_links + "\n\n" in readme
+    readme = Path("README.md").read_text(encoding="utf-8")
+    github_links = make_quick_links(filename)
+    # There must be at least one blank line after the last link.
+    assert github_links + "\n\n" in readme
 
 
 def remove_fenced_code_blocks(lines, fence="```"):
@@ -444,7 +458,7 @@ def make_label(title):
 def make_quick_links(filename):
     """Generate links for a quick links section."""
     header_level = "## "  # note trailing space
-    with open(filename, encoding="utf-8") as f:
+    with open(filename, "r", encoding="utf-8") as f:
         lines = f.readlines()
     lines = [line.rstrip() for line in lines]  # lose newlines
     # README.md has fenced code blocks that enclose other

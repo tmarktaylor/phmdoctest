@@ -1,8 +1,7 @@
 """Fixtures used in multiple test files."""
 import difflib
-import logging
 from itertools import zip_longest
-
+from pathlib import Path
 
 import pytest
 
@@ -10,7 +9,10 @@ import pytest
 import phmdoctest.simulator
 
 
-@pytest.fixture(scope="session")
+pytest_plugins = ["pytester"]
+
+
+@pytest.fixture()
 def checker():
     """Return Callable(str, str) that runs difflib.ndiff. Multi-line str's ok."""
 
@@ -28,7 +30,7 @@ def checker():
     return a_and_b_are_the_same
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture()
 def example_tester(checker):
     """Return Callable that runs a phmdoctest command and checks the --outfile."""
 
@@ -49,9 +51,8 @@ def example_tester(checker):
 
         # check the OUTFILE against the expected value
         if want_file_name is not None:
-            with open(want_file_name) as f:
-                want = f.read()
-                checker(want, simulator_status.outfile)
+            want = Path(want_file_name).read_text(encoding="utf-8")
+            checker(want, simulator_status.outfile)
         return simulator_status
 
     return one_example

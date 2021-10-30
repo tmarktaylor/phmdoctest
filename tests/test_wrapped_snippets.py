@@ -1,12 +1,12 @@
 """pytest test cases to check markdown wrapped files."""
+from pathlib import Path
 
 import phmdoctest.tool
 
 
 def check_first_block(markdown_path, contents_path, checker_function):
     """Check that first FCB in Markdown is same as the file contents."""
-    with open(contents_path, "r", encoding="utf-8") as f:
-        want = f.read()
+    want = Path(contents_path).read_text(encoding="utf-8")
     blocks = phmdoctest.tool.fenced_code_blocks(markdown_path)
     got = blocks[0]
     checker_function(a=want, b=got)
@@ -134,5 +134,14 @@ def test_test_inline_example_py_md(checker):
     check_first_block(
         markdown_path="doc/test_inline_example_py.md",
         contents_path="doc/test_inline_example.py",
+        checker_function=checker,
+    )
+
+
+def test_test_project_test_py_md(checker):
+    """The copy of .py file in fenced code block is the same as the file."""
+    check_first_block(
+        markdown_path="doc/project_test_py.md",
+        contents_path="tests/project_test.py",
         checker_function=checker,
     )

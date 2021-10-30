@@ -1,4 +1,6 @@
 """Third group of pytest test cases for phmdoctest."""
+from pathlib import Path
+
 import pytest
 import click
 
@@ -328,8 +330,7 @@ def test_empty_code_blocks_report(checker):
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code is None
     stdout = simulator_status.runner_status.stdout
-    with open("tests/empty_code_report.txt", "r", encoding="utf-8") as f:
-        want = f.read()
+    want = Path("tests/empty_code_report.txt").read_text(encoding="utf-8")
     checker(want, stdout)
 
 

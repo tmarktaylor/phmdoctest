@@ -1,2 +1,2 @@
-pytest >= 6
+pytest >= 6.2
 PyYAML >= 5.4.1

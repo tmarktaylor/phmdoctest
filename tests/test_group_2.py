@@ -1,4 +1,6 @@
 """Second group of pytest test cases for phmdoctest."""
+from pathlib import Path
+
 import phmdoctest
 import phmdoctest.cases
 import phmdoctest.main
@@ -152,9 +154,7 @@ def test_one_skip_many_matches(checker):
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code is None
     stdout = simulator_status.runner_status.stdout
-
-    with open("tests/twentysix_report.txt", "r", encoding="utf-8") as f:
-        want = f.read()
+    want = Path("tests/twentysix_report.txt").read_text(encoding="utf-8")
     checker(want, stdout)
 
 

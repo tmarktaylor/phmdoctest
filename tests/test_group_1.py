@@ -1,7 +1,7 @@
 """First group of pytest test cases for phmdoctest."""
 import configparser
 import copy
-import os
+from pathlib import Path
 
 import pytest
 import yaml
@@ -20,10 +20,6 @@ import phmdoctest.tool
 # subprocess.
 # Pytest captures stdout and so does CliRunner.invoke().
 
-# To skip tests with @pytest.mark.skipif(skip_selected_tests),
-# set the environment variable PHMDOCTEST_SKIP_TESTS to any value.
-skip_selected_tests = True if os.environ.get("PHMDOCTEST_SKIP_TESTS", False) else False
-
 
 class TestSameVersions:
     """Verify same release version string in all places.
@@ -40,8 +36,7 @@ class TestSameVersions:
     def verify_found_in_file(self, filename, format_spec="{}"):
         """Format the package version and look for result in caller's file."""
         looking_for = format_spec.format(self.package_version)
-        with open(filename, "r", encoding="utf-8") as f:
-            text = f.read()
+        text = Path(filename).read_text(encoding="utf-8")
         assert looking_for in text
 
     def test_readme_md(self):
@@ -71,6 +66,10 @@ class TestSameVersions:
         """Check the ref: value in the GitHub deploy.yml action."""
         self.verify_found_in_file(".github/workflows/deploy.yml", "\n        ref: v{}")
 
+    def test_api_rst(self):
+        """Check the version is anywhere in api.rst."""
+        self.verify_found_in_file("doc/api.rst", "version {}")
+
 
 def string_to_dependencies(text: str) -> set:
     """Return the set of pip dependencies from a multi-line string.
@@ -97,8 +96,7 @@ def setup_dependencies(section, option) -> set:
 
 def file_dependencies(filename: str) -> set:
     """Extract set of dependencies from a requirements.txt file."""
-    with open(filename, "r", encoding="utf-8") as f:
-        text = f.read()
+    text = Path(filename).read_text(encoding="utf-8")
     return string_to_dependencies(text)
 
 
@@ -139,16 +137,16 @@ def test_doc_requirements_file():
     """
     packages = ["Click", "monotable", "commonmark"]
     setup_versions = {}
-    with open("requirements.txt", "r", encoding="utf-8") as f:
-        setup_requirements = f.read().splitlines()
+    setup_text = Path("requirements.txt").read_text(encoding="utf-8")
+    setup_requirements = setup_text.splitlines()
     for line in setup_requirements:
         for package in packages:
             if line.startswith(package):
                 setup_versions[package] = line
 
     doc_versions = {}
-    with open("doc/requirements.txt", "r", encoding="utf-8") as f:
-        doc_requirements = f.read().splitlines()
+    doc_text = Path("doc/requirements.txt").read_text(encoding="utf-8")
+    doc_requirements = doc_text.splitlines()
     for line in doc_requirements:
         for package in packages:
             if line.startswith(package):
@@ -178,8 +176,7 @@ def test_empty_output_block_report(example_tester, checker):
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
     stdout = simulator_status.runner_status.stdout
-    with open("tests/empty_output_report.txt", "r", encoding="utf-8") as f:
-        want = f.read()
+    want = Path("tests/empty_output_report.txt").read_text(encoding="utf-8")
     checker(a=want, b=stdout)
 
 
@@ -193,8 +190,7 @@ def test_empty_code_block_report(example_tester, checker):
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
     stdout = simulator_status.runner_status.stdout
-    with open("tests/empty_code_report.txt", "r", encoding="utf-8") as f:
-        want = f.read()
+    want = Path("tests/empty_code_report.txt").read_text(encoding="utf-8")
     checker(a=want, b=stdout)
 
 
@@ -267,7 +263,6 @@ def test_pytest_session_fails(example_tester):
     assert simulator_status.pytest_exit_code == 1
 
 
-@pytest.mark.skipif(skip_selected_tests, reason="added separately to test suite")
 def test_project_md(example_tester):
     """Make sure that project.md generates a file that passes pytest."""
     simulator_status = example_tester(
@@ -290,8 +285,7 @@ def test_example2_report(example_tester, checker):
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code is None
     stdout = simulator_status.runner_status.stdout
-    with open("tests/example2_report.txt", "r", encoding="utf-8") as f:
-        want = f.read()
+    want = Path("tests/example2_report.txt").read_text(encoding="utf-8")
     checker(a=want, b=stdout)
 
 
@@ -336,7 +330,7 @@ def test_no_namespace_manager_call_generated():
     # with neither share-names or clear-names directives.
     # Coverage reports a missing statement.
     # Fix by calling with a block that doesn't have those directives.
-    with open("tests/direct.md", encoding="utf-8") as fp:
+    with open("tests/direct.md", "r", encoding="utf-8") as fp:
         blocks = phmdoctest.fenced.convert_nodes(phmdoctest.tool.fenced_block_nodes(fp))
     code_line = phmdoctest.cases.call_namespace_manager(blocks[0])
     assert code_line == ""
@@ -348,7 +342,7 @@ def test_fenced_role_skipping():
     # Make a copy of the first block below, modify the role,
     # and call skip() on it.  The good roles don't raise an assertion,
     # the bad roles do.
-    with open("tests/direct.md", encoding="utf-8") as fp:
+    with open("tests/direct.md", "r", encoding="utf-8") as fp:
         blocks = phmdoctest.fenced.convert_nodes(phmdoctest.tool.fenced_block_nodes(fp))
     good_roles = [
         Role.CODE,

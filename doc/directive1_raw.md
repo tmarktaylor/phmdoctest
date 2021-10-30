@@ -77,9 +77,9 @@ user='eric_idle'
 ```
 
 ## label directive on a session. 
-This will generate a test case called 
-`test_print_coffee()`.
-<!--phmdoctest-label test_print_coffee-->
+This will generate a test case called `doctest_print_coffee()`. 
+It does not start with test_ to avoid collection as a test item.
+<!--phmdoctest-label doctest_print_coffee-->
 ```py
 >>> print("coffee")
 coffee
