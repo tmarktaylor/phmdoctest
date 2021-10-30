@@ -49,7 +49,7 @@ matrix:
   #    script: *utest_run
 
     - python: 3.8
-      name: Pytest Live Log Demo
+      name: pytest Live Log Demo
       install:
        - pip install --no-deps "."
        - pip install -r requirements.txt
