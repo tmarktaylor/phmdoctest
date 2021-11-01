@@ -91,11 +91,11 @@ def test_doc_example2_md(testfile_creator, testfile_tester, testfile_checker):
 def test_doc_directive1_md(testfile_creator, testfile_tester, testfile_checker):
     """Generate pytest file from directive1.md and run it in pytester."""
     testfile = testfile_creator("doc/directive1.md")
+    testfile_checker("doc/test_directive1.py", testfile)
     result = testfile_tester(
         contents=testfile, pytest_options=["-v", "--doctest-modules"]
     )
     nofail_noerror_nowarn(result)
-    testfile_checker("doc/test_directive1.py", testfile)
 
 
 def test_doc_directive2_md(testfile_creator, testfile_tester, testfile_checker):
@@ -186,11 +186,12 @@ def test_tests_does_not_print_md(testfile_creator, testfile_tester):
     onefailed(result)
 
 
-def test_tests_managenamespace_md(testfile_creator, testfile_tester):
+def test_tests_managenamespace_md(testfile_creator, testfile_tester, testfile_checker):
     """Generate pytest file from managenamespace.md and run it in pytester."""
     # Note- testfile_name= is set to avoid collection error with
     # test_managenamespace.py.
     testfile = testfile_creator("tests/managenamespace.md")
+    testfile_checker("doc/test_managenamespace.py", testfile)
     result = testfile_tester(
         contents=testfile,
         testfile_name="test_my_managenamespace_md.py",
