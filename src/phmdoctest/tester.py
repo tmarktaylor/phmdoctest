@@ -123,7 +123,7 @@ def testfile_tester(pytester):  # type: ignore
 
     def test_testfile(
         contents: str = "",
-        testfile_name: str = "test_it.py",
+        testfile_name: str = "testfile_tester_test.py",
         pytest_options: Optional[List[str]] = None,
     ) -> RunResult:
         """Run pytester.runpytest with the caller's pytest file string."""
