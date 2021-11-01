@@ -1,5 +1,5 @@
 # Recent changes
-1.3.0 - 2021-TBD
+1.3.0 - 2021-11-01
 
 - Add main.testfile().
 - Add testfile_creator and testfile_tester fixtures. 
