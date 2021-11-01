@@ -81,11 +81,11 @@ incorrect expected output
 
 @pytest.mark.skipif(sys.version_info < (3, 8), reason="requires >=py3.8")
 def test_fstring(capsys):
-    user = "eric_idle"
-    print(f"{user=}")
+    b = 10
+    print(b.as_integer_ratio())
 
     _phm_expected_str = """\
-user='eric_idle'
+(10, 1)
 """
     _phm_compare_exact(a=_phm_expected_str, b=capsys.readouterr().out)
 

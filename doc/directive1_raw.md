@@ -69,11 +69,11 @@ Python 3.8.
 <!--phmdoctest-label test_fstring-->
 <!--phmdoctest-mark.skipif<3.8-->
 ```python
-user = "eric_idle"
-print(f"{user=}")
+b = 10
+print(b.as_integer_ratio())
 ```
 ```
-user='eric_idle'
+(10, 1)
 ```
 
 ## label directive on a session. 
