@@ -7,6 +7,7 @@ import phmdoctest.main
 import pytest
 from _pytest.pytester import RunResult
 
+# mypy: ignore_errors
 
 # Note- Because testfile_tester uses pytester it can't be used in the
 #       same test function with simulator.run_and_pytest() because pytester
