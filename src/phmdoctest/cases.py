@@ -227,7 +227,7 @@ def test_case(block: FencedBlock, used_names: Set[str]) -> str:
     if not function_name:
         code_identifier = "test_code_" + str(block.line)
         output_identifier = ""
-        if block.output:
+        if block.output and block.output.role != Role.SKIP_OUTPUT:
             output_identifier = "_output_" + str(block.output.line)
         function_name = code_identifier + output_identifier
     code, num_commented_out_sections = apply_inline_commands(block.contents)

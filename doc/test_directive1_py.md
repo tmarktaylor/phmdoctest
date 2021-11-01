@@ -8,7 +8,7 @@ import pytest
 from phmdoctest.functions import _phm_compare_exact
 
 
-def test_code_23_output_30():
+def test_code_23():
     from datetime import date
 
     date.today()
