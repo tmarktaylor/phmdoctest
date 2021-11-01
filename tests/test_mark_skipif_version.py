@@ -22,10 +22,43 @@ def nofail_noerror_nowarn(result: RunResult) -> None:
     assert "passed" in summary_nouns
 
 
-pytest_file_image = '''"""module docstring"""
+# pytest_file_image = '''"""module docstring"""
+# import sys
+#
+# import pytest
+#
+#
+# def test_code_23():
+#     from datetime import date
+#
+#     date.today()
+#
+#     Caution- no assertions.
+#
+#
+# @pytest.mark.skip()
+# def test_mark_skip(capsys):
+#     assert False, "expected to skip the test"
+#
+# @pytest.mark.skipif(sys.version_info < (major, minor), reason="requires >=pymajor.minor")
+# def test_mark_skipif(capsys):
+#     assert False, "expected to skip the test"
+#
+#
+# def doctest_print_coffee():
+#     r"""
+#     >>> print("coffee")
+#     coffee
+#     """
+# '''
+
+
+pytest_file_image = '''"""pytest file built from doc/directive1.md"""
 import sys
 
 import pytest
+
+from phmdoctest.functions import _phm_compare_exact
 
 
 def test_code_23():
@@ -38,11 +71,23 @@ def test_code_23():
 
 @pytest.mark.skip()
 def test_mark_skip(capsys):
-    assert False, "expected to skip the test" 
+    print("testing @pytest.mark.skip().")
 
-@pytest.mark.skipif(sys.version_info < (major, minor), reason="requires >=pymajor.minor")
-def test_mark_skipif(capsys):
-    assert False, "expected to skip the test" 
+    _phm_expected_str = """\
+incorrect expected output
+"""
+    _phm_compare_exact(a=_phm_expected_str, b=capsys.readouterr().out)
+
+
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="requires >=py3.8")
+def test_fstring(capsys):
+    user = "eric_idle"
+    print(f"{user=}")
+
+    _phm_expected_str = """\
+user='eric_idle'
+"""
+    _phm_compare_exact(a=_phm_expected_str, b=capsys.readouterr().out)
 
 
 def doctest_print_coffee():
@@ -52,14 +97,9 @@ def doctest_print_coffee():
     """
 '''
 
-assert pytest_file_image.count("major") == 2
-assert pytest_file_image.count("minor") == 2
-major = sys.version_info[0]
 minor = sys.version_info[1] + 1
-pytest_file_image1 = pytest_file_image.replace("major", str(major))
-pytest_file_image2 = pytest_file_image1.replace("minor", str(minor))
-assert pytest_file_image2.count("major") == 0
-assert pytest_file_image2.count("minor") == 0
+pytest_file_image1 = pytest_file_image.replace("(3, 8)", "(3, " + str(minor) + ")")
+pytest_file_image2 = pytest_file_image1.replace("py3,8", "(py3." + str(minor))
 
 
 def test_pytest_skips(testfile_tester):
