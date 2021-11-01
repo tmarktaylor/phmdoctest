@@ -95,7 +95,7 @@ def test_doc_directive1_md(testfile_creator, testfile_tester, testfile_checker):
     result = testfile_tester(
         contents=testfile,
         testfile_name="test_my_directive1_md.py",
-        pytest_options=["-v", "--doctest-modules"]
+        pytest_options=["-v", "--doctest-modules"],
     )
     nofail_noerror_nowarn(result)
     summary_nouns = result.parse_summary_nouns(result.outlines)
@@ -211,7 +211,6 @@ def test_tests_managenamespace_md(testfile_creator, testfile_tester):
     else:
         summary_nouns = result.parse_summary_nouns(result.outlines)
         assert summary_nouns.get("skipped", 0) == 1
-
 
 
 def test_tests_no_code_blocks_md(testfile_creator, testfile_tester):
