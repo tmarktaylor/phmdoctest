@@ -32,7 +32,7 @@ jobs:
         python -m pip install -r tests/requirements.txt
     - name: Tests
       run: |
-        python -c "from pathlib import Path; d = Path('tests') / 'tmp'; d.mkdir(mode=0o600)"
+        python -c "from pathlib import Path; d = Path('tests') / 'tmp'; d.mkdir(mode=0o700)"
         phmdoctest project.md --report --outfile tests/tmp/test_project.py
         pytest --doctest-modules -vv tests
 ```
