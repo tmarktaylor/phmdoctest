@@ -6,6 +6,7 @@ The purpose here is to build and run a pytest file using
 the fixtures in tester.py. The testfile_tester fixture
 uses the pytester fixture to run the pytest file.
 """
+import sys
 from pathlib import Path
 
 import click
@@ -91,11 +92,20 @@ def test_doc_example2_md(testfile_creator, testfile_tester, testfile_checker):
 def test_doc_directive1_md(testfile_creator, testfile_tester, testfile_checker):
     """Generate pytest file from directive1.md and run it in pytester."""
     testfile = testfile_creator("doc/directive1.md")
-    testfile_checker("doc/test_directive1.py", testfile)
     result = testfile_tester(
-        contents=testfile, pytest_options=["-v", "--doctest-modules"]
+        contents=testfile,
+        testfile_name="test_my_directive1_md.py",
+        pytest_options=["-v", "--doctest-modules"]
     )
     nofail_noerror_nowarn(result)
+    summary_nouns = result.parse_summary_nouns(result.outlines)
+    if sys.version_info >= (3, 8):
+        assert summary_nouns.get("passed", 0) == 3
+        assert summary_nouns.get("skipped", 0) == 1
+    else:
+        assert summary_nouns.get("passed", 0) == 2
+        assert summary_nouns.get("skipped", 0) == 2
+    testfile_checker("doc/test_directive1.py", testfile)
 
 
 def test_doc_directive2_md(testfile_creator, testfile_tester, testfile_checker):
@@ -186,18 +196,22 @@ def test_tests_does_not_print_md(testfile_creator, testfile_tester):
     onefailed(result)
 
 
-def test_tests_managenamespace_md(testfile_creator, testfile_tester, testfile_checker):
+def test_tests_managenamespace_md(testfile_creator, testfile_tester):
     """Generate pytest file from managenamespace.md and run it in pytester."""
     # Note- testfile_name= is set to avoid collection error with
     # test_managenamespace.py.
     testfile = testfile_creator("tests/managenamespace.md")
-    testfile_checker("doc/test_managenamespace.py", testfile)
     result = testfile_tester(
         contents=testfile,
         testfile_name="test_my_managenamespace_md.py",
         pytest_options=["-v", "--doctest-modules"],
     )
-    nofail_noerror_nowarn(result)
+    if sys.version_info >= (3, 8):
+        nofail_noerror_nowarn(result)
+    else:
+        summary_nouns = result.parse_summary_nouns(result.outlines)
+        assert summary_nouns.get("skipped", 0) == 1
+
 
 
 def test_tests_no_code_blocks_md(testfile_creator, testfile_tester):
