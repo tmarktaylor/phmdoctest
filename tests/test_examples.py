@@ -174,15 +174,6 @@ def test_tests_bad_skipif_number_md(testfile_creator):
         _ = testfile_creator("tests/bad_skipif_number.md")
 
 
-def test_tests_direct_md(testfile_creator):
-    """Try to generate pytest file from bad_skipif_number.md.
-
-    Illegal setup directive usage.
-    """
-    with pytest.raises(click.exceptions.ClickException):
-        _ = testfile_creator("tests/direct.md")
-
-
 def test_tests_does_not_print_md(testfile_creator, testfile_tester):
     """Generate pytest file from does_not_print.md and run it in pytester.
 
