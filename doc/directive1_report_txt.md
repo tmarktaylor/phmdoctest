@@ -12,7 +12,7 @@ py          38  skip-session  -skip
 python      53  code          -mark.skip
                               -label test_mark_skip
             56  output
-python      70  code          -label test_fstring
+python      70  code          -label test_i_ratio
                               -mark.skipif<3.8
             74  output
 py          82  session       -label doctest_print_coffee

@@ -49,7 +49,7 @@ incorrect expected output
 
 
 @pytest.mark.skipif(sys.version_info < (3, 8), reason="requires >=py3.8")
-def test_fstring(capsys):
+def test_i_ratio(capsys):
     b = 10
     print(b.as_integer_ratio())
 

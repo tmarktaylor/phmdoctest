@@ -64,7 +64,7 @@ decorator.  This test case will only run when Python
 is version 3.8 or higher. f-string support is new in
 Python 3.8.
 
-<!--phmdoctest-label test_fstring-->
+<!--phmdoctest-label test_i_ratio-->
 <!--phmdoctest-mark.skipif<3.8-->
 ```python
 b = 10
