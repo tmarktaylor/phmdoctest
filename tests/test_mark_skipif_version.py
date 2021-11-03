@@ -22,37 +22,6 @@ def nofail_noerror_nowarn(result: RunResult) -> None:
     assert "passed" in summary_nouns
 
 
-# pytest_file_image = '''"""module docstring"""
-# import sys
-#
-# import pytest
-#
-#
-# def test_code_23():
-#     from datetime import date
-#
-#     date.today()
-#
-#     Caution- no assertions.
-#
-#
-# @pytest.mark.skip()
-# def test_mark_skip(capsys):
-#     assert False, "expected to skip the test"
-#
-# @pytest.mark.skipif(sys.version_info < (major, minor), reason="requires >=pymajor.minor")
-# def test_mark_skipif(capsys):
-#     assert False, "expected to skip the test"
-#
-#
-# def doctest_print_coffee():
-#     r"""
-#     >>> print("coffee")
-#     coffee
-#     """
-# '''
-
-
 pytest_file_image = '''"""pytest file built from doc/directive1.md"""
 import sys
 
@@ -114,6 +83,3 @@ def test_pytest_skips(testfile_tester):
     )
     nofail_noerror_nowarn(result)
     result.assert_outcomes(passed=2, skipped=2)
-    # uncomment to manually see the version
-    # print(pytest_file_image2)
-    # assert False
