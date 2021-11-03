@@ -59,7 +59,7 @@ coffee
 """
 
 
-def test_details_tag_parsed(testfile_tester):
+def test_sees_inside_details(testfile_tester):
     """Generate a testfile from Markdown with <details> and pytest it."""
     markdown_filename = "details.md"
     p = Path(markdown_filename)
