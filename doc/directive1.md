@@ -61,7 +61,7 @@ incorrect expected output
 Use mark.skipif on Python code blocks.
 A test case gets generated with a @pytest.mark.skipif(...)
 decorator.  This test case will only run when Python
-is version 3.8 or higher. f-string support is new in
+is version 3.8 or higher. int.as_integer_ratio() is new in
 Python 3.8.
 
 <!--phmdoctest-label test_i_ratio-->
