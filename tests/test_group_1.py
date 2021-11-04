@@ -42,6 +42,7 @@ class TestSameVersions:
     def test_readme_md(self):
         """Check the version near the top of README.md."""
         self.verify_found_in_file("README.md", "# phmdoctest {}")
+        self.verify_found_in_file("README.md", "section Development tools API {}")
 
     def test_index_rst(self):
         """Check the version is anywhere in index.rst."""
