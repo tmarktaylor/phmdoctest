@@ -95,9 +95,10 @@ def testfile_tester(pytester):  # type: ignore
 
     Stores the caller's pytest test file `contents`
     in a temporary directory hosted by pytest. Run pytest on it
-    using `pytest_options`. The file tests/test_examples.py uses this
-    fixture.
-    This fixture does not require phmdoctest to generate the test file.
+    using `pytest_options`.
+    Typically the caller runs testfile_creator to generate the test file.
+    See example usage in the files tests/test_examples.py
+    and tests/test_details.py.
 
     The fixture injects a function with the following signature. Please
     consult the source in tester.py.

@@ -171,7 +171,7 @@ def testfile(
 
     Keyword Args:
         skips
-            Do not test blocks with substring TEXT.
+            List[str]. Do not test blocks with substring TEXT.
 
         fail_nocode
             Markdown file with no code blocks generates a failing test.

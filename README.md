@@ -27,8 +27,9 @@ highlighted code examples in Markdown.
 - An included Python library: [Latest Development tools API][10].
   - Python function returns test file in a string. *(testfile() in main.py)*
   - Two pytest fixtures. *(tester.py)*
-    1) Runs phmdoctest.main.testfile(). Needed when using fixture 2).
-    2) Run a pytest file with pytest's pytester in its isolated environment.  
+    1. **testfile_creator** runs *testfile()*. Use with testfile_tester.
+    2. **testfile_tester** runs a pytest file with pytest's pytester
+       in its isolated environment.  
   - Runs phmdoctest and can run pytest too. *(simulator.py)*
   - Functions to read fenced code blocks from Markdown. *(tool.py)*
   - Extract testsuite tree and list of failing trees from JUnit XML. *(tool.py)*
@@ -1015,11 +1016,14 @@ assert expected == generated_testfile
 
 ## pytest fixtures
 
-Use the first pytest fixture to generate a test file.
-The test file is temporary. The second fixture runs 
-the test file in the pytester environment. 
-[Fixture API][10]. | [Example](doc/project_test_py.md).
-See more uses in tests/test_examples.py.
+Use fixture **testfile_creator** to generate a test file in memory.
+Pass the test file to fixture **testfile_tester** to run 
+the test file in the pytester environment.
+[Fixture API][10] | [Example](doc/project_test_py.md).
+See more uses in tests/test_examples.py and tests/test_details.py.
+The fixtures run pytest much faster than `run_and_pytest()`
+below since there is no subprocess call.
+In the readthedocs documentation see the section Development tools API 1.3.0.
 
 ## Simulate command line
 
@@ -1085,8 +1089,9 @@ assert simulator_status.pytest_exit_code == 0
   to support setup, teardown, share-names, and clear-names features.
 - The phmdoctest Markdown parser finds fenced code blocks enclosed by
   html `<details>` and `</details>` tags.
-  The tags may require a preceding and trailing blank line.
-- Try piping phmdoctest standard output into PYPI Pygments to
+  The tags may require a preceding and trailing blank line
+  to render correctly. See example in tests/test_details.py.
+- Try redirecting phmdoctest standard output into PYPI Pygments to
   colorize the generated test file.
   ```shell
   python -m phmdoctest project.md --outfile - | pygmentize
