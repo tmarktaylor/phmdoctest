@@ -66,7 +66,6 @@ def test_sees_inside_details(testfile_tester):
     p.write_text(markdown_file_image, encoding="utf-8")
     testfile = phmdoctest.main.testfile(
         markdown_file=markdown_filename,
-        built_from=markdown_filename,
     )
     result = testfile_tester(
         contents=testfile,
