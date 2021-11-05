@@ -1,17 +1,36 @@
 # Recent changes
-1.3.0 - 2021-11-
+1.3.0 - 2021-11-NN
 
 - Add main.testfile().
 - Add testfile_creator and testfile_tester fixtures.
-- Bugfix- Issue- Generated testname has output_NN when skip
+- Bugfix- Issue- Generated test name has output_NN when skip
   directive on output block.
 - Bugfix- Issue- mark.skipif example code causes pytest AST fail at 
   assertion rewrite time. Happens on skipped Python version.
   Replaced with code that compiles on the skipped version.
-- Add mode=0o700 to mkdir() calls in test .yml files.
-- Tox no longer used in test suite.
 - Drop Python 3.7 add Python 3.10.
+
+tests:
+
+- Add mode=0o700 to mkdir() calls in test .yml files.
+- Run tests in virtual envirionments. ci.yml.
+- Add test_details.py.
+- add Appveyor to CI to show pytest items.
+- Rework requirements files. Add tests.
+- Refactor new fixtures to conftest.py.
+- Rework/refactor quick_links test logic
+- Tox no longer used in test suite.
+
+docs:
+- Bugfix- Issue- Markdown header level out of sequence.
 - Loosen doc dependencies.
+- Fenced code block info_string changes for GitHub pages.
+- Sphinx with myst_parser for docs.
+
+style:
+- Style/pep8/inspection fixes.
+- Path and open changes.
+
 
 1.2.1 - 2021-07-07
 
