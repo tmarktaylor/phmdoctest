@@ -1,8 +1,14 @@
 # Recent changes
-1.3.0 - 2021-11-04
+1.3.0 - 2021-11-
 
 - Add main.testfile().
-- Add testfile_creator and testfile_tester fixtures. 
+- Add testfile_creator and testfile_tester fixtures.
+- Bugfix- Issue- Generated testname has output_NN when skip
+  directive on output block.
+- Bugfix- Issue- mark.skipif example code causes pytest AST fail at 
+  assertion rewrite time. Happens on skipped Python version.
+  Replaced with code that compiles on the skipped version.
+- Add mode=0o700 to mkdir() calls in test .yml files.
 - Tox no longer used in test suite.
 - Drop Python 3.7 add Python 3.10.
 - Loosen doc dependencies.
