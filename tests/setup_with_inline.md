@@ -6,7 +6,7 @@ This test shows that inline annotations get processed in
 #### This will be the setup code.
 
 - Use phmdoctest --setup FIRST to select it.
-- Setup code does not have an output block. 
+- Setup code does not have an output block.
 ```py3
 mylist = [1, 2, 3]
 a, b = 10, 11  # phmdoctest:omit
@@ -36,7 +36,7 @@ expected output:
 #### This will be specified as the teardown code.
 
 - Use phmdoctest --teardown LAST to select it.
-- Teardown code does not have an output block. 
+- Teardown code does not have an output block.
 ```py3
 mylist.clear()
 assert not mylist, "mylist was not emptied"

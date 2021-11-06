@@ -1,5 +1,5 @@
 ### Markdown with only one code block
- 
+
 Code:
 ```python3
 from enum import Enum

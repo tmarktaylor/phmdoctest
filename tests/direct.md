@@ -13,10 +13,10 @@ Hello
 World!
 ```
 
-#### Interactive Python session requires `<BLANKINE>` in the expected output 
+#### Interactive Python session requires `<BLANKINE>` in the expected output
 
 Blank lines in the expected output must be replaced with `<BLANKLINE>`.
-To see the `<BLANKLINE>` navigate to [project.md unrendered][1]. 
+To see the `<BLANKLINE>` navigate to [project.md unrendered][1].
 
 
 <!-- an HTML comment -->
@@ -53,14 +53,14 @@ True
 ```
 The phmdoctest-clear-names directive above is seen
 even though there are five blank line between it
-and the fenced code block.  
+and the fenced code block.
 ```
 
 
 <!--phmdoctest-clear-names-->
 some text that causes backwards marker scan to terminate
 ```
-The phmdoctest-clear-names directive above 
+The phmdoctest-clear-names directive above
 some text is not found by phmdoctest because
 it does not immediately precede the fenced code block.
 ```

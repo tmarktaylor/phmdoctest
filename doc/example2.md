@@ -70,7 +70,7 @@ some text
 ## A doctest session
 Here is a Python interactive session.  It is described by
 the Python Standard Library module doctest.  Note there is
-no need for an empty line at the end of the session. 
+no need for an empty line at the end of the session.
 ```py
 >>> a = "Greetings Planet!"
 >>> a
@@ -96,7 +96,7 @@ print(d)
 
 ## Another doctest session (skipped in test_example2.py)
 
-Example borrowed from Python Standard Library 
+Example borrowed from Python Standard Library
 fractions documentation.
 ```py
 >>> from fractions import Fraction

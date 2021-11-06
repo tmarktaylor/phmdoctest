@@ -190,7 +190,7 @@ def myfunc():
         print(item * 2)
 
 if __name__ == "__main__":   # phmdoctest:omit
-    myfunc()        
+    myfunc()
 """
 
     want = """\
@@ -215,7 +215,7 @@ def myfunc():
         print(item * 2)
 
 # if __name__ == "__main__":   # phmdoctest:omit
-#     myfunc()        
+#     myfunc()
 """
 
     got, num_changed_sections = phmdoctest.inline.apply_inline_commands(code)

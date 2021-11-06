@@ -28,10 +28,10 @@ else:
     assert False, "did not get expected NameError"
 ```
 
-## Share the names assigned here with later Python code blocks. 
+## Share the names assigned here with later Python code blocks.
 The share-names directive makes the names assigned here
 global to the test module.  The names are visible to all Python code blocks
-occurring later in the Markdown source file. The code assigns the 
+occurring later in the Markdown source file. The code assigns the
 names string, x, y, z, grades, and the function incrementer().
 Place the `<!--phmdoctest-share-names-->` directive in the Markdown file.
 
@@ -65,7 +65,7 @@ string.digits= 0123456789
 
 ## This test case modifies grades.
 The objects created by the share-names code block can be modified
-and blocks run afterward will see the changes.  
+and blocks run afterward will see the changes.
 ```python
 grades.append("D")
 ```

@@ -13,7 +13,7 @@ def cause_assertion():
     assert False                  # phmdoctest:omit
     print("after assert.")
     print("bye")  # phmdoctest:omit
-    
+
 cause_assertion()
 ```
 Expected output:
@@ -31,10 +31,10 @@ def prints_too_much(condition):
     if condition:             # phmdoctest:omit
         print("-" * 50)
         # note the section continues across blank lines
-        
+
         print("=" * 50)
         print("*" * 50)
-        
+
     # Can't use phmdoctest:omit on the next line because
     # the else: line would get a Python SyntaxError.
     if condition:

@@ -52,16 +52,16 @@ True
 ```
 
 ## The names created by the setup code are optionally visible to sessions.
-When running phmdoctest setup names become visible to sessions 
+When running phmdoctest setup names become visible to sessions
 by using these options:
-- --setup specifies a code block that initializes variables. 
-- --setup-doctest injects the setup variables into the doctest namespace. 
+- --setup specifies a code block that initializes variables.
+- --setup-doctest injects the setup variables into the doctest namespace.
 
 Run the generated test file with pytest.
 - Specify --doctest-modules to run the sessions.
 - Sessions run in a separate context from the Python code/output block
   pairs.  The setup and teardown get repeated.
-  
+
 The value 55 is appended to mylist. Note that the 4 appended by the
 test case above is not there.  This is because the sessions
 run in a separate context.
@@ -81,7 +81,7 @@ The change to mylist made in the session above is visible.
 
 ## This will be specified as the teardown code.
 Use phmdoctest --teardown LAST to select it.
-Teardown code does not have an output block. 
+Teardown code does not have an output block.
 ```python
 mylist.clear()
 assert not mylist, "mylist was not emptied"

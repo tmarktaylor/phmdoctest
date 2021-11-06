@@ -1,4 +1,4 @@
-### Two code blocks use the same label directive value. 
+### Two code blocks use the same label directive value.
 
 <!--phmdoctest-label k_and_v-->
 ```py3

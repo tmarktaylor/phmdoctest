@@ -1,4 +1,4 @@
-### Code block has a label directive that is not a Python identifier. 
+### Code block has a label directive that is not a Python identifier.
 
 <!--phmdoctest-label I-am-not-a-Python-identifier-->
 ```python

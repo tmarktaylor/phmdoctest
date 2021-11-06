@@ -46,7 +46,7 @@ These files are at the project root:
 - README.md
 - conf.py
 
-GitHub page build consumes _config.yml. 
+GitHub page build consumes _config.yml.
 
 Since conf.py is at the project root Sphinx searches the entire
 project for document source files.  Additional

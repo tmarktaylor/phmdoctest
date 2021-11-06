@@ -39,7 +39,7 @@ doubler(16)= 32
 
 ## This test case modifies mylist.
 The objects created by the --setup code can be modified
-and blocks run afterward will see the changes.  
+and blocks run afterward will see the changes.
 ```python
 mylist.append(4)
 print(mylist)
