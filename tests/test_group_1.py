@@ -3,6 +3,7 @@ import configparser
 import copy
 from pathlib import Path
 import subprocess
+import sys
 
 import pytest
 import yaml
@@ -168,6 +169,7 @@ def test_readthedocs_python_version():
     assert rtd["python"]["version"] == workflow_version
 
 
+@pytest.mark.skipif(sys.version_info < (3, 7), reason="requires >=py3.7")
 def test_trailing_whitespace():
     """Expose files that have lines with trailing spaces.
 
