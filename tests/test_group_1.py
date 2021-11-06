@@ -1,7 +1,9 @@
 """First group of pytest test cases for phmdoctest."""
 import configparser
 import copy
+import difflib
 from pathlib import Path
+import subprocess
 
 import pytest
 import yaml
@@ -165,6 +167,29 @@ def test_readthedocs_python_version():
     assert "Setup Python" in step["name"]
     workflow_version = step["with"]["python-version"]
     assert rtd["python"]["version"] == workflow_version
+
+
+def test_trailing_spaces():
+    """Expose files that have lines with trailing spaces.
+
+    Note- The IDE should be preventing the trailing spaces when editing.
+    """
+    completed = subprocess.run("git ls-files", capture_output=True, text=True)
+    files = completed.stdout.splitlines()
+    found_trailing_spaces = False
+    for name in files:
+        text = Path(name).read_text(encoding="utf-8")
+        lines = text.splitlines()
+        for num, line in enumerate(lines, start=1):
+            actual = line
+            expected = line.rstrip()
+            if actual != expected:
+                print(name, "line", num)
+                diffs = difflib.ndiff([line], [line.rstrip()])
+                for line in diffs:
+                    print(line)
+                found_trailing_spaces = True
+    assert not found_trailing_spaces, "One or more files have trailing spaces."
 
 
 def test_empty_output_block_report(example_tester, checker):
