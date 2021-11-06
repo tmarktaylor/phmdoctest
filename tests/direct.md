@@ -21,7 +21,7 @@ To see the `<BLANKLINE>` navigate to [project.md unrendered][1].
 
 <!-- an HTML comment -->
 <!--phmdoctest-skip-->
-```pycon
+```py
 >>> print('Hello\n\nWorld!')
 Hello
 <BLANKLINE>
@@ -34,7 +34,7 @@ World!
 <!-- some other tool -->
 <!--phmdoctest-label NO_TRAILING_SPACE-->
 <!--phmdoctest-label   EXTRA_SPACES  -->
-```pycon
+```py
 >>> coffee = 5
 >>> coding = 5
 >>> enjoyment = 10

@@ -24,7 +24,7 @@ tests:
 docs:
 - Bugfix- Issue- Markdown header level out of sequence.
 - Loosen doc dependencies.
-- Fenced code block info_string changes for GitHub pages.
+- Fenced code block info_string pycon -> py.
 - Sphinx with myst_parser for docs.
 
 style:

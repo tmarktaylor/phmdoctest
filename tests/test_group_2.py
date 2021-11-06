@@ -48,7 +48,7 @@ def test_skip_first_session():
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
     stdout = simulator_status.runner_status.stdout
-    assert 'pycon        3  skip-session  "FIRST"' in stdout
+    assert 'py          3  skip-session  "FIRST"' in stdout
     assert "FIRST         3" in stdout
 
 
@@ -64,7 +64,7 @@ def test_skip_second_session():
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
     stdout = simulator_status.runner_status.stdout
-    assert 'py           8  skip-session  "SECOND"' in stdout
+    assert 'py          8  skip-session  "SECOND"' in stdout
     assert "SECOND        8" in stdout
 
 
