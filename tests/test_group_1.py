@@ -181,11 +181,11 @@ def test_trailing_spaces():
         text = Path(name).read_text(encoding="utf-8")
         lines = text.splitlines()
         for num, line in enumerate(lines, start=1):
-            actual = line
-            expected = line.rstrip()
-            if actual != expected:
+            got = line
+            wanted = line.rstrip()
+            if got != wanted:
                 print(name, "line", num)
-                diffs = difflib.ndiff([line], [line.rstrip()])
+                diffs = difflib.ndiff([got], [wanted])
                 for line in diffs:
                     print(line)
                 found_trailing_spaces = True
