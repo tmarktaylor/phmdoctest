@@ -2,7 +2,7 @@
 
 ## Interactive Python session (doctest)
 
-```py 
+```py
 >>> print("Hello World!")
 Hello World!
 ```
