@@ -175,7 +175,7 @@ def test_trailing_whitespace():
     making this test redundant.
     To run just this test: pytest -v tests -k test_trailing_whitespace
     """
-    completed = subprocess.run("git ls-files", capture_output=True, text=True)
+    completed = subprocess.run(["git", "ls-files"], capture_output=True, text=True)
     files = completed.stdout.splitlines()
     found_trailing_spaces = False
     for name in files:
