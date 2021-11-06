@@ -1,11 +1,11 @@
 # Recent changes
-1.3.0 - 2021-11-NN
+1.3.0 - 2021-11-06
 
 - Add main.testfile().
 - Add testfile_creator and testfile_tester fixtures.
 - Bugfix- Issue- Generated test name has output_NN when skip
   directive on output block.
-- Bugfix- Issue- mark.skipif example code causes pytest AST fail at 
+- Bugfix- Issue- mark.skipif example code causes pytest AST fail at
   assertion rewrite time. Happens on skipped Python version.
   Replaced with code that compiles on the skipped version.
 - Drop Python 3.7 add Python 3.10.
@@ -15,10 +15,11 @@ tests:
 - Add mode=0o700 to mkdir() calls in test .yml files.
 - Run tests in virtual envirionments. ci.yml.
 - Add test_details.py.
-- add Appveyor to CI to show pytest items.
+- Add Appveyor to CI to show pytest items.
 - Rework requirements files. Add tests.
 - Refactor new fixtures to conftest.py.
-- Rework/refactor quick_links test logic
+- Rework/refactor quick_links test logic.
+- Add test to find trailing spaces in sources.
 - Tox no longer used in test suite.
 
 docs:
@@ -30,6 +31,7 @@ docs:
 style:
 - Style/pep8/inspection fixes.
 - Path and open changes.
+- Remove trailing spaces from 25+ files.
 
 
 1.2.1 - 2021-07-07
@@ -55,7 +57,7 @@ style:
 1.1.0 - 2021-05-12
 
 - Add test directives taken from HTML comments in .md.
-- Implement setup/teardown with Pytest fixtures. 
+- Implement setup/teardown with Pytest fixtures.
 - Use difflib.ndiff to show unexpected output.
 - Add simulator feature to return JUnitXML from pytest.
 
