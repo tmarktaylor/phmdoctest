@@ -173,8 +173,7 @@ def run_and_pytest(
             )
 
         # Copy the generated pytest file from the temporary directory.
-        with open(outfile_path, "r", encoding="utf-8") as fp:
-            outfile_text = fp.read()
+        outfile_text = outfile_path.read_text(encoding="utf-8")
 
         if pytest_options is None:
             return SimulatorStatus(
@@ -184,6 +183,7 @@ def run_and_pytest(
                 junit_xml="",
             )
         else:
+            # Run python -m pytest [options] in a subprocess.
             commandline = [sys.executable, "-m", "pytest"] + pytest_options
             if junit_family:
                 junit_name = outfile_name.replace(".py", ".xml")
@@ -195,8 +195,7 @@ def run_and_pytest(
 
             xml = ""
             if junit_family:
-                with open(junit_path, "r", encoding="utf-8") as fp1:
-                    xml = fp1.read()
+                xml = junit_path.read_text(encoding="utf-8")
 
             return SimulatorStatus(
                 runner_status=runner_status,
