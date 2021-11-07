@@ -171,7 +171,7 @@ def test_readthedocs_python_version():
 
 @pytest.mark.skipif(sys.version_info < (3, 7), reason="requires >=py3.7")
 def test_trailing_whitespace():
-    """Expose files that have lines with trailing spaces.
+    """Expose files in repository that have lines with trailing spaces.
 
     Note- The IDE and/or git may be configurable to prevent trailing spaces
     making this test redundant.
@@ -183,9 +183,8 @@ def test_trailing_whitespace():
     for name in files:
         text = Path(name).read_text(encoding="utf-8")
         lines = text.splitlines()
-        for num, line in enumerate(lines, start=1):
-            got = line
-            wanted = line.rstrip()
+        for num, got in enumerate(lines, start=1):
+            wanted = got.rstrip()
             if got != wanted:
                 print(name, "line", num, "has trailing whitespace.")
                 found_trailing_spaces = True
