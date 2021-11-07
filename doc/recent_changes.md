@@ -1,5 +1,5 @@
 # Recent changes
-1.3.0 - 2021-11-06
+1.3.0 - 2021-11-08
 
 - Add main.testfile().
 - Add testfile_creator and testfile_tester fixtures.
@@ -31,7 +31,7 @@ docs:
 style:
 - Style/pep8/inspection fixes.
 - Path and open changes.
-- Remove trailing spaces from 25+ files.
+- Remove trailing spaces from ~25 files.
 
 
 1.2.1 - 2021-07-07
