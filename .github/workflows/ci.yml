@@ -80,6 +80,7 @@ jobs:
         file: coverage.xml
         flags: pytest,python-${{ steps.setuppython.outputs.python-version }},ubuntu-latest
         fail_ci_if_error: false
+        token: ${{ secrets.CODECOV_TOKEN }}
 
   inspect:
     runs-on: ubuntu-latest
