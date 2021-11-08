@@ -1,4 +1,4 @@
-#### doc/test_directive2.py
+# doc/test_directive2.py
 ```python
 """pytest file built from doc/directive2.md"""
 import pytest
@@ -63,6 +63,6 @@ True
 """
     _phm_compare_exact(a=_phm_expected_str, b=capsys.readouterr().out)
 ```
-This page is created from a Markdown file that contains the contents
-of a python source file in a syntax highlighted fenced code block.
+The above syntax highlighted fenced code block contains the
+contents of a python source file.
 It is included in the documentation as an example python file.

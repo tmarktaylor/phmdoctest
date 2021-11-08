@@ -1,4 +1,4 @@
-### This is file doc/my_markdown_file.md
+# This is file doc/my_markdown_file.md
 
 <!--phmdoctest-label my-fenced-code-block-->
 ```

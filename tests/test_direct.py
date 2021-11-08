@@ -48,7 +48,7 @@ def test_no_directive_on_output_block():
     assert len(directives) == 0
 
 
-def test_comment_skip_on_pycon():
+def test_comment_skip_on_session():
     directives = fenced_block_node_directives()
     assert len(directives) == 1
     marker = directives[0]

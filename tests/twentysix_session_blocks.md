@@ -1,130 +1,130 @@
 
-```pycon
+```py
 >>> print("Hello World!")
 Hello World!
 ```
 
-```py 
+```py
 >>> print("Hello World!")
 Hello World!
 ```
 
-```pycon 
+```py
 >>> print("Hello World!")
 Hello World!
 ```
 
-```py 
+```py
 >>> print("Hello World!")
 Hello World!
 ```
 
-```pycon 
+```py
 >>> print("Hello World!")
 Hello World!
 ```
 
-```pycon 
+```py
 >>> print("Hello World!")
 Hello World!
 ```
 
-```python 
+```py
 >>> print("Hello World!")
 Hello World!
 ```
 
-```pycon 
+```py
 >>> print("Hello World!")
 Hello World!
 ```
 
-```pycon 
+```py
 >>> print("Hello World!")
 Hello World!
 ```
 
-```pycon 
+```py
 >>> print("Hello World!")
 Hello World!
 ```
 
-```pycon 
+```py
 >>> print("Hello World!")
 Hello World!
 ```
 
-```pycon 
+```py
 >>> print("Hello World!")
 Hello World!
 ```
 
-```pycon 
+```py
 >>> print("Hello World!")
 Hello World!
 ```
 
-```pycon 
+```py
 >>> print("Hello World!")
 Hello World!
 ```
 
-```pycon 
+```py
 >>> print("Hello World!")
 Hello World!
 ```
 
-```pycon 
+```py
 >>> print("Hello World!")
 Hello World!
 ```
 
-```pycon 
+```py
 >>> print("Hello World!")
 Hello World!
 ```
 
-```pycon 
+```py
 >>> print("Hello World!")
 Hello World!
 ```
 
-```pycon 
+```py
 >>> print("Hello World!")
 Hello World!
 ```
 
-```pycon 
+```py
 >>> print("Hello World!")
 Hello World!
 ```
 
-```pycon 
+```py
 >>> print("Hello World!")
 Hello World!
 ```
 
-```pycon 
+```py
 >>> print("Hello World!")
 Hello World!
 ```
 
-```pycon 
+```py
 >>> print("Hello World!")
 Hello World!
 ```
 
-```pycon 
+```py
 >>> print("Hello World!")
 Hello World!
 ```
 
-```py 
+```py
 >>> print("Hello World!")
 Hello World!
 ```
 
-```pycon 
+```py
 >>> print("Hello World!")
 Hello World!
 ```

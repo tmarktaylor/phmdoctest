@@ -19,5 +19,5 @@ Floats.VERY_SMALL_ROCKS
 Floats.CHERRIES
 Floats.ADUCK
 ```
-Incorrect sample output replaces Floats.CIDER with
-Floats.VERY_SMALL_ROCKS.
+Incorrect sample output replaces **Floats.CIDER** with
+**Floats.VERY_SMALL_ROCKS**.

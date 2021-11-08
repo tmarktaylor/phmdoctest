@@ -20,14 +20,14 @@ sys.path.insert(0, py_sources_path)
 
 # This file is placed in the project root directory rather than /doc.
 
-# Configuration for Sphinx 1.8.5
+# Configuration for Sphinx
 
 project = "phmdoctest"
 copyright = "2021, Mark Taylor"
 author = "Mark Taylor"
 
 # The full version, including alpha/beta/rc tags
-release = "1.2.1"
+release = "1.3.0"
 
 
 # -- General configuration ---------------------------------------------------
@@ -35,7 +35,7 @@ release = "1.2.1"
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ["recommonmark", "sphinx.ext.autodoc", "sphinx.ext.napoleon"]
+extensions = ["myst_parser", "sphinx.ext.autodoc", "sphinx.ext.napoleon"]
 
 source_suffix = {
     ".rst": "restructuredtext",
@@ -57,6 +57,7 @@ exclude_patterns = [
     "tests",
     "src",
     ".tox",
+    "env",
     ".pytest_cache",
     "_build",
     "Thumbs.db",
@@ -69,17 +70,12 @@ master_doc = "index"
 
 # -- Options for HTML output -------------------------------------------------
 
-on_rtd = os.environ.get("READTHEDOCS", None) == "True"
-if not on_rtd:
-    import sphinx_rtd_theme
-
-    html_theme = "sphinx_rtd_theme"
-    html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
-
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-# html_theme = 'alabaster'
+html_theme = "sphinx_rtd_theme"
+# html_theme = "alabaster"
+
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,

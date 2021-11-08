@@ -1,22 +1,21 @@
-## About the documentation
+# About the documentation
 
-The documentation is built around README.md at the project root.
-README.md serves as the:
+README.md at the project root serves as the:
 
 - project home page
 - PYPI long description
 - user manual
 
-The documentation is constructed to achieve:
+Design considerations:
 
 - Most text is in the README.
 - Python Package Index long description taken from the README.
-- README is at the Github repository root.
+- README is at the GitHub repository root.
 - Examples in the README are fully syntax highlighted.
 - Building a static copy of the documentation for offline use.
-- No visible raw ReStructured text in the README rendered by Github.
+- No visible raw ReStructured text in the README rendered by GitHub.
 
-### Implementation
+## Implementation
 
 - GitHub pages hosts the project website.
 - GitHub hosts the repository and renders README.md.
@@ -29,15 +28,15 @@ The documentation is constructed to achieve:
   - recent_changes.md
   - CONTRIBUTING.md
 
-### Tools
+## Tools
 
 - GitHub Pages
 - Sphinx
-- recommonmark
+- myst_parser
 
-recommonmark enables Sphinx to parse Markdown files.
+myst_parser enables Sphinx to parse Markdown files.
 
-### Files
+## Files
 
 These files are at the project root:
 
@@ -47,10 +46,10 @@ These files are at the project root:
 - README.md
 - conf.py
 
-GitHub page build consumes _config.yml. 
+GitHub page build consumes _config.yml.
 
-Since conf.py is at the project root the entire project is
-searched by Sphinx for document source files.  Additional
+Since conf.py is at the project root Sphinx searches the entire
+project for document source files.  Additional
 **exclude_patterns** keep out unwanted document source files.
 
 The files below in the doc folder are not part of the documentation:
@@ -61,13 +60,5 @@ The files below in the doc folder are not part of the documentation:
 
 ### Read the Docs hosting
 
-The Sphinx documentation is hosted by readthedocs.org.
-The documentation build dependencies **doc/requirements.txt** are
-pinned to what is currently available.
-
-The links that start with '-' in the links section after the
-license badge don't work in the developers build of Sphinx html
-docs.  There is commented out code in tests/quick_links.py
-to create the same links as Sphinx html suggests.  It is
-not likely that code will be deployed. These links might
-get renamed in a future version of phmdoctest.
+readthedocs.org hosts the Sphinx documentation.
+**doc/requirements.txt** lists the build dependencies.

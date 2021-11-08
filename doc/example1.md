@@ -2,13 +2,13 @@
 
 ## Interactive Python session (doctest)
 
-```py 
+```py
 >>> print("Hello World!")
 Hello World!
 ```
 
 ## Source Code and terminal output
- 
+
 Code:
 ```python
 from enum import Enum

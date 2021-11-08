@@ -138,7 +138,7 @@ def setup_and_teardown_fixture(
 
     if setup_block:
         comment = "# setup code line {}.\n".format(setup_block.line)
-        code, _ = apply_inline_commands((setup_block.contents))
+        code, _ = apply_inline_commands(setup_block.contents)
         full_code = comment + code
         indented_code = textwrap.indent(full_code, "    ")
         src = src.replace("    # <setup code here>\n", indented_code, 1)
@@ -227,7 +227,7 @@ def test_case(block: FencedBlock, used_names: Set[str]) -> str:
     if not function_name:
         code_identifier = "test_code_" + str(block.line)
         output_identifier = ""
-        if block.output:
+        if block.output and block.output.role != Role.SKIP_OUTPUT:
             output_identifier = "_output_" + str(block.output.line)
         function_name = code_identifier + output_identifier
     code, num_commented_out_sections = apply_inline_commands(block.contents)
@@ -311,13 +311,15 @@ def build_test_cases(args: Args, blocks: List[FencedBlock]) -> str:
     # Sequence number to order sessions.
     session_counter = itertools.count(1)
 
-    # collect the generated code in a single string
-    # repr escapes back slashes from win filesystem paths
-    # so it can be part of the generated test module docstring.
-    quoted_markdown_path = repr(click.format_filename(args.markdown_file))
-    markdown_path = quoted_markdown_path[1:-1]
-    docstring_text = "pytest file built from {}".format(markdown_path)
-    generated = StringIO()
+    # create the generated test file docstring.
+    built_from = args.built_from
+    if not built_from:
+        # repr escapes back slashes from win filesystem paths
+        # so it can be part of the generated test module docstring.
+        quoted_path = repr(click.format_filename(args.markdown_file))
+        built_from = quoted_path[1:-1]
+    docstring_text = "pytest file built from {}".format(built_from)
+    generated = StringIO()  # collect the generated code in a single string
     generated.write('"""' + docstring_text + '"""\n')
 
     setup_block = get_block_with_role(blocks, Role.SETUP)

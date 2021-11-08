@@ -1,9 +1,10 @@
 """phmdoctest entry point."""
+from typing import List, Optional
 
 import click
 
 from phmdoctest.entryargs import Args
-from phmdoctest.fenced import Role
+from phmdoctest.fenced import FencedBlock, Role
 import phmdoctest.cases
 import phmdoctest.fenced
 import phmdoctest.fillrole
@@ -24,7 +25,7 @@ import phmdoctest.tool
 @click.option(
     "--outfile",
     nargs=1,
-    help=('Write generated test case file to path TEXT. "-"' " writes to stdout."),
+    help='Write generated test case file to path TEXT. "-"' " writes to stdout.",
 )
 @click.option(
     "-s",
@@ -119,10 +120,22 @@ def entry_point(
         setup=setup,
         teardown=teardown,
         setup_doctest=setup_doctest,
+        built_from="",  # not supplied by the Click command line.
     )
+    blocks = _configure_block_roles(args)
+    if args.is_report:
+        phmdoctest.report.print_report(args, blocks)
 
-    # Find markdown blocks and pair up code and output blocks.
-    with click.open_file(args.markdown_file, encoding="utf-8") as fp:
+    # build test cases and write to the --outfile path
+    if args.outfile:
+        test_case_string = phmdoctest.cases.build_test_cases(args, blocks)
+        with click.open_file(args.outfile, "w", encoding="utf-8") as ofp:
+            ofp.write(test_case_string)
+
+
+def _configure_block_roles(args: Args) -> List[FencedBlock]:
+    """Find markdown blocks and pair up code and output blocks."""
+    with click.open_file(args.markdown_file, "r", encoding="utf-8") as fp:
         blocks = phmdoctest.fenced.convert_nodes(phmdoctest.tool.fenced_block_nodes(fp))
     phmdoctest.fillrole.identify_code_output_session_blocks(blocks)
     phmdoctest.fillrole.del_problem_blocks(blocks)
@@ -132,11 +145,69 @@ def entry_point(
     phmdoctest.fillrole.find_and_designate_teardown(
         args.teardown, code_and_session_blocks
     )
-    if args.is_report:
-        phmdoctest.report.print_report(args, blocks)
+    return blocks
 
-    # build test cases and write to the --outfile path
-    if args.outfile:
-        test_case_string = phmdoctest.cases.build_test_cases(args, blocks)
-        with click.open_file(args.outfile, "w", encoding="utf-8") as ofp:
-            ofp.write(test_case_string)
+
+def testfile(
+    markdown_file: str = "",
+    *,
+    skips: Optional[List[str]] = None,
+    fail_nocode: bool = False,
+    setup: Optional[str] = None,
+    teardown: Optional[str] = None,
+    setup_doctest: bool = False,
+    built_from: str = "",
+) -> str:
+    """Run with callers keyword arguments and default values.
+
+    Return a string that contains the generated pytest file.
+    The parameters are described by the command line help.
+    Each string in the list skips is described by the --skip TEXT
+    command line option.
+
+    Args:
+        markdown_file
+            Path to the Markdown input file.
+
+    Keyword Args:
+        skips
+            List[str]. Do not test blocks with substring TEXT.
+
+        fail_nocode
+            Markdown file with no code blocks generates a failing test.
+
+        setup
+            Run block with substring TEXT at test module setup time.
+
+        teardown
+            Run block with substring TEXT at test module teardown time.
+
+        setup_doctest
+            Make globals created by the setup Python code block
+            or setup directive visible to Python interactive session >>> blocks.
+            Caution: The globals are set at Pytest Session scope and are visible
+            to all tests run by --doctest-modules.
+
+        built_from
+            Text that follows "built from" in test file's docstring.
+            When empty string the docstring built from text is derived
+            from markdown_file.
+
+    Returns:
+        String containing the contents of the generated pytest file.
+    """
+    if skips is None:
+        skips = []
+    args = Args(
+        markdown_file=markdown_file,
+        outfile="",
+        skips=skips,
+        is_report=False,
+        fail_nocode=fail_nocode,
+        setup=setup,
+        teardown=teardown,
+        setup_doctest=setup_doctest,
+        built_from=built_from,
+    )
+    blocks = _configure_block_roles(args)
+    return phmdoctest.cases.build_test_cases(args, blocks)

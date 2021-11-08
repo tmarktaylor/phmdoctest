@@ -10,6 +10,6 @@ A line of code in report.print_report checks for
 produces the table only if the list of blocks is
 not empty.
 
-Running phmdoctest with this file produces branch 
+Running phmdoctest with this file produces branch
 coverage for the branch taken when the list of
 blocks is empty.

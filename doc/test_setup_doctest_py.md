@@ -1,4 +1,4 @@
-#### doc/test_setup_doctest.py
+# doc/test_setup_doctest.py
 ```python
 """pytest file built from doc/setup_doctest.md"""
 import pytest
@@ -97,6 +97,6 @@ def session_00002_line_76():
     3.142
     """
 ```
-This page is created from a Markdown file that contains the contents
-of a python source file in a syntax highlighted fenced code block.
+The above syntax highlighted fenced code block contains the
+contents of a python source file.
 It is included in the documentation as an example python file.

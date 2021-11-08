@@ -1,9 +1,9 @@
-#### doc/directive3.md
+# doc/directive3.md
 ~~~
 # This is Markdown file directive3.md
 
 Directives are HTML comments and are not rendered.
-To see the directives press Edit on Github and then
+To see the directives press Edit on GitHub and then
 the Raw button.
 
 ## share-names and clear-names directives.
@@ -30,10 +30,10 @@ else:
     assert False, "did not get expected NameError"
 ```
 
-#### Share the names assigned here with later Python code blocks. 
+## Share the names assigned here with later Python code blocks.
 The share-names directive makes the names assigned here
 global to the test module.  The names are visible to all Python code blocks
-occurring later in the Markdown source file. The code assigns the 
+occurring later in the Markdown source file. The code assigns the
 names string, x, y, z, grades, and the function incrementer().
 Place the `<!--phmdoctest-share-names-->` directive in the Markdown file.
 
@@ -50,7 +50,7 @@ def incrementer(x):
 grades = ["A", "B", "C"]
 ```
 
-#### This test case shows the shared names are visible.
+## This test case shows the shared names are visible.
 ```python
 print("string.digits=", string.digits)
 print(incrementer(10))
@@ -65,14 +65,14 @@ string.digits= 0123456789
 77 88 99
 ```
 
-#### This test case modifies grades.
+## This test case modifies grades.
 The objects created by the share-names code block can be modified
-and blocks run afterward will see the changes.  
+and blocks run afterward will see the changes.
 ```python
 grades.append("D")
 ```
 
-#### This test case sees the modified grades.
+## This test case sees the modified grades.
 ```python
 print(grades == ["A", "B", "C", "D"])
 ```
@@ -81,7 +81,7 @@ expected output:
 True
 ```
 
-#### This test case shares another name.
+## This test case shares another name.
 <!--phmdoctest-share-names-->
 ```python
 hex_digits = string.hexdigits
@@ -95,14 +95,14 @@ have an output block.
 0123456789abcdefABCDEF
 ```
 
-#### Use clear-names directive to un-share.
+## Use clear-names directive to un-share.
 
 First notice that hex_digits shared by the last test case
 is visible.
 The clear-names directive un-shares any previously shared names.
 The names will no longer be visible to Python code
 blocks occurring later in the Markdown source file.
-The clearing does not happen until after the test case is run.
+The clearing does not happen until after the test case runs.
 This test case is the same as the previous test case to show
 that mylist is still visible.
 <!--phmdoctest-clear-names-->
@@ -134,7 +134,6 @@ else:
     assert False, "expected NameError for hex_digits"
 ```
 ~~~
-This page is created from a Markdown file that contains the contents
-of a Markdown source file in a fenced code block.
+The above fenced code block contains the contents of a Markdown file.
 It shows the HTML comments which are not visible in rendered Markdown.
 It is included in the documentation as an example raw Markdown file.

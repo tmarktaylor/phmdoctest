@@ -1,0 +1,24 @@
+# Results at https://ci.appveyor.com/project/tmarktaylor/phmdoctest
+build: off
+
+install:
+# It is advisable to install in a virtual environment.
+# Use the pre-installed python image to create the virtual environment.
+# https://packaging.python.org/guides/installing-using-pip-and-virtual-environments
+# https://www.appveyor.com/docs/windows-images-software#python
+- cmd: py -m venv env
+- cmd: .\env\Scripts\activate
+- cmd: where python
+- cmd: python -m pip install --upgrade pip
+- cmd: python -m pip --version
+- cmd: python -m pip install --no-deps "."
+- cmd: python -m pip install -r requirements.txt
+- cmd: python -m pip install -r tests/requirements.txt
+
+test_script:
+# Create directory "tmp" for the generated pytest file.
+# Run phmdoctest to generate the test file and print the report.
+# Run the phmdoctest test suite including the generated pytest file in "tmp".
+- cmd: python -c "from pathlib import Path; d = Path('tests') / 'tmp'; d.mkdir(mode=0o700)"
+- cmd: phmdoctest project.md --report --outfile tests/tmp/test_project.py
+- cmd: pytest --doctest-modules -vv tests

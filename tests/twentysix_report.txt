@@ -1,35 +1,35 @@
-   tests/twentysix_session_blocks.md fenced blocks
------------------------------------------------------
-block     line  test          TEXT or directive
-type    number  role          quoted and one per line
------------------------------------------------------
-pycon        3  skip-session  ">>>"
-py           8  skip-session  ">>>"
-pycon       13  skip-session  ">>>"
-py          18  skip-session  ">>>"
-pycon       23  skip-session  ">>>"
-pycon       28  skip-session  ">>>"
-python      33  skip-session  ">>>"
-pycon       38  skip-session  ">>>"
-pycon       43  skip-session  ">>>"
-pycon       48  skip-session  ">>>"
-pycon       53  skip-session  ">>>"
-pycon       58  skip-session  ">>>"
-pycon       63  skip-session  ">>>"
-pycon       68  skip-session  ">>>"
-pycon       73  skip-session  ">>>"
-pycon       78  skip-session  ">>>"
-pycon       83  skip-session  ">>>"
-pycon       88  skip-session  ">>>"
-pycon       93  skip-session  ">>>"
-pycon       98  skip-session  ">>>"
-pycon      103  skip-session  ">>>"
-pycon      108  skip-session  ">>>"
-pycon      113  skip-session  ">>>"
-pycon      118  skip-session  ">>>"
-py         123  skip-session  ">>>"
-pycon      128  skip-session  ">>>"
------------------------------------------------------
+  tests/twentysix_session_blocks.md fenced blocks
+----------------------------------------------------
+block    line  test          TEXT or directive
+type   number  role          quoted and one per line
+----------------------------------------------------
+py          3  skip-session  ">>>"
+py          8  skip-session  ">>>"
+py         13  skip-session  ">>>"
+py         18  skip-session  ">>>"
+py         23  skip-session  ">>>"
+py         28  skip-session  ">>>"
+py         33  skip-session  ">>>"
+py         38  skip-session  ">>>"
+py         43  skip-session  ">>>"
+py         48  skip-session  ">>>"
+py         53  skip-session  ">>>"
+py         58  skip-session  ">>>"
+py         63  skip-session  ">>>"
+py         68  skip-session  ">>>"
+py         73  skip-session  ">>>"
+py         78  skip-session  ">>>"
+py         83  skip-session  ">>>"
+py         88  skip-session  ">>>"
+py         93  skip-session  ">>>"
+py         98  skip-session  ">>>"
+py        103  skip-session  ">>>"
+py        108  skip-session  ">>>"
+py        113  skip-session  ">>>"
+py        118  skip-session  ">>>"
+py        123  skip-session  ">>>"
+py        128  skip-session  ">>>"
+----------------------------------------------------
 0 test cases.
 26 skipped interactive session blocks.
 

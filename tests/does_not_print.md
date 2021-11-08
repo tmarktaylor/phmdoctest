@@ -1,4 +1,4 @@
-### Code doesn't call print(). 
+### Code doesn't call print().
 
 Python fenced code block has no print statements.
 

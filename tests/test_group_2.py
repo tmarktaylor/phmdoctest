@@ -1,9 +1,10 @@
 """Second group of pytest test cases for phmdoctest."""
+from pathlib import Path
+
 import phmdoctest
 import phmdoctest.cases
 import phmdoctest.main
 import phmdoctest.simulator
-import verify
 
 
 def test_skip_first():
@@ -47,7 +48,7 @@ def test_skip_first_session():
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
     stdout = simulator_status.runner_status.stdout
-    assert 'pycon        3  skip-session  "FIRST"' in stdout
+    assert 'py          3  skip-session  "FIRST"' in stdout
     assert "FIRST         3" in stdout
 
 
@@ -63,7 +64,7 @@ def test_skip_second_session():
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
     stdout = simulator_status.runner_status.stdout
-    assert 'py           8  skip-session  "SECOND"' in stdout
+    assert 'py          8  skip-session  "SECOND"' in stdout
     assert "SECOND        8" in stdout
 
 
@@ -123,7 +124,7 @@ def test_skip_matches_start_of_contents():
         '  --skip="words =" --report --outfile discarded.py'
     )
     simulator_status = phmdoctest.simulator.run_and_pytest(
-        well_formed_command=command, pytest_options=["--doctest-modules", "-vv"]
+        well_formed_command=command, pytest_options=["--doctest-modules", "-v"]
     )
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code == 0
@@ -144,7 +145,7 @@ def test_multiple_skips_report():
     assert "len           44" in stdout
 
 
-def test_one_skip_many_matches():
+def test_one_skip_many_matches(checker):
     """Every block matches the skip pattern presenting multi-line report."""
     command = "phmdoctest tests/twentysix_session_blocks.md" ' --skip=">>>" --report'
     simulator_status = phmdoctest.simulator.run_and_pytest(
@@ -153,10 +154,8 @@ def test_one_skip_many_matches():
     assert simulator_status.runner_status.exit_code == 0
     assert simulator_status.pytest_exit_code is None
     stdout = simulator_status.runner_status.stdout
-
-    with open("tests/twentysix_report.txt", "r", encoding="utf-8") as f:
-        want = f.read()
-    verify.a_and_b_are_the_same(want, stdout)
+    want = Path("tests/twentysix_report.txt").read_text(encoding="utf-8")
+    checker(want, stdout)
 
 
 def test_no_output_blocks():

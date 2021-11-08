@@ -14,6 +14,13 @@ export.bat
 MANIFEST
 .sdist
 .tox
+
+# reserved for virtual environment
+env
+
+# reserved for generated test files
+tests/tmp
+
 .cache
 .coverage
 .pypirc
@@ -26,3 +33,4 @@ htmlcov/
 
 # Sphinx
 doc/_build/*
+_build/*

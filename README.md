@@ -1,18 +1,18 @@
-# phmdoctest 1.2.1
+# phmdoctest 1.3.0
 
 ## Introduction
 
 Python syntax highlighted Markdown doctest
 
-Command line program to test Python syntax highlighted code
-examples in Markdown.
+Command line program and Python library to test Python syntax
+highlighted code examples in Markdown.
 
-- Writes a pytest test file that tests Python examples in
+- Creates a [pytest][15] Python module that tests Python examples in
   README and other Markdown files.
 - Reads these from Markdown fenced code blocks:
   - Python interactive sessions described by [doctest][4].
   - Python source code and expected terminal output.
-- The test cases are run later by calling pytest.  
+- The test cases get run later by running pytest.
 - Simple use case is possible with no Markdown edits at all.
 - More features selected by adding HTML comment **directives**
   to the Markdown.
@@ -20,17 +20,23 @@ examples in Markdown.
   - Add a pytest.mark.skip decorator.
   - Promote names defined in a test case to module level globals.
   - Label any fenced code block for later retrieval (API).
-- Add inline annotations to comment out sections of code.  
+- Add inline annotations to comment out sections of code.
 - Get code coverage by running pytest with [coverage][6].
 - Select Python source code blocks as setup and teardown code.
 - Setup applies to code blocks and optionally to session blocks.
 - An included Python library: [Latest Development tools API][10].
-  - functions to read fenced code blocks from Markdown. *(tool.py)*
-  - runs phmdoctest and can run pytest too. *(simulator.py)*
-  - extract testsuite tree and list of failing trees from JUnit XML. *(tool.py)*
-  
+  - Python function returns test file in a string. *(testfile() in main.py)*
+  - Two pytest fixtures. *(tester.py)*
+    1. **testfile_creator** runs *testfile()*. Use with testfile_tester.
+    2. **testfile_tester** runs a pytest file with pytest's pytester
+       in its isolated environment.
+  - Runs phmdoctest and can run pytest too. *(simulator.py)*
+  - Functions to read fenced code blocks from Markdown. *(tool.py)*
+  - Extract testsuite tree and list of failing trees from JUnit XML. *(tool.py)*
+- Available soon as a pytest plugin.
 
-##### master branch status
+
+### default branch status
 [![](https://img.shields.io/pypi/l/phmdoctest.svg)](https://github.com/tmarktaylor/phmdoctest/blob/master/LICENSE.txt)
 [![](https://img.shields.io/pypi/v/phmdoctest.svg)](https://pypi.python.org/pypi/phmdoctest)
 [![](https://img.shields.io/pypi/pyversions/phmdoctest.svg)](https://pypi.python.org/pypi/phmdoctest)
@@ -38,22 +44,24 @@ examples in Markdown.
 
 [![Usage Test](https://github.com/tmarktaylor/phmdoctest/actions/workflows/install.yml/badge.svg)](https://github.com/tmarktaylor/phmdoctest/actions/workflows/install.yml)
 [![CI Test](https://github.com/tmarktaylor/phmdoctest/actions/workflows/ci.yml/badge.svg)](https://github.com/tmarktaylor/phmdoctest/actions/workflows/ci.yml)
-[![](https://readthedocs.org/projects/phmdoctest/badge/?version=latest)](https://phmdoctest.readthedocs.io/en/latest/?badge=latest)
-[![](https://codecov.io/gh/tmarktaylor/phmdoctest/coverage.svg?branch=master)](https://codecov.io/gh/tmarktaylor/phmdoctest?branch=master)
+[![Build status](https://ci.appveyor.com/api/projects/status/5pp3swc1q1fgbcd6/branch/master?svg=true)](https://ci.appveyor.com/project/tmarktaylor/phmdoctest/branch/master)
+[![readthedocs](https://readthedocs.org/projects/phmdoctest/badge/?version=latest)](https://phmdoctest.readthedocs.io/en/latest/?badge=latest)
+[![codecov](https://codecov.io/gh/tmarktaylor/phmdoctest/coverage.svg?branch=master)](https://codecov.io/gh/tmarktaylor/phmdoctest?branch=master)
 
 [Website](https://tmarktaylor.github.io/phmdoctest) |
 [Docs](https://phmdoctest.readthedocs.io/en/latest/) |
 [Repos](https://github.com/tmarktaylor/phmdoctest) |
-[Build][12] |
+[pytest][13] |
 [Codecov](https://codecov.io/gh/tmarktaylor/phmdoctest?branch=master) |
 [License](https://github.com/tmarktaylor/phmdoctest/blob/master/LICENSE.txt)
 
 
 [Introduction](#introduction) |
 [Installation](#installation) |
-[Sample Usage](#sample-usage) |
-[Sample usage without directives](#sample-usage-without-directives) |
-[--report](#--report) |
+[Sample usage](#sample-usage) |
+[Sample Usage with HTML comment directives](#sample-usage-with-html-comment-directives) |
+[CI usage](#ci-usage) |
+[--report](#report-option) |
 [Identifying blocks](#identifying-blocks) |
 [Directives](#directives) |
 [skip](#skip) |
@@ -69,19 +77,21 @@ examples in Markdown.
 [setup and teardown example](#setup-and-teardown-example) |
 [share-names clear-names example](#share-names-clear-names-example) |
 [Inline annotations](#inline-annotations) |
-[skipping blocks with --skip](#skipping-blocks-with---skip) |
-[--skip](#--skip) |
-[-s short form of --skip](#-s-short-form-of---skip) |
-[--fail-nocode](#--fail-nocode) |
-[--setup](#--setup) |
-[--teardown](#--teardown) |
+[skipping blocks with --skip](#skipping-blocks-with-skip-option) |
+[--skip](#skip-option) |
+[short form of --skip](#short-form-of-skip-option) |
+[--fail-nocode](#fail-nocode-option) |
+[--setup](#setup-option) |
+[--teardown](#teardown-option) |
 [Setup example](#setup-example) |
 [Setup for sessions](#setup-for-sessions) |
 [Execution context](#execution-context) |
 [Send outfile to stdout](#send-outfile-to-stdout) |
 [Usage](#usage) |
 [Run as a Python module](#run-as-a-python-module) |
-[Call from Python](#call-from-python) |
+[Python API](#python-api) |
+[pytest fixtures](#pytest-fixtures) |
+[Simulate command line](#simulate-command-line) |
 [Hints](#hints) |
 [Directive hints](#directive-hints) |
 [Related projects](#related-projects)
@@ -98,61 +108,7 @@ It is advisable to install in a virtual environment.
 
     python -m pip install phmdoctest
 
-## Sample Usage
-
-Given the Markdown file shown in raw form here...
-<!--phmdoctest-label directive-example-raw-->
-~~~
-<!--phmdoctest-mark.skip-->
-<!--phmdoctest-label test_example-->
-```python
-print("Hello World!")
-```
-```
-incorrect expected output
-```
-~~~
-
-the command...
-<!--phmdoctest-label directive-example-command-->
-```
-phmdoctest tests/one_mark_skip.md --outfile test_one_mark_skip.py
-```
-
-creates the python source code file shown here...
-<!--phmdoctest-label directive-example-outfile-->
-```python
-"""pytest file built from tests/one_mark_skip.md"""
-import pytest
-
-from phmdoctest.functions import _phm_compare_exact
-
-
-@pytest.mark.skip()
-def test_example(capsys):
-    print("Hello World!")
-
-    _phm_expected_str = """\
-incorrect expected output
-"""
-    _phm_compare_exact(a=_phm_expected_str, b=capsys.readouterr().out)
-```
-
-Run the --outfile with pytest...
-```
-$ pytest -vv test_one_mark_skip.py
-
-test_one_mark_skip.py::test_example SKIPPED 
-```
-
-- The HTML comments in the Markdown are phmdoctest **directives**.
-- The mark.skip directive adds the @pytest.mark.skip() line.
-- The label directive names the test case function.
-- List of  [Directives](#directives)
-- Directives are not required.
-
-
-## Sample usage without directives
+## Sample usage
 
 Given the Markdown file [example1.md](doc/example1.md)
 shown in raw form here...
@@ -163,13 +119,13 @@ shown in raw form here...
 
 ## Interactive Python session (doctest)
 
-```py 
+```py
 >>> print("Hello World!")
 Hello World!
 ```
 
 ## Source Code and terminal output
- 
+
 Code:
 ```python
 from enum import Enum
@@ -239,33 +195,109 @@ Then run a pytest command something like this in your terminal
 to test the Markdown session, code, and expected output blocks.
 
     pytest --doctest-modules
-    
+
 Or these two commands:
 
     pytest
     python -m doctest test_example1.py
 
-The `line_6` in the function name `session_00001_line_6` is the 
+The `line_6` in the function name `session_00001_line_6` is the
 line number in [example1.md](doc/example1.md) of the first line
 of the interactive session. `00001` is a sequence number to
-order the doctests. 
+order the doctests.
 
 The `14` in the function name `test_code_14_output_28` is the
 line number of the first line
-of python code. `28` shows the line number of the expected 
+of python code. `28` shows the line number of the expected
 terminal output.
 
-One test case function is generated for each: 
+One test case function gets generated for each:
 
-- Markdown fenced code block interactive session 
+- Markdown fenced code block interactive session
 - Python-code/expected-output Markdown fenced code block pair
 
 The `--report` option below shows the blocks discovered and
 how they are tested.
-   
-## --report
 
-To see the [GFM fenced code blocks][3] in the MARKDOWN_FILE use the 
+## Sample Usage with HTML comment directives
+
+Given the Markdown file shown in raw form here...
+<!--phmdoctest-label directive-example-raw-->
+~~~
+<!--phmdoctest-mark.skip-->
+<!--phmdoctest-label test_example-->
+```python
+print("Hello World!")
+```
+```
+incorrect expected output
+```
+~~~
+
+the command...
+<!--phmdoctest-label directive-example-command-->
+```
+phmdoctest tests/one_mark_skip.md --outfile test_one_mark_skip.py
+```
+
+creates the python source code file shown here...
+<!--phmdoctest-label directive-example-outfile-->
+```python
+"""pytest file built from tests/one_mark_skip.md"""
+import pytest
+
+from phmdoctest.functions import _phm_compare_exact
+
+
+@pytest.mark.skip()
+def test_example(capsys):
+    print("Hello World!")
+
+    _phm_expected_str = """\
+incorrect expected output
+"""
+    _phm_compare_exact(a=_phm_expected_str, b=capsys.readouterr().out)
+```
+
+Run the --outfile with pytest...
+```
+$ pytest -vv test_one_mark_skip.py
+
+test_one_mark_skip.py::test_example SKIPPED
+```
+
+- The HTML comments in the Markdown are phmdoctest **directives**.
+- The **mark.skip** directive adds the @pytest.mark.skip() line.
+- The label directive names the test case function.
+- List of  [Directives](#directives)
+- Directives are optional.
+- Markdown edits are optional.
+
+## CI usage
+
+Test Python examples in README.md in Continuous Integration scripts.
+In this snippet for Linux the pytest test suite is in the
+**tests** folder.
+
+<!--phmdoctest-label ci-example-->
+```bash
+mkdir tests/tmp
+phmdoctest README.md --report --outfile tests/tmp/test_readme.py
+pytest --doctest-modules -vv tests
+```
+
+This console shows testing Python examples in project.md.
+Look for the tmp tests at the bottom. [Windows Usage on Appveyor][13].
+
+See this excerpt from ci.yml [Actions usage example](doc/actions_usage.md).
+It runs on Windows, Linux, and macOS. Please find the phmdoctest command
+at the bottom.
+
+No changes to README.md are needed [here, look in the last job log][14].
+
+## report option
+
+To see the [GFM fenced code blocks][3] in the MARKDOWN_FILE use the
 `--report` option like this:
 
 <!--phmdoctest-label report-command-->
@@ -275,7 +307,7 @@ phmdoctest doc/example2.md --report
 
 which lists the fenced code blocks it found in
 the file [example2.md](doc/example2.md).
-The `test role` column shows how each fenced code block is tested.  
+The `test role` column shows how each fenced code block gets tested.
 
 <!--phmdoctest-label example2-report-->
 ```
@@ -308,15 +340,15 @@ py         102  session
 The PYPI [commonmark][7] project provides code to extract fenced code
 blocks from Markdown. Specification [CommonMark Spec][8] and website [CommonMark][9].
 
-Python code, expected output, and Python interactive sessions are extracted.
+Python code, expected output, and Python interactive sessions get extracted.
 
 Only [GFM fenced code blocks][3] are considered.
 
-A block is a session block if the info_string starts with 'py' 
+A block is a session block if the info_string starts with ``py``
 and the first line of the block starts with the
 session prompt: `'>>> '`.
- 
-To be treated as Python code the opening fence should start 
+
+To be treated as Python code the opening fence should start
 with one of these:
 
     ```python
@@ -336,8 +368,8 @@ is laden with additional text, it will be ignored.  The
 entire info string will be shown in the block type column of the
 report.
 
-Output blocks are fenced code blocks that immediately follow a
-Python block and start with an opening fence like this which
+An output block is a fenced code block that immediately follows a
+Python block and starts with an opening fence like this which
 has an empty info string.
 
     ```
@@ -348,8 +380,8 @@ if it is followed by any of:
 - Python code block
 - Python session block
 - a fenced code block with a non-empty info string
-  
-Test code is generated for it, but there will be no
+
+Test code gets generated for it, but there will be no
 assertion statement.
 
 ## Directives
@@ -357,7 +389,7 @@ assertion statement.
 Directives are HTML comments containing test generation commands.
 They are edited into the Markdown file immediately before a fenced
 code block. It is OK if other HTML comments are present.
-The `<!--phmdoctest-skip-->` directive is shown in the
+See the `<!--phmdoctest-skip-->` directive in the
 raw Markdown below.
 With the skip directive no test code will be
 generated from the fenced code block.
@@ -385,7 +417,7 @@ List of Directives
 <!--phmdoctest-mark.skip-->        | code
 <!--phmdoctest-mark.skipif<3.N-->  | code
 <!--phmdoctest-setup-->            | code
-<!--phmdoctest-teardown-->         | code 
+<!--phmdoctest-teardown-->         | code
 <!--phmdoctest-share-names-->      | code
 <!--phmdoctest-clear-names-->      | code
 ```
@@ -393,7 +425,7 @@ List of Directives
 [Directive hints](#directive-hints)
 
 ## skip
-The skip directive or `--skip TEXT` command line option 
+The skip directive or `--skip TEXT` command line option
 prevents code generation for the code or session block.
 The skip directive can be placed on an expected output block.
 There it prevents checking expected against actual output.
@@ -407,9 +439,9 @@ Two generated tests, the first without a label,
 shown in pytest -v terminal output:
 
 ```
-test_readme.py::test_code_93 FAILED 
+test_readme.py::test_code_93 FAILED
 test_readme.py::test_beta_feature FAILED
-``` 
+```
 
 ## label on any fenced code block
 On any fenced code block, the label directive identifies the block
@@ -421,7 +453,7 @@ phmdoctest. The directive value can be any string.
 
 <!--phmdoctest-label my-markdown-file-->
 ~~~
-### This is file doc/my_markdown_file.md
+# This is file doc/my_markdown_file.md
 
 <!--phmdoctest-label my-fenced-code-block-->
 ```
@@ -447,12 +479,12 @@ The label directive can be placed on any fenced code block.
 
 ## pytest skip
 The `<!--phmdoctest-mark.skip-->`  directive generates a test
-case with a `@pytest.mark.skip()` decorator. 
+case with a `@pytest.mark.skip()` decorator.
 [Example.](#label-skip-and-mark-example)
 
 
 ## pytest skipif
-The `<!--phmdoctest-mark.skipif<3.N-->`  directive generates 
+The `<!--phmdoctest-mark.skipif<3.N-->`  directive generates
 a test case with the pytest decorator
 `@pytest.mark.skipif(sys.version_info < (3, N), reason="requires >=py3.N")`.
 N is a Python minor version number.
@@ -461,13 +493,13 @@ N is a Python minor version number.
 ## setup
 A single Python code block can assign names visible to
 other code blocks by adding a setup directive or
-using the [--setup](#--setup) command line option.
+using the [--setup](#setup-option) command line option.
 
 Names assigned by the setup block
-are copied to the test module's global namespace after
+get copied to the test module's global namespace after
 the setup block runs.
 
-Here is an example setup block from 
+Here is an example setup block from
 [setup.md](doc/setup.md):
 <!--phmdoctest-label setup-md-first-block-->
 ```python
@@ -490,13 +522,13 @@ to the other Python code blocks. The objects can be modified.
 Selects a single Python code block that runs
 at test module teardown time.
 A teardown block can also be designated
-using the [--teardown](#--teardown) command line option.
+using the [--teardown](#teardown-option) command line option.
 [Example.](#setup-and-teardown-example)
- 
+
 ## share-names
-Names assigned by the Python code block are copied to
+Names assigned by the Python code block get copied to
 the test module as globals after the test code runs. This happens at run
-time. These names are now visible to subsequent 
+time. These names are now visible to subsequent
 test cases generated for Python code blocks in the Markdown file.
 share-names modifies the execution context as described for
 the setup directive above.
@@ -505,13 +537,13 @@ code block.
 [Example.](#share-names-clear-names-example)
 
 This directive effectively joins its Python code block to the
-following Python code blocks in the Markdown file. 
+following Python code blocks in the Markdown file.
 
 ## clear-names
 After the test case generated for the Python code block
 with the clear-names directive runs, all names that were
 created by one or more preceding share-names directives
-are deleted. The names that were shared are no longer visible.
+get deleted. The names that were shared are no longer visible.
 This directive also deletes the names assigned by setup.
 [Example.](#share-names-clear-names-example)
 
@@ -532,7 +564,7 @@ phmdoctest doc/directive1.md --outfile test_directive1.py
 
 ## setup and teardown example
 The file [directive2.md](doc/directive2_raw.md) contains
-example usage of label, skip, and mark directives. 
+example usage of label, skip, and mark directives.
 The command below generates
 [test_directive2.py](doc/test_directive2_py.md).
 `phmdoctest doc/directive2.md --report`
@@ -546,7 +578,7 @@ phmdoctest doc/directive2.md --outfile test_directive2.py
 
 ## share-names clear-names example
 The file [directive3.md](doc/directive3_raw.md) contains
-example usage of share-names and clear-names directives. 
+example usage of share-names and clear-names directives.
 The command below generates
 [test_directive3.py](doc/test_directive3_py.md).
 `phmdoctest doc/directive3.md --report`
@@ -562,10 +594,10 @@ phmdoctest doc/directive3.md --outfile test_directive3.py
 
 Inline annotations comment out sections of code.
 They can be added to the end of lines in Python code blocks.
-They should be in a comment. 
+They should be in a comment.
 
-- `phmdoctest:omit` comments out a section of code.  The line it is on, 
-  plus following lines at greater indent are commented out.
+- `phmdoctest:omit` comments out a section of code.  The line it is on,
+  plus following lines at greater indent get commented out.
 - `phmdoctest:pass` comments out one line of code and prepends the pass statement.
 
 Here is a snippet showing how to place `phmdoctest:pass` in the code.
@@ -587,8 +619,8 @@ def takes_too_long():
 takes_too_long()
 ```
 
-Use `phmdoctest:omit` on single or multi-line statements. Note that two
-time.sleep(99) calls were commented out. They follow and are indented more
+Use `phmdoctest:omit` on single or multi-line statements. Note the two
+commented out time.sleep(99). They follow and are indented more
 that the `if condition:`line with `phmdoctest:omit`.
 
 <!--phmdoctest-label omit-code-->
@@ -612,7 +644,7 @@ condition = True
 ```
 
 Inline annotation processing counts the number of commented
-out sections and adds the count as the suffix 
+out sections and adds the count as the suffix
 `_N` to the name of the pytest function in the
 generated test file.
 
@@ -621,7 +653,7 @@ than the Python standard library **doctest** directive `#doctest+SKIP`.
 Improper use of `phmdoctest:omit` can cause Python syntax errors.
 
 The examples above are snippets that illustrate how to
-use inline annotations. 
+use inline annotations.
 Here is an example that produces a pytest file from Markdown.
 The command below takes [inline_example.md](doc/inline_example.md) and generates
 [test_inline_example.py](doc/test_inline_example_py.md).
@@ -631,43 +663,43 @@ phmdoctest doc/inline_example.md --outfile test_inline_example.py
 ```
 
 
-## skipping blocks with --skip
+## skipping blocks with skip option
 
 If you don't want to generate test cases for Python
 blocks precede the block with a **skip** directive or
-use the `--skip TEXT` option. More than one **skip** directive 
+use the `--skip TEXT` option. More than one **skip** directive
 or`--skip TEXT`is allowed.
 
-The following describes using `--skip TEXT`.  
-The code in each Python block is searched 
+The following describes using `--skip TEXT`.
+The code in each Python block gets searched
 for the substring `TEXT`.  Zero, one or more blocks will contain
 the substring. These blocks will not generate test cases in the
 output file.
 
-- The Python code in the fenced code block is searched.
+- The Python code in the fenced code block gets searched.
 - The info string is **not** searched.
 - Output blocks are **not** searched.
-- Both Python code and session blocks are searched.
+- Both Python code and session blocks get searched.
 - Case is significant.
 
-The report shows which Python blocks are skipped
-in the test role column and the Python blocks that 
+The report shows which Python blocks get skipped
+in the test role column, and the Python blocks that
 matched each --skip TEXT in the skips section.
 
 This option makes it **very easy** to **inadvertently exclude**
-Python blocks from the test cases.  In the event no test cases are
+Python blocks from the test cases.  In the event no test cases get
 generated, the option `--fail-nocode` described below is useful.
 
 Three special `--skip TEXT` strings work a little differently.
 They select one of the first, second, or last of the Python blocks.
-Only Python blocks are counted.
+Only Python blocks get counted.
 - `--skip FIRST` skips the first Python block.
 - `--skip SECOND` skips the second Python block.
 - `--skip LAST` skips the final Python block.
 
-## --skip
+## skip option
 
-This command
+This command using `--skip`:
 
 <!--phmdoctest-label skip-command-->
 ```
@@ -711,13 +743,13 @@ Python 3.7    20
 LAST          102
 ------------------------------------------------
 ```
- 
-and creates the output file [test_example2.py](doc/test_example2_py.md)
+
+creates the output file [test_example2.py](doc/test_example2_py.md)
 
 
-## -s short form of --skip
+## short form of skip option
 
-This is the same command as above using the short `-s` form of the --skip option
+This is the same command as above using the short `-s` form of the `--skip` option
 in two places.
 It produces the same report and outfile.
 <!--phmdoctest-label short-skip-command-->
@@ -725,23 +757,23 @@ It produces the same report and outfile.
 phmdoctest doc/example2.md -s "Python 3.7" -sLAST --report --outfile test_example2.py
 ```
 
-## --fail-nocode
+## fail-nocode option
 
-This option produces a pytest file that will always
-fail when no Python code or session blocks are found.
+The `--fail-nocode` option produces a pytest file that will always
+fail when no Python code or session blocks get found.
 
-If no Python code or session blocks are found in the
-Markdown file a pytest file is still generated.
+Evem if no Python code or session blocks exist in the
+Markdown file a pytest file gets generated.
 This also happens when `--skip` eliminates all the
-Python code blocks. 
+Python code blocks.
 The generated pytest file will have the function
 `def test_nothing_passes()`.
 
 If the option `--fail-nocode` is passed the
 function is `def test_nothing_fails()` which raises an
-assertion. 
+assertion.
 
-## --setup
+## setup option
 
 A single Python code block can assign names visible to
 other code blocks by giving the `--setup TEXT` option.
@@ -751,22 +783,22 @@ The rules for `TEXT` are the same as for `--skip TEXT` plus...
 - Only one block can match `TEXT`.
 - The block cannot match a block that is skipped.
 - The block cannot be a session block even though session
-  blocks are searched for `TEXT`.
+  blocks get searched for `TEXT`.
 - It is ok if the block has an output block. It will be ignored.
 
 
-## --teardown
+## teardown option
 
 A single Python code block can supply code run by the pytest
 `teardown_module()` fixture. Use the `--teardown TEXT` option.
 Please see the [teardown](#teardown) directive above.
 The rules for `TEXT` are the same as for `--setup` above except
-`TEXT` won't match a setup block. 
+`TEXT` won't match a setup block.
 
 ## Setup example
 
 For the Markdown file [setup.md](doc/setup.md)
-run this command to see how the blocks are tested. 
+run this command to see how the blocks get tested.
 
 <!--phmdoctest-label setup-command-report-->
 ```
@@ -801,8 +833,8 @@ creates the test file
 [test_setup.py](doc/test_setup_py.md)
 
 ## Setup for sessions
-The pytest option `--doctest-modules` is required to 
-run doctest on sessions.  Pytest runs doctests in
+The pytest option `--doctest-modules` is required to
+run doctest on sessions.  pytest runs doctests in
 a separate context.
 For more on this see [Execution context](#execution-context) below.
 
@@ -813,7 +845,7 @@ Here is an example with setup code and sessions
 [setup_doctest.md](doc/setup_doctest.md). The first part
 of this file is a copy of setup.md.
 
-This command  uses the short form of setup and teardown. 
+This command  uses the short form of setup and teardown.
 -u for set**up** and -d for tear**down**.
 <!--phmdoctest-label setup-doctest-outfile-->
 ```
@@ -826,60 +858,55 @@ It creates the test file
 
 When run without `--setup`
 
-- Pytest and doctest determine the order of test case execution.
+- pytest and doctest determine the order of test case execution.
 - phmdoctest assumes test code and session execution is in file order.
 - Test case order is not significant.
 - Code and expected output run within a function body of a pytest test case.
-- If pytest is invoked with `--doctest-modules`: 
+- If pytest is invoked with `--doctest-modules`:
   - Sessions are run in a separate doctest execution context.
-  - Otherwise sessions are not run.
+  - Otherwise, sessions do not run.
 
-#### With `--setup`
+### With `--setup`
 
 - Names assigned by setup code are visible to code blocks.
-- Code blocks can modify the objects created by the setup code. 
+- Code blocks can modify the objects created by the setup code.
 - Code block test case order is significant.
 - Session order is not significant.
 - If pytest is run with `--doctest-modules`:
   - pytest runs two separate contexts: one for sessions, one for code blocks.
-  - setup and teardown code is run twice, once by each context.
-  - the names assigned by the setup code block 
+  - setup and teardown code gets run twice, once by each context.
+  - the names assigned by the setup code block
     are `are not` visible to the sessions.
 
-#### With `share-names`
+### With `share-names`
 - Only following code blocks can modify the shared objects.
-- Shared objects will **not** be visible to sessions 
+- Shared objects will **not** be visible to sessions
   if pytest is run with `--doctest-modules`.
 - After running a code block with `clear-names`
   - Shared objects will no longer be visible.
   - Names assigned by setup code will no longer be visible.
-  
-#### With `--setup` and `--setup-doctest`
+
+### With `--setup` and `--setup-doctest`
 Same as the setup section plus:
-- names assigned by the setup code block 
+- names assigned by the setup code block
   are visible to the sessions.
-- Sessions can modify the objects created by the setup code. 
+- Sessions can modify the objects created by the setup code.
 - Session order is significant.
 - Sessions and code blocks are still running in separate contexts
   isolated from each other.
-- A session can't affect a code block and a code block can't affect
+- A session can't affect a code block, and a code block can't affect
   a session.
 - Names assigned by the setup code block are globally visible
-  to the entire test suite via the Pytest doctest_namespace
-  fixture.  See hint near the end [Hints](#Hints).
+  to the entire test suite via the pytest doctest_namespace
+  fixture.  See hint near the end [Hints](#hints).
 
-#### Pytest live logging demos
-The live logging demos reveal pytest execution contexts. 
-Pytest Live Logs show the
+### pytest live logging demo
+The live logging demos reveals pytest execution contexts.
+pytest Live Logs show the
 execution order of setup_module(), test cases, sessions, and
 teardown_module().
-The demos are in one of the Travis CI builds.
-- Look for the build log here [Build][12].
-- Go to last job called Pytest Live Log Demo.
-- Go to the Job Log tab.
-
-There are 2 more demo invocations in the workflow action
-called Pytest Live Log Demo.  
+There are 2 demo invocations in the workflow action
+called pytest Live Log Demo.  GitHub login required.
 
 
 ## Send outfile to stdout
@@ -955,7 +982,7 @@ Options:
                        option.  Please note that pytest runs doctests in a
                        separate context that only runs doctests. This option
                        is ignored if there is no --setup option.
-                       
+
   --version            Show the version and exit.
   --help               Show this message and exit.
 ```
@@ -966,24 +993,58 @@ To run phmdoctest from the command line:
 
 `python -m phmdoctest doc/example2.md --report`
 
-## Call from Python
 
-To call phmdoctest from within a Python script
-`phmdoctest.simulator` offers the function `run_and_pytest()`.
-It simulates running phmdoctest from the command line.
-- useful during development
-- creates the --outfile in a temporary directory
-- optionally runs pytest on the outfile 
+## Python API
+
+Call **main.testfile()** to generate a pytest file in memory.
+Please see the Python API [here][10].
+The example generates a pytest file from doc/setup.md and
+compares the result to doc/test_setup.py.
+<!--phmdoctest-label main-testfile-->
+```python
+from pathlib import Path
+import phmdoctest.main
+
+generated_testfile = phmdoctest.main.testfile(
+    "doc/setup.md",
+    setup="FIRST",
+    teardown="LAST",
+)
+expected = Path("doc/test_setup.py").read_text(encoding="utf-8")
+assert expected == generated_testfile
+```
+
+## pytest fixtures
+
+Use fixture **testfile_creator** to generate a test file in memory.
+Pass the test file to fixture **testfile_tester** to run
+the test file in the pytester environment.
+[Fixture API][10] | [Example](doc/project_test_py.md).
+See more uses in tests/test_examples.py and tests/test_details.py.
+The fixtures run pytest much faster than `run_and_pytest()`
+below since there is no subprocess call.
+In the readthedocs documentation see the section Development tools API 1.3.0.
+
+## Simulate command line
+
+To simulate a command line call to phmdoctest from
+within a Python script `phmdoctest.simulator` offers the
+function `run_and_pytest()`.
+- it creates the --outfile in a temporary directory
+- optionally runs pytest on the outfile
+- pytest can return a JUnit XML report
+- useful during development to validate the command line
+  and prevent use of a stale --outfile
 
 Please see the [Latest Development tools API section][10] or
-the docstring of the function `run_and_pytest()` in the file `simulator.py.` 
-pytest_options are passed as a list of strings as shown below.
+the docstring of the function `run_and_pytest()` in the file `simulator.py.`
+Pass pytest_options as a list of strings as shown below.
 
 <!--phmdoctest-label simulator-->
 ```python
 import phmdoctest.simulator
 
-command = "phmdoctest doc/example1.md --report --outfile test_me.py"
+command = "phmdoctest doc/example1.md --report --outfile temporary.py"
 simulator_status = phmdoctest.simulator.run_and_pytest(
     well_formed_command=command, pytest_options=["--doctest-modules", "-v"]
 )
@@ -997,46 +1058,69 @@ assert simulator_status.pytest_exit_code == 0
   Use `-` for MARKDOWN_FILE.
 - Write the test file to a temporary directory so that
   it is always up to date.
+- In CI scripts the following shell command will create the temporary
+  directory **tmp** in the **tests** folder on Windows, Linux, and macOS.
+  ```bash
+  python -c "from pathlib import Path; d = Path('tests') / 'tmp'; d.mkdir(mode=0o700)"
+  ```
 - It is easy to use --output by mistake instead of `--outfile`.
 - If Python code block has no output, put assert statements in the code.
-- Use pytest option `--doctest-modules` to test the sessions. 
+- Use pytest option `--doctest-modules` to test the sessions.
 - Markdown indented code blocks ([Spec][8] section 4.4) are ignored.
-- simulator_status.runner_status.exit_code == 2 is the click 
+- simulator_status.runner_status.exit_code == 2 is the click
   command line usage error.
 - Since phmdoctest generates code, the input file should be from a trusted
   source.
-- An empty code block is given the role `del-code`. It is not tested. 
+- An empty code block gets given the role `del-code`. It is not tested.
 - Use special TEXT values FIRST, SECOND, LAST for the command
   line options `--setup` and `--teardown` since they only match one block.
 - The variable names `managenamespace`, `doctest_namespace`,
-  `capsys`, and `_phm_expected_str` should not be used in 
+  `capsys`, and `_phm_expected_str` should not be used in
   Markdown Python code blocks since they may be used in generated code.
-- Setup and teardown code blocks cannot have expected output.  
+- Setup and teardown code blocks cannot have expected output.
 - To have pytest collect a code block with the label directive
   start the value with `test_`.
 - With the `--setup-doctest` option, names assigned by the setup code
   block are globally visible to the entire test suite.
-  This is due to the scope of the Pytest doctest_namespace
-  fixture.  Using a separate pytest command to test
-  just the phmdoctest test file is recommended.
-- The module phmdoctest.fixture is imported at pytest time
-  to support setup, teardown, share-names, and clear-names features. 
+  This is due to the scope of the pytest doctest_namespace
+  fixture.  Try using a separate pytest command to test
+  just the phmdoctest test.
+- The module **phmdoctest.fixture** is imported at pytest time
+  to support setup, teardown, share-names, and clear-names features.
+- The phmdoctest Markdown parser finds fenced code blocks enclosed by
+  html `<details>` and `</details>` tags.
+  The tags may require a preceding and trailing blank line
+  to render correctly. See example in tests/test_details.py.
+- Try redirecting phmdoctest standard output into PYPI Pygments to
+  colorize the generated test file.
+  ```shell
+  python -m phmdoctest project.md --outfile - | pygmentize
+  ```
+
+- If the --outfile is written into a folder that pre-exists in the
+  repository, consider adding the outfile name to .gitignore. If
+  the outfile name later changes, the change will be needed in
+  .gitignore too.
+  ```
+  # Reserved for generated test file.
+  tests/test_readme.py
+  ```
 
 ## Directive hints
 
-- Only put one of setup, teardown, share-names, or 
+- Only put one of setup, teardown, share-names, or
   clear-names on a code block.
 - Only one block can be setup. Only one block can be teardown.
-- The setup or teardown block can't have an expected output block.  
-- Label directive may be used, but does not generate a test
+- The setup or teardown block can't have an expected output block.
+- Label directive does not generate a test
   case name on setup and teardown blocks.
 - Directives displayed in the `--report` start with a dash like
-  this: `-label test_fstring`.
+  this: `-label test_i_ratio`.
 - Code generated by Python blocks with setup and teardown
-  directives runs at the pytest fixture `scope="module"` level. 
+  directives runs at the pytest fixture `scope="module"` level.
 - Code generated by Python blocks with share-names and
   clear-names directives are **collected** and run by pytest
-  like any other test case. 
+  like any other test case.
 - A malformed HTML comment ending is bad. Make sure
   it ends with both dashes like `-->`.  Running with `--report`
   will expose that problem.
@@ -1046,7 +1130,7 @@ assert simulator_status.pytest_exit_code == 0
   `--log-cli-level=DEBUG --color=yes`
 - There is no limit to number of blank lines after
   the directive HTML comment but before the fenced code block.
-  
+
 ## Related projects
 - rundoc
 - byexample
@@ -1054,6 +1138,7 @@ assert simulator_status.pytest_exit_code == 0
 - sybil
 - doxec
 - egtest
+- pytest-phmdoctest
 - pytest-codeblocks
 
 [3]: https://github.github.com/gfm/#fenced-code-blocks
@@ -1064,4 +1149,6 @@ assert simulator_status.pytest_exit_code == 0
 [9]: https://commonmark.org
 [4]: https://docs.python.org/3/library/doctest.html
 [6]: https://pypi.python.org/project/coverage
-[12]: https://travis-ci.com/tmarktaylor/phmdoctest
+[13]: https://ci.appveyor.com/project/tmarktaylor/phmdoctest
+[14]: https://travis-ci.org/tmarktaylor/monotable
+[15]: https://docs.pytest.org/en/stable

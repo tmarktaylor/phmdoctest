@@ -6,7 +6,7 @@ import pytest
 from phmdoctest.functions import _phm_compare_exact
 
 
-def test_code_23_output_30():
+def test_code_23():
     from datetime import date
 
     date.today()
@@ -25,17 +25,17 @@ incorrect expected output
 
 
 @pytest.mark.skipif(sys.version_info < (3, 8), reason="requires >=py3.8")
-def test_fstring(capsys):
-    user = "eric_idle"
-    print(f"{user=}")
+def test_i_ratio(capsys):
+    b = 10
+    print(b.as_integer_ratio())
 
     _phm_expected_str = """\
-user='eric_idle'
+(10, 1)
 """
     _phm_compare_exact(a=_phm_expected_str, b=capsys.readouterr().out)
 
 
-def test_print_coffee():
+def doctest_print_coffee():
     r"""
     >>> print("coffee")
     coffee

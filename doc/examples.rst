@@ -6,6 +6,7 @@ These pages are referenced by relative links in README.md.
 .. toctree::
    :maxdepth: 0
 
+   actions_usage.md
    example1.md
    example2.md
    test_example2_py.md
@@ -29,3 +30,4 @@ These pages are referenced by relative links in README.md.
    test_setup_doctest_py.md
    inline_example.md
    test_inline_example_py.md
+   project_test_py.md
