@@ -35,7 +35,12 @@ release = "1.3.0"
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ["myst_parser", "sphinx.ext.autodoc", "sphinx.ext.napoleon"]
+extensions = [
+    "sphinx_rtd_theme",
+    "myst_parser",
+    "sphinx.ext.autodoc",
+    "sphinx.ext.napoleon",
+]
 
 source_suffix = {
     ".rst": "restructuredtext",
