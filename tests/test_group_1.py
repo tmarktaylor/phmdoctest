@@ -6,7 +6,6 @@ import subprocess
 import sys
 
 import pytest
-import trove_classifiers
 import yaml
 
 import phmdoctest
@@ -168,27 +167,6 @@ def test_readthedocs_python_version():
     assert "Setup Python" in step["name"]
     workflow_version = step["with"]["python-version"]
     assert rtd["python"]["version"] == workflow_version
-
-
-def test_trove_classifiers():
-    """Check the trove classifiers in setup.cfg."""
-    config = configparser.ConfigParser()
-    config.read("setup.cfg", encoding="utf-8")
-    text = config.get("metadata", "classifiers")
-    lines = text.splitlines()
-    # remove comments and blank lines
-    lines1 = [line for line in lines if not line.startswith("#")]
-    lines2 = [line1 for line1 in lines1 if not line1 == ""]
-    # No dupicates.
-    items = set(lines2)
-    assert len(items) == len(lines2)
-    for trove_line in lines2:
-        assert (
-            trove_line in trove_classifiers.classifiers
-        ), "Unknown classifier, check spelling."
-        assert (
-            trove_line not in trove_classifiers.deprecated_classifiers
-        ), "Classifier is deprecated."
 
 
 @pytest.mark.skipif(sys.version_info < (3, 7), reason="requires >=py3.7")
