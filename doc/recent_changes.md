@@ -8,7 +8,7 @@
 - Bugfix- Issue- mark.skipif example code causes pytest AST fail at
   assertion rewrite time. Happens on skipped Python version.
   Replaced with code that compiles on the skipped version.
-- Drop Python 3.7 add Python 3.10.
+- Drop Python 3.6 add Python 3.10.
 
 tests:
 
