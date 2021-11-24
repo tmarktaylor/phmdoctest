@@ -33,7 +33,7 @@ highlighted code examples in Markdown.
   - Runs phmdoctest and can run pytest too. *(simulator.py)*
   - Functions to read fenced code blocks from Markdown. *(tool.py)*
   - Extract testsuite tree and list of failing trees from JUnit XML. *(tool.py)*
-- Available soon as a pytest plugin.
+- Available as the pytest plugin [pytest-phmdoctest][16].
 
 
 ### default branch status
@@ -42,7 +42,6 @@ highlighted code examples in Markdown.
 [![](https://img.shields.io/pypi/pyversions/phmdoctest.svg)](https://pypi.python.org/pypi/phmdoctest)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-[![Usage Test](https://github.com/tmarktaylor/phmdoctest/actions/workflows/install.yml/badge.svg)](https://github.com/tmarktaylor/phmdoctest/actions/workflows/install.yml)
 [![CI Test](https://github.com/tmarktaylor/phmdoctest/actions/workflows/ci.yml/badge.svg)](https://github.com/tmarktaylor/phmdoctest/actions/workflows/ci.yml)
 [![Build status](https://ci.appveyor.com/api/projects/status/5pp3swc1q1fgbcd6/branch/master?svg=true)](https://ci.appveyor.com/project/tmarktaylor/phmdoctest/branch/master)
 [![readthedocs](https://readthedocs.org/projects/phmdoctest/badge/?version=latest)](https://phmdoctest.readthedocs.io/en/latest/?badge=latest)
@@ -1152,3 +1151,4 @@ assert simulator_status.pytest_exit_code == 0
 [13]: https://ci.appveyor.com/project/tmarktaylor/phmdoctest
 [14]: https://travis-ci.org/tmarktaylor/monotable
 [15]: https://docs.pytest.org/en/stable
+[16]: https://tmarktaylor.github.io/pytest-phmdoctest
