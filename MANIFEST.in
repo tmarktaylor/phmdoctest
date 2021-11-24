@@ -22,6 +22,3 @@ include .gitignore
 include *.yml
 include *.toml
 include *.ini
-
-# Don't want Sphinx build artifacts
-recursive-exclude doc/_build *
