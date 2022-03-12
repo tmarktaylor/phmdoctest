@@ -1036,7 +1036,8 @@ Use fixture **testfile_creator** to generate a test file in memory.
 Pass the test file to fixture **testfile_tester** to run
 the test file in the pytester environment.
 [Fixture API][10] | [Example](doc/project_test_py.md).
-See more uses in tests/test_examples.py and tests/test_details.py.
+See more uses in tests/test_examples.py, tests/test_details.py, and
+tests/test_many_markdown.py.
 The fixtures run pytest much faster than `run_and_pytest()`
 below since there is no subprocess call.
 In the readthedocs documentation see the section Development tools API 1.3.0.
