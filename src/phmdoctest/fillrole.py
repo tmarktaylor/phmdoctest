@@ -4,6 +4,7 @@ from typing import List, Optional
 
 import click
 
+import commonmark.node  # type: ignore
 from phmdoctest.direct import Marker
 from phmdoctest.entryargs import Args
 from phmdoctest.fenced import Role, FencedBlock
@@ -11,6 +12,24 @@ from phmdoctest.fenced import Role, FencedBlock
 
 PYTHON_FLAVORS = ["python", "py3", "python3"]
 """Python fenced code blocks info string will start with one of these."""
+
+
+def is_python_block(node: commonmark.node.Node) -> bool:
+    """True if the node is a Python highlighted fenced code block.
+
+    This should duplicate the test at the beginning of
+    identify_code_output_session_blocks() below.
+    """
+    return any(node.info.startswith(flavor) for flavor in PYTHON_FLAVORS)
+
+
+def is_doctest_block(node: commonmark.node.Node) -> bool:
+    """True if the node is a Python doctest highlighted fenced code block
+
+    This should duplicate the test at the beginning of
+    identify_code_output_session_blocks() below.
+    """
+    return bool(node.literal.startswith(">>> ") and node.info.startswith("py"))
 
 
 def identify_code_output_session_blocks(blocks: List[FencedBlock]) -> None:

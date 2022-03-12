@@ -1,4 +1,6 @@
 """General purpose tools get fenced code blocks from Markdown."""
+from collections import namedtuple
+from pathlib import Path
 from typing import IO, Optional, List, NamedTuple, Tuple
 from xml.etree import ElementTree
 from xml.etree.ElementTree import Element
@@ -7,6 +9,7 @@ import commonmark  # type: ignore
 import commonmark.node  # type: ignore
 
 import phmdoctest.direct
+import phmdoctest.fillrole
 
 
 class FCBChooser:
@@ -17,7 +20,7 @@ class FCBChooser:
 
         Args:
             markdown_filename:
-                Path to the Markdown file
+                Path to the Markdown file as a string.
         """
         self._blocks = labeled_fenced_code_blocks(markdown_filename)
 
@@ -48,7 +51,18 @@ LabeledFCB = NamedTuple(
         ("contents", str),  # fenced code block contents
     ],
 )
-"""Information about a fenced code block that has a label directive."""
+"""Describes a fenced code block that has a label directive. (collections.namedtuple).
+
+    Args:
+        label
+            The label directive's value.
+
+        line
+            Markdown file line number of block contents.
+
+        contents
+            Fenced code block contents.
+"""
 
 
 def labeled_fenced_code_blocks(markdown_filename: str) -> List[LabeledFCB]:
@@ -68,7 +82,7 @@ def labeled_fenced_code_blocks(markdown_filename: str) -> List[LabeledFCB]:
 
     Args:
         markdown_filename
-            Path to the Markdown file.
+            Path to the Markdown file as a string.
 
     Returns:
         List of LabeledFCB objects.
@@ -103,7 +117,7 @@ def fenced_code_blocks(markdown_filename: str) -> List[str]:
 
     Args:
         markdown_filename
-            Path to the Markdown file.
+            Path to the Markdown file as a string.
 
     Returns:
         List of strings, one for the contents of each Markdown
@@ -160,3 +174,94 @@ def extract_testsuite(junit_xml_string: str) -> Tuple[Optional[Element], List[El
             if case.find("failure") is not None:
                 failed_test_cases.append(case)
     return suite, failed_test_cases
+
+
+PythonExamples = namedtuple("PythonExamples", ["has_code", "has_session"])
+"""Presence of Python fenced code blocks in Markdown. (collections.namedtuple)
+
+    Args:
+        has_code
+            True if detected at least one fenced code block with Python code.
+
+        has_session
+            True if detected at least one fenced code block with Python
+            interactive session (doctest).
+"""
+
+
+def detect_python_examples(markdown_path: Path) -> "PythonExamples":
+    """Return whether .md has any Python highlighted fenced code blocks.
+
+     This includes Python code blocks and Python doctest interactive session
+     blocks. These blocks may or may not generate test cases once processed
+     by phmdoctest.test_file() and collected.
+
+     - We don't care here if the code block is followed by expected output.
+     - This logic does not check if the block has any phmdoctest skip,
+       mark.skip, or mark.skipif directives.
+     - This logic does not check if the block would be skipped by
+       a phmdoctest command line --skip option.
+
+    Args:
+         markdown_path
+             pathlib.Path of input Markdown file.
+
+    """
+    with open(markdown_path, "r", encoding="utf-8") as fp:
+        fenced = fenced_block_nodes(fp)
+    has_code = any(phmdoctest.fillrole.is_python_block(node) for node in fenced)
+    has_session = any(phmdoctest.fillrole.is_doctest_block(node) for node in fenced)
+    return PythonExamples(
+        has_code=has_code,
+        has_session=has_session,
+    )
+
+
+def _with_stem(path: Path, stem: str) -> Path:
+    """Replacement for pathlib.PurePath.with_stem() which is new Python 3.9."""
+    return path.with_name(stem + path.suffix)
+
+
+def wipe_testfile_directory(target_dir: Path):
+    """Create and/or clean target_dir directory to receive generated testfiles.
+
+    Create target_dir if needed for writing generated pytest files.
+    Prevent future use of pre-existing .py files in target_dir.
+
+        - The FILENAME.py files found in target_dir are renamed
+          to noFILENAME.sav.
+        - If a noFILENAME.sav already exists it is not modified.
+        - Files in target_dir with other extensions are not modified.
+        - A FILENAME.py pre-existing in target_dir is only renamed
+          and not deleted.
+          This allows for recovery of .py files when target_dir gets pointed
+          by mistake to a directory with Python source files.
+
+    Args:
+        target_dir
+            pathlib.Path of destination directory for generated test files.
+    """
+
+    # create if needed
+    target_dir.mkdir(mode=0o700, parents=True, exist_ok=True)
+
+    # Clean out or preserve pre-existing Python files.
+    for existing_path in target_dir.glob("*.py"):
+        preserve_path = existing_path.with_suffix(".sav")
+        preserve_path = _with_stem(preserve_path, "no" + existing_path.stem)
+        if preserve_path.exists():
+            # A no*.sav already exists, so we assume it was created by
+            # a prior pytest invocation. It is possible the user mis-typed
+            # the --phmdmoctest-generate DIR on the command line and
+            # may want to recover .py files later.
+            # We can't overwrite a .sav file since it may hold a
+            # preserved .py file.
+            # Since pytest invocations only write files named test_*.py
+            # the file about to be deleted here is named test_*.py and
+            # it was created by a previous invocation of this plugin.
+            assert existing_path.name.startswith("test_")
+            assert existing_path.suffix == ".py"
+            existing_path.unlink()  # delete the file
+        else:
+            # rename the file
+            existing_path.replace(preserve_path)

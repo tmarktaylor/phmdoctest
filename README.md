@@ -33,6 +33,8 @@ highlighted code examples in Markdown.
        in its isolated environment.
   - Runs phmdoctest and can run pytest too. *(simulator.py)*
   - Functions to read fenced code blocks from Markdown. *(tool.py)*
+  - Test Markdown for Python examples. *(tool.py)*
+  - Prepare directory for generated test files. *(tool.py)*
   - Extract testsuite tree and list of failing trees from JUnit XML. *(tool.py)*
 - Available as the pytest plugin [pytest-phmdoctest][16].
 
@@ -1162,8 +1164,8 @@ assert simulator_status.pytest_exit_code == 0
 [8]: https://spec.commonmark.org
 [9]: https://commonmark.org
 [4]: https://docs.python.org/3/library/doctest.html
-[6]: https://pypi.python.org/project/coverage
+[6]: https://pypi.org/project/coverage
 [13]: https://ci.appveyor.com/project/tmarktaylor/phmdoctest
 [14]: https://travis-ci.org/tmarktaylor/monotable
 [15]: https://docs.pytest.org/en/stable
-[16]: https://tmarktaylor.github.io/pytest-phmdoctest
+[16]: https://pypi.org/project/pytest-phmdoctest

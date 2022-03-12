@@ -1,4 +1,6 @@
 """Tests to complete code coverage of tool.py"""
+from pathlib import Path
+
 import pytest
 
 import phmdoctest.tool
@@ -74,3 +76,93 @@ def test_pytest_really_fails(example_tester):
     assert suite.attrib["errors"] == "0"
     assert suite.attrib["failures"] == "1"
     assert fails[0].attrib["name"] == "test_code_4_output_17"
+
+
+def test_detect_python_examples():
+    """Show Python examples in Markdown are detected."""
+    result1 = phmdoctest.tool.detect_python_examples(
+        Path("tests/no_fenced_code_blocks.md")
+    )
+    assert not result1.has_code
+    assert not result1.has_session
+
+    result2 = phmdoctest.tool.detect_python_examples(
+        Path("tests/one_code_block.md")
+    )
+    assert result2.has_code
+    assert not result2.has_session
+
+    result3 = phmdoctest.tool.detect_python_examples(
+        Path("tests/twentysix_session_blocks.md")
+    )
+    assert not result3.has_code
+    assert result3.has_session
+
+    # This file has fenced code blocks at the top level but no info strings.
+    result4 = phmdoctest.tool.detect_python_examples(
+        Path("doc/mark_example_raw.md")
+    )
+    assert not result4.has_code
+    assert not result4.has_session
+
+
+def test_wipe_testfile_directory(tmp_path):
+    """Show that pre-existing *.py are renamed, not deleted."""
+    source1 = "test_file1.py"  # Use the filename as the contents of the file.
+    source1a = "different test_file1.py"
+    source2 = "myfile.py"
+    source3 = "something.txt"
+    # Create pre-existing pytest file.
+    d = tmp_path / ".gendir"
+    d.mkdir()
+    file1 = d / "test_example1.py"
+    file2 = d / "myfile.py"
+    file3 = d / "something.txt"
+    _ = file1.write_text(source1, encoding="utf-8")
+    _ = file2.write_text(source2, encoding="utf-8")
+    _ = file3.write_text(source3, encoding="utf-8")
+    assert file1.exists()
+    assert file2.exists()
+    assert file3.exists()
+    assert len(list(d.glob("**/*.*"))) == 3, "3 files exist"
+
+    phmdoctest.tool.wipe_testfile_directory(d)
+    assert len(list(d.glob("**/*.py"))) == 0, "no .py files"
+    assert not file1.exists(), "file1 is gone (it was renamed)."
+    assert not file2.exists(), "file2 is gone (it was renamed)."
+    preserved1 = d / "notest_example1.sav"
+    preserved2 = d / "nomyfile.sav"
+    assert preserved1.exists(), "newly renamed file"
+    assert preserved2.exists(), "newly renamed file"
+    assert len(list(d.glob("**/*.*"))) == 3, "3 files exist"
+
+    # Renamed files still have the original contents.
+    # file3 was not modified.
+    assert source1 == preserved1.read_text(encoding="utf-8")
+    assert source2 == preserved2.read_text(encoding="utf-8")
+    assert source3 == file3.read_text(encoding="utf-8")
+
+    # Show that the renamed files still have the original contents
+    # even after a second wipe.
+    phmdoctest.tool.wipe_testfile_directory(d)
+    assert len(list(d.glob("**/*.py"))) == 0, "no .py files"
+    assert len(list(d.glob("**/*.*"))) == 3, "3 files exist"
+    assert source1 == preserved1.read_text(encoding="utf-8")
+    assert source2 == preserved2.read_text(encoding="utf-8")
+    assert source3 == file3.read_text(encoding="utf-8")
+
+    # Simulate generating a new test file by writing a new file1 with
+    # different contents.
+    _ = file1.write_text(source1a, encoding="utf-8")  # modify
+    assert file1.exists()
+    assert source1a == file1.read_text(encoding="utf-8")
+    assert len(list(d.glob("**/*.*"))) == 4, "4 files exist"
+
+    # Show the originally preserved files still exist.
+    # The second wipe only removed the new file1 that had source1a contents.
+    phmdoctest.tool.wipe_testfile_directory(d)
+    assert len(list(d.glob("**/*.py"))) == 0, "no .py files"
+    assert len(list(d.glob("**/*.*"))) == 3, "3 files exist"
+    assert source1 == preserved1.read_text(encoding="utf-8")
+    assert source2 == preserved2.read_text(encoding="utf-8")
+    assert source3 == file3.read_text(encoding="utf-8")
