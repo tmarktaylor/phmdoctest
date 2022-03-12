@@ -20,6 +20,7 @@ env
 
 # reserved for generated test files
 tests/tmp
+tests/.gendir
 
 .cache
 .coverage
