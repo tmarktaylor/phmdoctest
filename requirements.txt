@@ -1,4 +1,5 @@
 # These need to be present in [options] install_requires in setup.cfg.
+pytest
 Click >= 7.1.1
 commonmark >= 0.9.1
 monotable >= 2.1.1
