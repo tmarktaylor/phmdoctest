@@ -86,9 +86,7 @@ def test_detect_python_examples():
     assert not result1.has_code
     assert not result1.has_session
 
-    result2 = phmdoctest.tool.detect_python_examples(
-        Path("tests/one_code_block.md")
-    )
+    result2 = phmdoctest.tool.detect_python_examples(Path("tests/one_code_block.md"))
     assert result2.has_code
     assert not result2.has_session
 
@@ -99,9 +97,7 @@ def test_detect_python_examples():
     assert result3.has_session
 
     # This file has fenced code blocks at the top level but no info strings.
-    result4 = phmdoctest.tool.detect_python_examples(
-        Path("doc/mark_example_raw.md")
-    )
+    result4 = phmdoctest.tool.detect_python_examples(Path("doc/mark_example_raw.md"))
     assert not result4.has_code
     assert not result4.has_session
 
