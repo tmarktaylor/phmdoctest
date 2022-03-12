@@ -28,6 +28,9 @@ These pages are referenced by relative links in README.md.
    test_setup_py.md
    setup_doctest.md
    test_setup_doctest_py.md
+   mark_example.md
+   mark_example_raw.md
+   test_mark_example_py.md
    inline_example.md
    test_inline_example_py.md
    project_test_py.md

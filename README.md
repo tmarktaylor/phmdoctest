@@ -17,6 +17,7 @@ highlighted code examples in Markdown.
 - More features selected by adding HTML comment **directives**
   to the Markdown.
   - Set test case name.
+  - Add a pytest custom marker.
   - Add a pytest.mark.skip decorator.
   - Promote names defined in a test case to module level globals.
   - Label any fenced code block for later retrieval (API).
@@ -72,6 +73,7 @@ highlighted code examples in Markdown.
 [teardown](#teardown) |
 [share-names](#share-names) |
 [clear-names](#clear-names) |
+[pytest mark decorator](#pytest-mark-decorator) |
 [label skip and mark example](#label-skip-and-mark-example) |
 [setup and teardown example](#setup-and-teardown-example) |
 [share-names clear-names example](#share-names-clear-names-example) |
@@ -419,6 +421,7 @@ List of Directives
 <!--phmdoctest-teardown-->         | code
 <!--phmdoctest-share-names-->      | code
 <!--phmdoctest-clear-names-->      | code
+<!--phmdoctest-mark.ATTRIBUTE-->   | code
 ```
 
 [Directive hints](#directive-hints)
@@ -545,6 +548,18 @@ created by one or more preceding share-names directives
 get deleted. The names that were shared are no longer visible.
 This directive also deletes the names assigned by setup.
 [Example.](#share-names-clear-names-example)
+
+## pytest mark decorator
+The `<!--phmdoctest-mark.ATTRIBUTE-->` directive adds
+a @pytest.mark.ATTRIBUTE decorator to the
+generated test function. ATTRIBUTE is a valid Python attribute
+identifier. This defines a marker to pytest that is used to
+select and deselect tests. See the pytest documentation section
+"Working with custom markers".
+The file [mark_example.md](doc/mark_example_raw.md) contains
+example usage of the user defined marker "slow". It generates
+[test_mark_example.py](doc/test_mark_example_py.md)
+
 
 ## label skip and mark example
 The file [directive1.md](doc/directive1_raw.md) contains

@@ -35,10 +35,11 @@ Read contents of Markdown fenced code blocks.
 
 .. module:: phmdoctest.tool
 
-.. autoclass::  FCBChooser
+.. autoclass:: FCBChooser
 .. automethod:: FCBChooser.__init__
 .. automethod:: FCBChooser.contents
 
+.. autoclass:: LabeledFCB
 .. autofunction:: labeled_fenced_code_blocks
 
 .. autofunction:: fenced_code_blocks
@@ -50,3 +51,16 @@ Get elements from test suite JUnit XML output.
 ==============================================
 
 .. autofunction:: extract_testsuite
+
+
+Check a Markdown file for Python examples.
+==========================================
+
+.. autoclass:: PythonExamples
+.. autofunction:: detect_python_examples
+
+
+Prepare directory for generated test files.
+===========================================
+
+.. autofunction:: wipe_testfile_directory

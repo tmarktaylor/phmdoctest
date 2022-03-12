@@ -17,6 +17,26 @@ class Marker(Enum):
     TEARDOWN = "<!--phmdoctest-teardown-->"
     SHARE_NAMES = "<!--phmdoctest-share-names-->"
     CLEAR_NAMES = "<!--phmdoctest-clear-names-->"
+    PYTEST_MARK = "<!--phmdoctest-mark."  # Note no trailing space, no "-->".
+
+
+PYTEST_MARKERS = {
+    Marker.PYTEST_SKIP,
+    Marker.PYTEST_SKIPIF,
+    Marker.PYTEST_MARK,
+}
+"""Markers that generate code containing a pytest.mark decorator."""
+
+
+NAMES_MARKERS = {
+    Marker.SHARE_NAMES,
+    Marker.CLEAR_NAMES,
+}
+"""Markers that generate code using managenamespace fixture."""
+
+
+SKIP_MARKER_VALUES = {Marker.PYTEST_SKIP.value, Marker.PYTEST_SKIPIF.value}
+"""Other non PYTEST_MARK Markers whose values start with <!--phmdoctest-mark."""
 
 
 Directive = namedtuple(
@@ -63,6 +83,16 @@ def find_one_directive(node: commonmark.node) -> Optional[Directive]:
             return Directive(
                 type=Marker.PYTEST_SKIPIF,
                 value=extract_value(node.literal, Marker.PYTEST_SKIPIF),
+                line=node.sourcepos[0][0],
+                literal=node.literal,
+            )
+        elif (
+            node.literal.startswith(Marker.PYTEST_MARK.value)
+            and node.literal not in SKIP_MARKER_VALUES
+        ):
+            return Directive(
+                type=Marker.PYTEST_MARK,
+                value=extract_value(node.literal, Marker.PYTEST_MARK),
                 line=node.sourcepos[0][0],
                 literal=node.literal,
             )

@@ -36,6 +36,7 @@ class FencedBlock:
         self.output = None  # type: Optional["FencedBlock"]
         self.patterns = list()  # type: List[str]
         self.directives = phmdoctest.direct.get_directives(node)
+        self._directive_markers = set(d.type for d in self.directives)
 
     def __str__(self) -> str:
         return "FencedBlock(role={}, line={})".format(self.role.value, self.line)
@@ -95,11 +96,22 @@ class FencedBlock:
             self.patterns.append(pattern)
 
     def has_directive(self, marker: phmdoctest.direct.Marker) -> bool:
-        """Return true if marker is the type of one of the directives."""
-        for directive in self.directives:
-            if directive.type == marker:
-                return True
-        return False
+        """Return true if block has a directive of type marker."""
+        return marker in self._directive_markers
+
+    def has_pytest_directive(self) -> bool:
+        """True if block has a PYTEST_* directive."""
+        return any(
+            marker in phmdoctest.direct.PYTEST_MARKERS
+            for marker in self._directive_markers
+        )
+
+    def has_names_directive(self) -> bool:
+        """True if block has a *_NAMES directive."""
+        return any(
+            marker in phmdoctest.direct.NAMES_MARKERS
+            for marker in self._directive_markers
+        )
 
 
 def convert_nodes(nodes: List[commonmark.node.Node]) -> List[FencedBlock]:
