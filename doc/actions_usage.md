@@ -1,7 +1,7 @@
 # Snippet of use in GitHub Actions
 ```yaml
 jobs:
-  venv_tests:
+  os:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
