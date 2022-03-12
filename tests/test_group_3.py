@@ -334,6 +334,29 @@ def test_empty_code_blocks_report(checker):
     checker(want, stdout)
 
 
+def test_ignored_directives_report(checker):
+    """Show report indicates directives that don't belong as "(ignored)"."""
+    command = "phmdoctest tests/ignored_directives.md --report"
+    simulator_status = phmdoctest.simulator.run_and_pytest(
+        well_formed_command=command, pytest_options=None
+    )
+    assert simulator_status.runner_status.exit_code == 0
+    assert simulator_status.pytest_exit_code is None
+    stdout = simulator_status.runner_status.stdout
+    want = """   tests/ignored_directives.md fenced blocks
+-----------------------------------------------
+block    line  test     TEXT or directive
+type   number  role     quoted and one per line
+-----------------------------------------------
+py         13  session  -mark.skip(ignored)
+                        -share-names(ignored)
+                        -mark.slow(ignored)
+-----------------------------------------------
+1 test cases.
+"""
+    checker(want, stdout)
+
+
 def test_missing_markdown_file():
     """Usage error for MARKDOWN_FILE that does not exist."""
     command = "phmdoctest tests/bogus.md --outfile discarded.py"
