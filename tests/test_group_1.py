@@ -167,8 +167,10 @@ def test_doc_requirements_file():
 
 def test_readthedocs_python_version():
     """The build docs Python version == workflow step Python version."""
-    rtd = yaml.safe_load(open(".readthedocs.yml", "r", encoding="utf-8"))
-    workflow = yaml.safe_load(open(".github/workflows/ci.yml", "r", encoding="utf-8"))
+    with open(".readthedocs.yml", "r", encoding="utf-8") as frtd:
+        rtd = yaml.safe_load(frtd)
+    with open(".github/workflows/ci.yml", "r", encoding="utf-8") as fwrk:
+        workflow = yaml.safe_load(fwrk)
     step = workflow["jobs"]["docs"]["steps"][1]
     assert "Setup Python" in step["name"]
     workflow_version = step["with"]["python-version"]
