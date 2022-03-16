@@ -1057,6 +1057,7 @@ tests/test_many_markdown.py.
 The fixtures run pytest much faster than `run_and_pytest()`
 below since there is no subprocess call.
 In the readthedocs documentation see the section Development tools API 1.3.0.
+pytest's pytester is suitable for pytest plugin development.
 
 ## Simulate command line
 
@@ -1138,6 +1139,8 @@ assert simulator_status.pytest_exit_code == 0
   # Reserved for generated test file.
   tests/test_readme.py
   ```
+- The directive `<!--phmdoctest-mark.xfail-->` might be useful as
+  an alternative to `<!--phmdoctest-mark.skip-->` for failing examples.
 
 ## Directive hints
 
