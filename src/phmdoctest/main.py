@@ -1,4 +1,5 @@
 """phmdoctest entry point."""
+from pathlib import Path
 from typing import List, Optional
 
 import click
@@ -9,6 +10,7 @@ import phmdoctest.cases
 import phmdoctest.fenced
 import phmdoctest.fillrole
 import phmdoctest.report
+import phmdoctest.using
 import phmdoctest.tool
 
 
@@ -111,6 +113,7 @@ import phmdoctest.tool
 def entry_point(
     markdown_file, outfile, skip, report, fail_nocode, setup, teardown, setup_doctest
 ):
+    """MARKDOWN_FILE may also be .toml, .cfg, or .ini configuration file."""
     args = Args(
         markdown_file=markdown_file,
         outfile=outfile,
@@ -122,15 +125,19 @@ def entry_point(
         setup_doctest=setup_doctest,
         built_from="",  # not supplied by the Click command line.
     )
-    blocks = _configure_block_roles(args)
-    if args.is_report:
-        phmdoctest.report.print_report(args, blocks)
+    markdown_path = Path(markdown_file)
+    if markdown_path.suffix in [".cfg", ".ini", ".toml"]:
+        generate_using(config_file=markdown_path)
+    else:
+        blocks = _configure_block_roles(args)
+        if args.is_report:
+            phmdoctest.report.print_report(args, blocks)
 
-    # build test cases and write to the --outfile path
-    if args.outfile:
-        test_case_string = phmdoctest.cases.build_test_cases(args, blocks)
-        with click.open_file(args.outfile, "w", encoding="utf-8") as ofp:
-            ofp.write(test_case_string)
+        # build test cases and write to the --outfile path
+        if args.outfile:
+            test_case_string = phmdoctest.cases.build_test_cases(args, blocks)
+            with click.open_file(args.outfile, "w", encoding="utf-8") as ofp:
+                ofp.write(test_case_string)
 
 
 def _configure_block_roles(args: Args) -> List[FencedBlock]:
@@ -185,7 +192,7 @@ def testfile(
         setup_doctest
             Make globals created by the setup Python code block
             or setup directive visible to Python interactive session >>> blocks.
-            Caution: The globals are set at Pytest Session scope and are visible
+            The globals are set at Pytest Session scope and are visible
             to all tests run by --doctest-modules.
 
         built_from
@@ -211,3 +218,24 @@ def testfile(
     )
     blocks = _configure_block_roles(args)
     return phmdoctest.cases.build_test_cases(args, blocks)
+
+
+def generate_using(config_file: Path) -> None:
+    """Generate test files as directed by configuration file.
+
+    See the "Using a configuration file" section of the documentation.
+
+    - The `markdown_globs` key specifies Markdown files to select for
+      test file generation.
+    - The `exclude_globs` key specifies Markdown files that should not
+      generate test files. Markdown files that don't have any Python examples
+      are automatically excluded.
+    - The generated test files get written to the directory specified
+      by `output_directory`.
+    - The `print` key directs printing.
+
+    Args:
+        config_file
+            Path to the .cfg, .ini, or .toml configuration file.
+    """
+    phmdoctest.using.generate_using(config_file=config_file)

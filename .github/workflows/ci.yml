@@ -89,6 +89,42 @@ jobs:
           phmdoctest doc/example2.md --skip "Python 3.7" --skip LAST --report > tests/tmp/example2_report.txt
           cmp tests/example2_report.txt tests/tmp/example2_report.txt
 
+      - name: .cfg configuration
+        run: |
+          # Generate test files and compare some to the repository versions.
+          phmdoctest setup.cfg
+          cmp doc/test_directive1.py .gendir-cfg/test_doc__directive1.py
+          cmp doc/test_directive2.py .gendir-cfg/test_doc__directive2.py
+          cmp doc/test_directive3.py .gendir-cfg/test_doc__directive3.py
+          cmp doc/test_example1.py .gendir-cfg/test_doc__example1.py
+          cmp doc/test_example2.py .gendir-cfg/test_doc__example2.py
+          cmp doc/test_inline_example.py .gendir-cfg/test_doc__inline_example.py
+          pytest --doctest-modules -vv .gendir-cfg
+
+      - name: .ini configuration
+        run: |
+          # Generate test files and compare some to the repository versions.
+          phmdoctest tox.ini
+          cmp doc/test_directive1.py .gendir-ini/test_doc__directive1.py
+          cmp doc/test_directive2.py .gendir-ini/test_doc__directive2.py
+          cmp doc/test_directive3.py .gendir-ini/test_doc__directive3.py
+          cmp doc/test_example1.py .gendir-ini/test_doc__example1.py
+          cmp doc/test_example2.py .gendir-ini/test_doc__example2.py
+          cmp doc/test_inline_example.py .gendir-ini/test_doc__inline_example.py
+          pytest --doctest-modules -vv .gendir-ini
+
+      - name: .toml configuration
+        run: |
+          # Generate test files and compare some to the repository versions.
+          phmdoctest pyproject.toml
+          cmp doc/test_directive1.py .gendir-toml/test_doc__directive1.py
+          cmp doc/test_directive2.py .gendir-toml/test_doc__directive2.py
+          cmp doc/test_directive3.py .gendir-toml/test_doc__directive3.py
+          cmp doc/test_example1.py .gendir-toml/test_doc__example1.py
+          cmp doc/test_example2.py .gendir-toml/test_doc__example2.py
+          cmp doc/test_inline_example.py .gendir-toml/test_doc__inline_example.py
+          pytest --doctest-modules -vv .gendir-toml
+
   coverage:
     runs-on: ubuntu-latest
     steps:
@@ -107,8 +143,11 @@ jobs:
         pip freeze
     - name: Tests, coverage report
       run: |
-        coverage run --branch --source=src -m pytest -vv tests
+        # Note: tests/generate.cfg is also used by a test case in test_generate_using.py.
+        coverage run --branch --source=src -m phmdoctest tests/generate.cfg
+        coverage run --branch --source=src --append -m phmdoctest tests/generate.toml
         coverage run --branch --source=src --append -m phmdoctest --help
+        coverage run --branch --source=src --append -m pytest -vv tests
         coverage report --show-missing
         coverage xml
       env:

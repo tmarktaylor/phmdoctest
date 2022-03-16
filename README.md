@@ -21,6 +21,7 @@ highlighted code examples in Markdown.
   - Add a pytest.mark.skip decorator.
   - Promote names defined in a test case to module level globals.
   - Label any fenced code block for later retrieval (API).
+- Configurable. Discover and process many Markdown files in a single command.
 - Add inline annotations to comment out sections of code.
 - Get code coverage by running pytest with [coverage][6].
 - Select Python source code blocks as setup and teardown code.
@@ -79,6 +80,7 @@ highlighted code examples in Markdown.
 [label skip and mark example](#label-skip-and-mark-example) |
 [setup and teardown example](#setup-and-teardown-example) |
 [share-names clear-names example](#share-names-clear-names-example) |
+[Configuration](#configuration) |
 [Inline annotations](#inline-annotations) |
 [skipping blocks with --skip](#skipping-blocks-with-skip-option) |
 [--skip](#skip-option) |
@@ -605,6 +607,18 @@ produces this
 phmdoctest doc/directive3.md --outfile test_directive3.py
 ```
 
+## Configuration
+
+Supply a .ini, .cfg, or .toml configuration file in place of the Markdown file.
+Configuration features:
+- Choose Markdown files for test file generation. (glob wildcards).
+- Exclude Markdown files from test file generation. (glob wildcards).
+- Name the output directory.
+- Removes stale test files from output directory.
+- Enable printing.
+
+Place a `[tool.phmdoctest]` section in the configuration file.
+[How to configure.](doc/configuring.md)
 
 ## Inline annotations
 
@@ -947,6 +961,8 @@ phmdoctest doc/example2.md -s "Python 3.7" -sLAST --outfile=-
 <!--phmdoctest-label usage-->
 ```
 Usage: phmdoctest [OPTIONS] MARKDOWN_FILE
+
+  MARKDOWN_FILE may also be .toml, .cfg, or .ini configuration file.
 
 Options:
   --outfile TEXT       Write generated test case file to path TEXT. "-" writes

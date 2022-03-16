@@ -20,7 +20,12 @@ env
 
 # reserved for generated test files
 tests/tmp
-tests/.gendir
+.gendir-toml
+.gendir-cfg
+.gendir-ini
+.gendir-suite-toml
+.gendir-suite-cfg
+.gendir-suite-ini
 
 .cache
 .coverage

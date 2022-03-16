@@ -1,15 +1,20 @@
 .. toctree::
    :maxdepth: 2
 
-Development tools API for version 1.3.0
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Development tools API version 1.3.0
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-Python API to generate a pytest file.
-=====================================
+Generate a pytest file.
+=======================
 .. module:: phmdoctest.main
 
 .. autofunction:: testfile
+
+
+Generate pytest files using a configuration file.
+=================================================
+.. autofunction:: generate_using
 
 
 Test with Pytest fixtures.

@@ -11,6 +11,7 @@ phmdoctest 1.3.0
    :caption: Contents:
 
    README
+   doc/configuring
    doc/recent_changes
    doc/api
    doc/about

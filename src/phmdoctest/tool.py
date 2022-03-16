@@ -222,7 +222,7 @@ def _with_stem(path: Path, stem: str) -> Path:
     return path.with_name(stem + path.suffix)
 
 
-def wipe_testfile_directory(target_dir: Path):
+def wipe_testfile_directory(target_dir: Path) -> None:
     """Create and/or clean target_dir directory to receive generated testfiles.
 
     Create target_dir if needed for writing generated pytest files.

@@ -1,4 +1,5 @@
 # These need to be present in [options] install_requires in setup.cfg.
+tomli >= 1.0.0 ; python_version < "3.11"
 pytest
 Click >= 7.1.1
 commonmark >= 0.9.1
