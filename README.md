@@ -473,8 +473,8 @@ Here is Python code to fetch it:
 import phmdoctest.tool
 
 chooser = phmdoctest.tool.FCBChooser("doc/my_markdown_file.md")
-text = chooser.contents(label="my-fenced-code-block")
-print(text)
+contents = chooser.contents(label="my-fenced-code-block")
+print(contents)
 ```
 Output:
 

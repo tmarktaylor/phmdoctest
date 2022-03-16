@@ -141,8 +141,8 @@ def test_report(checker):
 
 def test_intro_to_directives():
     """Verify correct spelling of the skip directive."""
-    text = labeled.contents(label="intro-to-directives")
-    lines = text.splitlines()
+    contents = labeled.contents(label="intro-to-directives")
+    lines = contents.splitlines()
     assert lines[0] == phmdoctest.direct.Marker.SKIP.value
     assert lines[1] == "<!--Another HTML comment-->"
 
@@ -154,8 +154,8 @@ def chooser_example_code():
     import phmdoctest.tool
 
     chooser = phmdoctest.tool.FCBChooser("doc/my_markdown_file.md")
-    text = chooser.contents(label="my-fenced-code-block")
-    print(text)
+    contents = chooser.contents(label="my-fenced-code-block")
+    print(contents)
 
 
 def test_fcb_chooser(capsys, checker):
