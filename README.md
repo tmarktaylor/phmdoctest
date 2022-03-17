@@ -1,4 +1,4 @@
-# phmdoctest 1.3.0
+# phmdoctest 1.4.0
 
 ## Introduction
 
@@ -1056,7 +1056,7 @@ See more uses in tests/test_examples.py, tests/test_details.py, and
 tests/test_many_markdown.py.
 The fixtures run pytest much faster than `run_and_pytest()`
 below since there is no subprocess call.
-In the readthedocs documentation see the section Development tools API 1.3.0.
+In the readthedocs documentation see the section Development tools API 1.4.0.
 pytest's pytester is suitable for pytest plugin development.
 
 ## Simulate command line

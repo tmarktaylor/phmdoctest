@@ -23,7 +23,7 @@ pytest -v .gendir-ini
 
 You can also pass a configuration file by Python.
 Look for the Python API in the readthedocs documentation.
-See the section Development tools API 1.3.0.
+See the section Development tools API 1.4.0.
 
 This is a good starting point template section for a .toml format file.
 ```toml

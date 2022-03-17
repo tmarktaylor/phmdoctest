@@ -10,7 +10,7 @@ jobs:
     - uses: actions/checkout@v2
       with:
         repository: tmarktaylor/phmdoctest
-        ref: v1.3.0
+        ref: v1.4.0
     - name: Set up Python
       uses: actions/setup-python@v2
       with:

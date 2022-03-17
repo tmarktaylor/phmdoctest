@@ -1,4 +1,15 @@
 # Recent changes
+
+1.4.0 - 2022-03-17
+- Add feature to generate test files using a configuration file.
+- Add `<--phmdoctest-mark.ATTRIBUTE-->` directive.
+- Add tool to check for Python examples.
+- Add tool to prepare a generated test file output directory.
+- Bugfix- issue- pytest not required for installation.
+- Combined CI script install.yml into ci.yml.
+- Close open files in test_readthedocs_python_version().
+
+
 1.3.0 - 2021-11-08
 
 - Add main.testfile().
