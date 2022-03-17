@@ -1,6 +1,6 @@
 # Recent changes
 
-1.4.0 - 2022-03-17
+1.4.0 - 2022-03-18
 - Add feature to generate test files using a configuration file.
 - Add `<--phmdoctest-mark.ATTRIBUTE-->` directive.
 - Add tool to check for Python examples.

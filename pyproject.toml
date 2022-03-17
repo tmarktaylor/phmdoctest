@@ -9,6 +9,8 @@ minversion = "6.2.4"
 testpaths = [
     "tests",
 ]
+addopts = "--ignore tests/check_classifiers.py"
+
 
 [tool.phmdoctest]
 # https://pypi.org/project/phmdoctest
