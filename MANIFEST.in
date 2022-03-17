@@ -17,6 +17,9 @@ recursive-include doc *.txt
 recursive-include tests *.md
 recursive-include tests *.py
 recursive-include tests *.txt
+recursive-include tests *.cfg
+recursive-include tests *.ini
+recursive-include tests *.toml
 
 include .gitignore
 include *.yml
