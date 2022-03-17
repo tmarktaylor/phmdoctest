@@ -11,10 +11,13 @@ import phmdoctest.tool
 labeled = phmdoctest.tool.FCBChooser("doc/configuring.md")
 
 
-def test_config_not_found():
+def test_bogus_configs():
     """Call generate_using() with non-existent configuration file."""
     with pytest.raises(FileNotFoundError):
         phmdoctest.main.generate_using(config_file=Path("bogus.toml"))
+    with pytest.raises(ValueError):
+        # Can't generate from a .py file.
+        phmdoctest.main.generate_using(config_file=Path("setup.py"))
 
 
 def test_using_toml_config(checker, capsys):
@@ -130,3 +133,36 @@ def test_tox_usage(checker):
     assert setup_tool["print"] == tox_tool["print"]
     assert ".gendir-cfg" in setup_tool["output_directory"]
     assert ".gendir-ini" in tox_tool["output_directory"]
+
+
+def test_absolute_outdir(tmp_path):
+    """Try absolute path in config file output_directory key."""
+    # Create destination directory.
+    tempdir = tmp_path / "outdir"
+    tempdir.mkdir(mode=0o700)
+    assert tempdir.exists()
+    assert tempdir.is_absolute()
+    assert len(list(tempdir.glob("**/*.*"))) == 0, "Must be empty."
+    # Create a new configuration file with an absolute output_directory.
+    # We are cheating a little by writing it to the same directory
+    # where the test files will be saved.
+    config_file = tempdir / Path("rewritten.cfg")
+    contents = Path("tests/generate.cfg").read_text(encoding="utf-8")
+    contents = contents.replace(".gendir-suite-cfg", str(tempdir))
+    contents = contents.replace("print = filename, summary", "print = summary")
+    _ = config_file.write_text(contents, encoding="utf-8")
+    phmdoctest.main.generate_using(config_file=config_file)
+    assert config_file.exists(), "In output_directory and didn't get wiped."
+    assert (Path(tempdir) / "test_project.py").exists()
+    assert (Path(tempdir) / "test_doc__directive1.py").exists()
+    assert (Path(tempdir) / "test_doc__directive2.py").exists()
+    assert (Path(tempdir) / "test_doc__directive3.py").exists()
+    assert (Path(tempdir) / "test_doc__example1.py").exists()
+    assert (Path(tempdir) / "test_doc__example2.py").exists()
+    assert (Path(tempdir) / "test_doc__inline_example.py").exists()
+    assert (Path(tempdir) / "test_tests__managenamespace.py").exists()
+    assert (Path(tempdir) / "test_tests__one_code_block.py").exists()
+    assert (Path(tempdir) / "test_tests__output_has_blank_lines.py").exists()
+    assert (Path(tempdir) / "test_tests__setup_only.py").exists()
+    assert (Path(tempdir) / "test_tests__twentysix_session_blocks.py").exists()
+    assert len(list(tempdir.glob("**/*.*"))) == 13, "12 test files and .cfg file."

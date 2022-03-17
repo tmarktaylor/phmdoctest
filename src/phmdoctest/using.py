@@ -39,8 +39,6 @@ class UserConfiguration:
 
 def parse_user_configuration(config_file: Path) -> UserConfiguration:
     """Parse configuration file in one of three configuration file formats."""
-    if not config_file.exists():
-        raise FileNotFoundError(str(config_file))
     if config_file.name.endswith(".cfg") or config_file.name.endswith(".ini"):
         config = configparser.ConfigParser()
         config.read(config_file)
@@ -67,6 +65,24 @@ def parse_user_configuration(config_file: Path) -> UserConfiguration:
         )
 
 
+def select_files(config: UserConfiguration, working_directory: Path) -> List[Path]:
+    """Look for Markdown files as directed by config. Keep if Python examples."""
+    included: List[Path] = []
+    for glob in config.markdown_globs:
+        included.extend(working_directory.glob(glob))
+    skipped: List[Path] = []
+    for glob in config.exclude_globs:
+        skipped.extend(working_directory.glob(glob))
+    tested: List[Path] = []
+    for keeper in included:
+        if keeper in skipped:
+            continue  # Don't append to the tested list.
+        python_examples = phmdoctest.tool.detect_python_examples(keeper)
+        if python_examples.has_code or python_examples.has_session:
+            tested.append(keeper)
+    return tested
+
+
 def generate_using(config_file: Path) -> None:
     """Generate test files as directed by configuration file.
 
@@ -79,23 +95,13 @@ def generate_using(config_file: Path) -> None:
 
     # Assemble list of files to test.
     # Names are relative to the current working directory.
-    included: List[Path] = []
-    for glob in config.markdown_globs:
-        included.extend(working_directory.glob(glob))
+    tested = select_files(config, working_directory)
 
-    skipped: List[Path] = []
-    for glob in config.exclude_globs:
-        skipped.extend(working_directory.glob(glob))
-
-    tested: List[Path] = []
-    for keeper in included:
-        if keeper in skipped:
-            continue  # Don't append to the tested list.
-        python_examples = phmdoctest.tool.detect_python_examples(keeper)
-        if python_examples.has_code or python_examples.has_session:
-            tested.append(keeper)
-
-    gendir = working_directory / config.output_directory_name
+    p = Path(config.output_directory_name)
+    if p.is_absolute():
+        gendir = p
+    else:
+        gendir = working_directory / config.output_directory_name
     phmdoctest.tool.wipe_testfile_directory(gendir)
 
     file_count = 0
@@ -115,11 +121,3 @@ def generate_using(config_file: Path) -> None:
         print(
             f"phmdoctest- {config_file.as_posix()} generated {file_count} pytest files"
         )
-
-
-if __name__ == "__main__":
-    generate_using(config_file=Path("setup.cfg"))
-    print()
-    generate_using(config_file=Path("pyproject.toml"))
-    print()
-    generate_using(config_file=Path("tox.ini"))

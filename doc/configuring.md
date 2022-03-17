@@ -43,8 +43,10 @@ output_directory = ".gendir-typical-toml"
 print = ["filename", "summary"]
 ```
 
-Filenames and globs and output_directory are relative to the current
-working directory of the shell that invokes phmdoctest.
+- Filenames and globs are relative to the current
+  working directory of the shell that invokes phmdoctest.
+- The output_directory can be relative or absolute.
+
 Please see Python standard library pathlib Path.glob(pattern)
 for glob syntax.
 The `**` glob pattern indicates recursive directory search. We
