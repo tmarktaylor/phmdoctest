@@ -42,6 +42,8 @@ extensions = [
     "sphinx.ext.napoleon",
 ]
 
+myst_heading_anchors = 2
+
 source_suffix = {
     ".rst": "restructuredtext",
     ".md": "markdown",
