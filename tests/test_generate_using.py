@@ -24,7 +24,7 @@ def test_bogus_configs():
 def line_sorted_checker(checker):
     """Return Callable(str, str) that sorts each arg's lines first."""
 
-    def sorted_checker(a:str, b:str):
+    def sorted_checker(a: str, b: str):
         """Split each string into lines, sort them, reconstitute string, then compare."""
         a_lines = a.splitlines()
         a_sorted = sorted(a_lines)
@@ -33,6 +33,7 @@ def line_sorted_checker(checker):
         b_sorted = sorted(b_lines)
         b_string = "\n".join(b_sorted)
         checker(a_string, b_string)
+
     return sorted_checker
 
 

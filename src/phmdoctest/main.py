@@ -10,8 +10,8 @@ import phmdoctest.cases
 import phmdoctest.fenced
 import phmdoctest.fillrole
 import phmdoctest.report
-import phmdoctest.using
 import phmdoctest.tool
+import phmdoctest.using
 
 
 @click.command()
