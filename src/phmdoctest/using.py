@@ -6,9 +6,9 @@ import re
 from typing import List
 
 try:
-    import tomllib
+    import tomllib  # type: ignore
 except ModuleNotFoundError:
-    import tomli as tomllib
+    import tomli as tomllib  # type: ignore
 
 import phmdoctest.main
 import phmdoctest.tool
