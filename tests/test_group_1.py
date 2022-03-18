@@ -79,6 +79,10 @@ class TestSameVersions:
         """Check the version is anywhere in api.rst."""
         self.verify_found_in_file("doc/api.rst", "version {}")
 
+    def test_actions_usage(self):
+        """Check the version in the link  is anywhere in actions_usage.md."""
+        self.verify_found_in_file("doc/actions_usage.md", "blob/v{}")
+
 
 def string_to_dependencies(text: str) -> set:
     """Return the set of pip dependencies from a multi-line string.
