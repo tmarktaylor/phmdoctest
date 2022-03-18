@@ -55,7 +55,6 @@ class TestMany:
     # Note: If none of the files in the list tested have doctests the
     #       --doctest-modules pytest option below is not needed.
 
-    @pytest.mark.skip
     @pytest.mark.skipif(sys.version_info < (3, 8), reason="requires >=py3.8")
     @pytest.mark.parametrize("markdown_name", tested)
     def test_md(self, markdown_name, testfile_creator, testfile_tester):
@@ -63,7 +62,7 @@ class TestMany:
         testfile = testfile_creator(markdown_name.as_posix())
         # create the test file name
         p = Path(markdown_name).with_suffix(".py")
-        myname = "test_" + "many_md__".join(p.parts)  # flatten
+        myname = "test_many_md_" + "__".join(p.parts)  # flatten
         result = testfile_tester(
             contents=testfile,
             testfile_name=myname,
