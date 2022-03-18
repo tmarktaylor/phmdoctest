@@ -8,7 +8,6 @@ from typing import List
 try:
     import tomllib
 except ModuleNotFoundError:
-    # noinspection PyPackageRequirements
     import tomli as tomllib
 
 import phmdoctest.main

@@ -20,7 +20,23 @@ def test_bogus_configs():
         phmdoctest.main.generate_using(config_file=Path("setup.py"))
 
 
-def test_using_toml_config(checker, capsys):
+@pytest.fixture()
+def line_sorted_checker(checker):
+    """Return Callable(str, str) that sorts each arg's lines first."""
+
+    def sorted_checker(a:str, b:str):
+        """Split each string into lines, sort them, reconstitute string, then compare."""
+        a_lines = a.splitlines()
+        a_sorted = sorted(a_lines)
+        a_string = "\n".join(a_sorted)
+        b_lines = b.splitlines()
+        b_sorted = sorted(b_lines)
+        b_string = "\n".join(b_sorted)
+        checker(a_string, b_string)
+    return sorted_checker
+
+
+def test_using_toml_config(line_sorted_checker, capsys):
     """Call generate_using() with .toml configuration file."""
     want = """
 phmdoctest- project.md => .gendir-suite-toml/test_project.py
@@ -39,10 +55,10 @@ phmdoctest- tests/generate.toml generated 12 pytest files
 """
     phmdoctest.main.generate_using(config_file=Path("tests/generate.toml"))
     drop_newline = want.lstrip()
-    checker(drop_newline, capsys.readouterr().out)
+    line_sorted_checker(drop_newline, capsys.readouterr().out)
 
 
-def test_using_cfg_config(checker, capsys):
+def test_using_cfg_config(line_sorted_checker, capsys):
     """Call generate_using() with .cfg configuration file."""
     want = """
 phmdoctest- project.md => .gendir-suite-cfg/test_project.py
@@ -61,7 +77,7 @@ phmdoctest- tests/generate.cfg generated 12 pytest files
 """
     phmdoctest.main.generate_using(config_file=Path("tests/generate.cfg"))
     drop_newline = want.lstrip()
-    checker(drop_newline, capsys.readouterr().out)
+    line_sorted_checker(drop_newline, capsys.readouterr().out)
 
 
 def test_using_ini_config(checker, capsys):
