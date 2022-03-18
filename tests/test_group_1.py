@@ -144,7 +144,7 @@ def test_doc_requirements_file():
     Make sure the docs build install the same versions listed by
     requirements.txt at the repository root.
     """
-    packages = ["Click", "monotable", "commonmark"]
+    packages = ["Click", "monotable", "commonmark", "tomli"]
     setup_versions = {}
     setup_text = Path("requirements.txt").read_text(encoding="utf-8")
     setup_requirements = setup_text.splitlines()
