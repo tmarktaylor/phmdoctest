@@ -97,7 +97,6 @@ jobs:
           cmp doc/test_directive2.py .gendir-cfg/test_doc__directive2.py
           cmp doc/test_directive3.py .gendir-cfg/test_doc__directive3.py
           cmp doc/test_example1.py .gendir-cfg/test_doc__example1.py
-          cmp doc/test_example2.py .gendir-cfg/test_doc__example2.py
           cmp doc/test_inline_example.py .gendir-cfg/test_doc__inline_example.py
           pytest --doctest-modules -vv .gendir-cfg
 
@@ -109,7 +108,6 @@ jobs:
           cmp doc/test_directive2.py .gendir-ini/test_doc__directive2.py
           cmp doc/test_directive3.py .gendir-ini/test_doc__directive3.py
           cmp doc/test_example1.py .gendir-ini/test_doc__example1.py
-          cmp doc/test_example2.py .gendir-ini/test_doc__example2.py
           cmp doc/test_inline_example.py .gendir-ini/test_doc__inline_example.py
           pytest --doctest-modules -vv .gendir-ini
 
@@ -121,7 +119,6 @@ jobs:
           cmp doc/test_directive2.py .gendir-toml/test_doc__directive2.py
           cmp doc/test_directive3.py .gendir-toml/test_doc__directive3.py
           cmp doc/test_example1.py .gendir-toml/test_doc__example1.py
-          cmp doc/test_example2.py .gendir-toml/test_doc__example2.py
           cmp doc/test_inline_example.py .gendir-toml/test_doc__inline_example.py
           pytest --doctest-modules -vv .gendir-toml
 
