@@ -60,7 +60,7 @@ class TestMany:
         testfile = testfile_creator(markdown_name.as_posix())
         # create the test file name
         p = Path(markdown_name).with_suffix(".py")
-        myname = "test_" + "__".join(p.parts)  # flatten
+        myname = "test_" + "many_md__".join(p.parts)  # flatten
         result = testfile_tester(
             contents=testfile,
             testfile_name=myname,
