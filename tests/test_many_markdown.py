@@ -1,6 +1,7 @@
 """A way to test lots of Markdown files using the pytester testfile_* fixtures."""
 
 from pathlib import Path
+import sys
 
 from _pytest.pytester import RunResult
 import pytest
@@ -54,6 +55,8 @@ class TestMany:
     # Note: If none of the files in the list tested have doctests the
     #       --doctest-modules pytest option below is not needed.
 
+    @pytest.mark.skip
+    @pytest.mark.skipif(sys.version_info < (3, 8), reason="requires >=py3.8")
     @pytest.mark.parametrize("markdown_name", tested)
     def test_md(self, markdown_name, testfile_creator, testfile_tester):
         """Generate pytest file and run it with pytester."""
