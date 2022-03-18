@@ -9,16 +9,19 @@ be added to pre-existing configuration files.
 A separate invocation of pytest is needed to run the generated test files.
 
 Here are some example invocations using a configuration file
-that have the phmdoctest configuration section.
+that have the phmdoctest configuration section. These
+configuration files are in the phmdoctest repository.
 
 <!--phmdoctest-label invocations-->
 ```
 phmdoctest pyproject.toml
-pytest -v .gendir-toml
+pytest -v --doctest-modules .gendir-toml
+
 phmdoctest setup.cfg
-pytest -v .gendir-cfg
+pytest -v --doctest-modules .gendir-cfg
+
 phmdoctest tox.ini
-pytest -v .gendir-ini
+pytest -v --doctest-modules .gendir-ini
 ```
 
 You can also pass a configuration file by Python.
