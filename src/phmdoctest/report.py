@@ -6,8 +6,9 @@ from typing import List
 import click
 import monotable
 
+from phmdoctest.direct import Marker
 from phmdoctest.entryargs import Args
-from phmdoctest.fenced import FencedBlock
+from phmdoctest.fenced import FencedBlock, Role
 
 
 def print_report(args: Args, blocks: List[FencedBlock]) -> None:
@@ -78,6 +79,9 @@ def fenced_block_report(blocks: List[FencedBlock], title: str = "") -> str:
         for d in block.directives:
             name = d.literal.replace("<!--phmdoctest", "")
             name = name.replace("-->", "")
+            # Indicate directives that are ignored for sessions.
+            if block.role == Role.SESSION and d.type not in {Marker.SKIP, Marker.LABEL}:
+                name += "(ignored)"
             patterns.append(name)
         cell = "\n".join(patterns)
         cell_grid.append([block.type, block.line, block.role.value, cell])

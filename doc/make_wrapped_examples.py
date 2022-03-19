@@ -33,7 +33,7 @@ def nag():
 def prompt_to_write_file(outfile_name, text):
     if input("ok to write " + outfile_name + " [Y/n]? >> ") == "Y":
         print("writing", outfile_name)
-        _ = Path("outfile_name").write_text(text, encoding="utf-8")
+        _ = Path(outfile_name).write_text(text, encoding="utf-8")
 
 
 def wrap_one_file(name, outname=None):
@@ -84,6 +84,9 @@ def main():
 
     wrap_one_file("doc/test_inline_example.py")
     wrap_one_file("tests/project_test.py", outname="doc/project_test_py.md")
+
+    wrap_raw_markdown("doc/mark_example.md")
+    wrap_one_file("doc/test_mark_example.py")
 
 
 if __name__ == "__main__":

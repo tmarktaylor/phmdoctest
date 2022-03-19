@@ -6,15 +6,16 @@ The purpose here is to build and run a pytest file using
 the fixtures in tester.py. The testfile_tester fixture
 uses the pytester fixture to run the pytest file.
 """
-import sys
 from pathlib import Path
+import sys
 
 import click
+from _pytest.pytester import RunResult
+import pytest
+
 from phmdoctest.tester import testfile_creator
 from phmdoctest.tester import testfile_tester
 import phmdoctest.tool
-from _pytest.pytester import RunResult
-import pytest
 
 
 def nofail_noerror_nowarn(result: RunResult) -> None:

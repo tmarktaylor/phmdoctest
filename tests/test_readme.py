@@ -73,7 +73,7 @@ def test_ci_example():
     fcb_lower_case = fcb.lower()
     fcb_lines = fcb_lower_case.splitlines()
     edited_lines_in_fcb = [line.replace("readme", "project") for line in fcb_lines]
-    whole_file = Path(".github/workflows/install.yml").read_text(encoding="utf-8")
+    whole_file = Path(".github/workflows/ci.yml").read_text(encoding="utf-8")
     lines_in_file = whole_file.splitlines()
     stripped_lines_in_file = [line.strip() for line in lines_in_file]
     assert len(edited_lines_in_fcb) == 3
@@ -86,8 +86,9 @@ def test_actions_usage_md(checker):
     blocks = phmdoctest.tool.fenced_code_blocks("doc/actions_usage.md")
     got = blocks[0]
     whole_file = Path(".github/workflows/ci.yml").read_text(encoding="utf-8")
+    # Match from "jobs:" up until blank line before "versions:"
     m = re.search(
-        pattern=r"(jobs:.*\n)\n  coverage:", string=whole_file, flags=re.DOTALL
+        pattern=r"(jobs:.*\n)\n  versions:", string=whole_file, flags=re.DOTALL
     )
     want = m.group(1)
     checker(a=want, b=got)
@@ -140,8 +141,8 @@ def test_report(checker):
 
 def test_intro_to_directives():
     """Verify correct spelling of the skip directive."""
-    text = labeled.contents(label="intro-to-directives")
-    lines = text.splitlines()
+    contents = labeled.contents(label="intro-to-directives")
+    lines = contents.splitlines()
     assert lines[0] == phmdoctest.direct.Marker.SKIP.value
     assert lines[1] == "<!--Another HTML comment-->"
 
@@ -153,8 +154,8 @@ def chooser_example_code():
     import phmdoctest.tool
 
     chooser = phmdoctest.tool.FCBChooser("doc/my_markdown_file.md")
-    text = chooser.contents(label="my-fenced-code-block")
-    print(text)
+    contents = chooser.contents(label="my-fenced-code-block")
+    print(contents)
 
 
 def test_fcb_chooser(capsys, checker):

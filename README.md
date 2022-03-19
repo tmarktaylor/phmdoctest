@@ -1,4 +1,4 @@
-# phmdoctest 1.3.0
+# phmdoctest 1.4.0
 
 ## Introduction
 
@@ -17,9 +17,11 @@ highlighted code examples in Markdown.
 - More features selected by adding HTML comment **directives**
   to the Markdown.
   - Set test case name.
+  - Add a pytest custom marker.
   - Add a pytest.mark.skip decorator.
   - Promote names defined in a test case to module level globals.
   - Label any fenced code block for later retrieval (API).
+- Configurable. Discover and process many Markdown files in a single command.
 - Add inline annotations to comment out sections of code.
 - Get code coverage by running pytest with [coverage][6].
 - Select Python source code blocks as setup and teardown code.
@@ -32,8 +34,10 @@ highlighted code examples in Markdown.
        in its isolated environment.
   - Runs phmdoctest and can run pytest too. *(simulator.py)*
   - Functions to read fenced code blocks from Markdown. *(tool.py)*
+  - Test Markdown for Python examples. *(tool.py)*
+  - Prepare directory for generated test files. *(tool.py)*
   - Extract testsuite tree and list of failing trees from JUnit XML. *(tool.py)*
-- Available soon as a pytest plugin.
+- Available as the pytest plugin [pytest-phmdoctest][16].
 
 
 ### default branch status
@@ -42,7 +46,6 @@ highlighted code examples in Markdown.
 [![](https://img.shields.io/pypi/pyversions/phmdoctest.svg)](https://pypi.python.org/pypi/phmdoctest)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-[![Usage Test](https://github.com/tmarktaylor/phmdoctest/actions/workflows/install.yml/badge.svg)](https://github.com/tmarktaylor/phmdoctest/actions/workflows/install.yml)
 [![CI Test](https://github.com/tmarktaylor/phmdoctest/actions/workflows/ci.yml/badge.svg)](https://github.com/tmarktaylor/phmdoctest/actions/workflows/ci.yml)
 [![Build status](https://ci.appveyor.com/api/projects/status/5pp3swc1q1fgbcd6/branch/master?svg=true)](https://ci.appveyor.com/project/tmarktaylor/phmdoctest/branch/master)
 [![readthedocs](https://readthedocs.org/projects/phmdoctest/badge/?version=latest)](https://phmdoctest.readthedocs.io/en/latest/?badge=latest)
@@ -73,9 +76,11 @@ highlighted code examples in Markdown.
 [teardown](#teardown) |
 [share-names](#share-names) |
 [clear-names](#clear-names) |
+[pytest mark decorator](#pytest-mark-decorator) |
 [label skip and mark example](#label-skip-and-mark-example) |
 [setup and teardown example](#setup-and-teardown-example) |
 [share-names clear-names example](#share-names-clear-names-example) |
+[Configuration](#configuration) |
 [Inline annotations](#inline-annotations) |
 [skipping blocks with --skip](#skipping-blocks-with-skip-option) |
 [--skip](#skip-option) |
@@ -420,6 +425,7 @@ List of Directives
 <!--phmdoctest-teardown-->         | code
 <!--phmdoctest-share-names-->      | code
 <!--phmdoctest-clear-names-->      | code
+<!--phmdoctest-mark.ATTRIBUTE-->   | code
 ```
 
 [Directive hints](#directive-hints)
@@ -467,8 +473,8 @@ Here is Python code to fetch it:
 import phmdoctest.tool
 
 chooser = phmdoctest.tool.FCBChooser("doc/my_markdown_file.md")
-text = chooser.contents(label="my-fenced-code-block")
-print(text)
+contents = chooser.contents(label="my-fenced-code-block")
+print(contents)
 ```
 Output:
 
@@ -547,6 +553,18 @@ get deleted. The names that were shared are no longer visible.
 This directive also deletes the names assigned by setup.
 [Example.](#share-names-clear-names-example)
 
+## pytest mark decorator
+The `<!--phmdoctest-mark.ATTRIBUTE-->` directive adds
+a @pytest.mark.ATTRIBUTE decorator to the
+generated test function. ATTRIBUTE is a valid Python attribute
+identifier. This defines a marker to pytest that is used to
+select and deselect tests. See the pytest documentation section
+"Working with custom markers".
+The file [mark_example.md](doc/mark_example_raw.md) contains
+example usage of the user defined marker "slow". It generates
+[test_mark_example.py](doc/test_mark_example_py.md)
+
+
 ## label skip and mark example
 The file [directive1.md](doc/directive1_raw.md) contains
 example usage of label, skip, and mark directives.
@@ -589,6 +607,18 @@ produces this
 phmdoctest doc/directive3.md --outfile test_directive3.py
 ```
 
+## Configuration
+
+Supply a .ini, .cfg, or .toml configuration file in place of the Markdown file.
+Configuration features:
+- Choose Markdown files for test file generation. (glob wildcards).
+- Exclude Markdown files from test file generation. (glob wildcards).
+- Name the output directory.
+- Removes stale test files from output directory.
+- Enable printing.
+
+Place a `[tool.phmdoctest]` section in the configuration file.
+[How to configure.](doc/configuring.md)
 
 ## Inline annotations
 
@@ -932,6 +962,8 @@ phmdoctest doc/example2.md -s "Python 3.7" -sLAST --outfile=-
 ```
 Usage: phmdoctest [OPTIONS] MARKDOWN_FILE
 
+  MARKDOWN_FILE may also be .toml, .cfg, or .ini configuration file.
+
 Options:
   --outfile TEXT       Write generated test case file to path TEXT. "-" writes
                        to stdout.
@@ -1020,10 +1052,12 @@ Use fixture **testfile_creator** to generate a test file in memory.
 Pass the test file to fixture **testfile_tester** to run
 the test file in the pytester environment.
 [Fixture API][10] | [Example](doc/project_test_py.md).
-See more uses in tests/test_examples.py and tests/test_details.py.
+See more uses in tests/test_examples.py, tests/test_details.py, and
+tests/test_many_markdown.py.
 The fixtures run pytest much faster than `run_and_pytest()`
 below since there is no subprocess call.
-In the readthedocs documentation see the section Development tools API 1.3.0.
+In the readthedocs documentation see the section Development tools API 1.4.0.
+pytest's pytester is suitable for pytest plugin development.
 
 ## Simulate command line
 
@@ -1130,6 +1164,13 @@ assert simulator_status.pytest_exit_code == 0
   `--log-cli-level=DEBUG --color=yes`
 - There is no limit to number of blank lines after
   the directive HTML comment but before the fenced code block.
+- The directive `<!--phmdoctest-mark.xfail-->` might be useful as
+  an alternative to `<!--phmdoctest-mark.skip-->` for failing examples.
+- The directive `<!--phmdoctest-mark.ATTRIBUTE-->` will not be
+  effective when used with `<!--phmdoctest-setup-->` or
+   `<!--phmdoctest-teardown-->` because pytest marks can only
+  be applied to tests. They have no effect on fixtures.
+  Setup and teardown use fixtures.
 
 ## Related projects
 - rundoc
@@ -1148,7 +1189,8 @@ assert simulator_status.pytest_exit_code == 0
 [8]: https://spec.commonmark.org
 [9]: https://commonmark.org
 [4]: https://docs.python.org/3/library/doctest.html
-[6]: https://pypi.python.org/project/coverage
+[6]: https://pypi.org/project/coverage
 [13]: https://ci.appveyor.com/project/tmarktaylor/phmdoctest
 [14]: https://travis-ci.org/tmarktaylor/monotable
 [15]: https://docs.pytest.org/en/stable
+[16]: https://pypi.org/project/pytest-phmdoctest

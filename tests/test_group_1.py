@@ -46,6 +46,12 @@ class TestSameVersions:
         self.verify_found_in_file("README.md", "# phmdoctest {}")
         self.verify_found_in_file("README.md", "section Development tools API {}")
 
+    def test_configuring_md(self):
+        """Check the version near the top of doc/configuring.md."""
+        self.verify_found_in_file(
+            "doc/configuring.md", "section Development tools API {}"
+        )
+
     def test_index_rst(self):
         """Check the version is anywhere in index.rst."""
         self.verify_found_in_file("index.rst", "phmdoctest {}\n=============")
@@ -72,6 +78,10 @@ class TestSameVersions:
     def test_api_rst(self):
         """Check the version is anywhere in api.rst."""
         self.verify_found_in_file("doc/api.rst", "version {}")
+
+    def test_actions_usage(self):
+        """Check the version in the link  is anywhere in actions_usage.md."""
+        self.verify_found_in_file("doc/actions_usage.md", "blob/v{}")
 
 
 def string_to_dependencies(text: str) -> set:
@@ -138,7 +148,7 @@ def test_doc_requirements_file():
     Make sure the docs build install the same versions listed by
     requirements.txt at the repository root.
     """
-    packages = ["Click", "monotable", "commonmark"]
+    packages = ["Click", "monotable", "commonmark", "tomli"]
     setup_versions = {}
     setup_text = Path("requirements.txt").read_text(encoding="utf-8")
     setup_requirements = setup_text.splitlines()
@@ -161,8 +171,10 @@ def test_doc_requirements_file():
 
 def test_readthedocs_python_version():
     """The build docs Python version == workflow step Python version."""
-    rtd = yaml.safe_load(open(".readthedocs.yml", "r", encoding="utf-8"))
-    workflow = yaml.safe_load(open(".github/workflows/ci.yml", "r", encoding="utf-8"))
+    with open(".readthedocs.yml", "r", encoding="utf-8") as frtd:
+        rtd = yaml.safe_load(frtd)
+    with open(".github/workflows/ci.yml", "r", encoding="utf-8") as fwrk:
+        workflow = yaml.safe_load(fwrk)
     step = workflow["jobs"]["docs"]["steps"][1]
     assert "Setup Python" in step["name"]
     workflow_version = step["with"]["python-version"]

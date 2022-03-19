@@ -8,8 +8,8 @@ from typing import List, Iterator, Optional, Set
 import click
 
 from phmdoctest.entryargs import Args
+from phmdoctest.direct import Directive, Marker
 from phmdoctest.fenced import Role, FencedBlock
-from phmdoctest.direct import Marker
 from phmdoctest import functions
 from phmdoctest.inline import apply_inline_commands
 
@@ -50,50 +50,55 @@ def make_label_unique(label: str, line_num: int, used: Set[str]) -> str:
     return label
 
 
-def get_skipif_minor_number(block: FencedBlock) -> int:
-    """Get block's first skipif minor numeric value, if it exists."""
-    # Return zero if there is no such directive.
-    minor_number = 0
-    for directive in block.directives:
-        if directive.type == Marker.PYTEST_SKIPIF:
-            value = directive.value
-            try:
-                minor_number = int(value, 10)
-                if minor_number < 0:
-                    raise ValueError("phmdoctest- must be >= 0")
-            except ValueError:
-                lines = [
-                    Marker.PYTEST_SKIPIF.value + "{}-->".format(value),
-                    (
-                        "at markdown file line {} ".format(directive.line)
-                        + "must be a decimal number and >= zero."
-                    ),
-                ]
-                message = "\n".join(lines)
-                raise click.ClickException(message)
+def get_skipif_minor_number(directive: Directive) -> int:
+    """Get the PYTEST_SKIPIF directive minor number value."""
+    value = directive.value
+    try:
+        minor_number = int(value, 10)
+        if minor_number < 0:
+            raise ValueError("phmdoctest- must be >= 0")
+    except ValueError:
+        lines = [
+            Marker.PYTEST_SKIPIF.value + "{}-->".format(value),
+            (
+                "at markdown file line {} ".format(directive.line)
+                + "must be a decimal number and >= zero."
+            ),
+        ]
+        message = "\n".join(lines)
+        raise click.ClickException(message)
     return minor_number
 
 
-def needs_sys(blocks: List[FencedBlock]) -> bool:
-    """See if import sys is needed for mark.skipif expression."""
-    for block in blocks:
-        # Look for the phmdoctest-mark.skipif<3. directive on code blocks only.
-        # If one is found this means import sys is required in the test file.
-        if block.role == Role.CODE:
-            if get_skipif_minor_number(block):
-                return True  # import sys is needed
-    return False
+def get_pytest_mark_value(directive: Directive) -> str:
+    """Get the PYTEST_MARK directive value."""
+    value: str = directive.value
+    if not value.isidentifier():
+        lines = [
+            Marker.PYTEST_MARK.value + "{}-->".format(value),
+            (
+                "at markdown file line {} ".format(directive.line)
+                + "must be a valid Python identifier."
+            ),
+        ]
+        message = "\n".join(lines)
+        raise click.ClickException(message)
+    return value
 
 
-def has_pytest_mark_decorator(blocks: List[FencedBlock]) -> bool:
+def needs_sys(code_blocks: List[FencedBlock]) -> bool:
+    """See if import sys is needed for pytest.mark.skipif expression."""
+    return any(block.has_directive(Marker.PYTEST_SKIPIF) for block in code_blocks)
+
+
+def has_pytest_mark_decorator(code_blocks: List[FencedBlock]) -> bool:
     """True if any code blocks generate @pytest.mark.* decorators."""
-    code_blocks = [b for b in blocks if b.role == Role.CODE]
-    # Return True if any calls to add_pytest_mark_decorator() write a line
-    # to the StringIO file.
-    pytest_marks_lines = StringIO()
-    for block in code_blocks:
-        add_pytest_mark_decorator(pytest_marks_lines, block)
-    return len(pytest_marks_lines.getvalue()) > 0
+    return any(block.has_pytest_directive() for block in code_blocks)
+
+
+def any_names_directives(code_blocks: List[FencedBlock]) -> bool:
+    """Return True if the managenamespace fixture is needed to share names."""
+    return any(block.has_names_directive() for block in code_blocks)
 
 
 def compose_import_lines(
@@ -102,12 +107,13 @@ def compose_import_lines(
     needs_output_checking: bool,
 ) -> str:
     """Generate import lines for the test file."""
-    needs_fixture = needs_setup_or_teardown or any_names_directives(blocks)
-    needs_import_pytest = has_pytest_mark_decorator(blocks)
+    code_blocks = [b for b in blocks if b.role == Role.CODE]
+    needs_fixture = needs_setup_or_teardown or any_names_directives(code_blocks)
+    needs_import_pytest = needs_fixture or has_pytest_mark_decorator(code_blocks)
     lines = list()
-    if needs_sys(blocks):
+    if needs_sys(code_blocks):
         lines.append("import sys\n\n")
-    if needs_fixture or needs_import_pytest:
+    if needs_import_pytest:
         lines.append("import pytest\n\n")
     if needs_fixture:
         lines.append("from phmdoctest.fixture import managenamespace\n")
@@ -174,42 +180,33 @@ def call_namespace_manager(block: FencedBlock) -> str:
         return ""
 
 
-def has_names_directive(block: FencedBlock) -> bool:
-    """Does the code block have a share-names or clear-names directive."""
-    assert block.role == Role.CODE, "must be a Python code block."
-    return block.has_directive(Marker.SHARE_NAMES) or block.has_directive(
-        Marker.CLEAR_NAMES
-    )
-
-
-def any_names_directives(blocks: List[FencedBlock]) -> bool:
-    """Return True if the managenamespace fixture is needed to share names."""
-    for block in blocks:
-        if block.role == Role.CODE:
-            if has_names_directive(block):
-                return True
-    return False
-
-
 def add_pytest_mark_decorator(writer: StringIO, block: FencedBlock) -> None:
-    """If block has a -mark. directive add the pytest.mark decorator.
+    """Add the pytest.mark decorators if specified by directives.
 
-    If the block has a mark.skip directive, write pytest.mark.skip.
-    If the block has a mark.skipif directive, write pytest.mark.skipif.
+    If the block has a mark.skip directive, write @pytest.mark.skip().
+    If the block has a mark.skipif directive, write @pytest.mark.skipif.
+    If the block has a mark. directive, write @pytest.mark.ATTRIBUTE().
+    The decorators are written in the same order as the directives
+    in the Markdown file.
     """
     for directive in block.directives:
         if directive.type == Marker.PYTEST_SKIP:
             writer.write("\n")
             writer.write("@pytest.mark.skip()")
 
-    mark_format = (
-        "@pytest.mark.skipif(sys.version_info < (3, {0}), "
-        'reason="requires >=py3.{0}")'
-    )
-    minor_number = get_skipif_minor_number(block)
-    if minor_number:
-        writer.write("\n")
-        writer.write(mark_format.format(minor_number))
+        elif directive.type == Marker.PYTEST_SKIPIF:
+            mark_format = (
+                "@pytest.mark.skipif(sys.version_info < (3, {0}), "
+                'reason="requires >=py3.{0}")'
+            )
+            minor_number = get_skipif_minor_number(directive)
+            writer.write("\n")
+            writer.write(mark_format.format(minor_number))
+
+        elif directive.type == Marker.PYTEST_MARK:
+            value = get_pytest_mark_value(directive)
+            writer.write("\n")
+            writer.write("@pytest.mark.{}".format(value))
 
 
 def test_case(block: FencedBlock, used_names: Set[str]) -> str:
@@ -235,7 +232,7 @@ def test_case(block: FencedBlock, used_names: Set[str]) -> str:
         function_name += "_{}".format(num_commented_out_sections)
     expected_output = block.get_output_contents()
     # A 'managed' block has the share-names or clear-names directive.
-    managed = has_names_directive(block)
+    managed = block.has_names_directive()
     text.write("\n")
     if expected_output:
         if managed:

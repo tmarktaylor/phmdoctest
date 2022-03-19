@@ -27,7 +27,7 @@ copyright = "2021, Mark Taylor"
 author = "Mark Taylor"
 
 # The full version, including alpha/beta/rc tags
-release = "1.3.0"
+release = "1.4.0"
 
 
 # -- General configuration ---------------------------------------------------
@@ -41,6 +41,8 @@ extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.napoleon",
 ]
+
+myst_heading_anchors = 2
 
 source_suffix = {
     ".rst": "restructuredtext",

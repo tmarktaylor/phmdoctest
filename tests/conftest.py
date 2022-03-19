@@ -23,6 +23,7 @@ def checker():
         for a_line, b_line in zip_longest(a_lines, b_lines):
             if a_line != b_line:
                 diffs = difflib.ndiff(a_lines, b_lines)
+                print()  # needed for IDE output window
                 for line in diffs:
                     print(line)
                 assert False

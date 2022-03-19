@@ -145,3 +145,12 @@ def test_test_project_test_py_md(checker):
         contents_path="tests/project_test.py",
         checker_function=checker,
     )
+
+
+def test_test_mark_example_py_md(checker):
+    """The copy of .py file in fenced code block is the same as the file."""
+    check_first_block(
+        markdown_path="doc/test_mark_example_py.md",
+        contents_path="doc/test_mark_example.py",
+        checker_function=checker,
+    )
