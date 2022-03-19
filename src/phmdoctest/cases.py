@@ -8,8 +8,8 @@ from typing import List, Iterator, Optional, Set
 import click
 
 from phmdoctest.entryargs import Args
-from phmdoctest.fenced import Role, FencedBlock
 from phmdoctest.direct import Directive, Marker
+from phmdoctest.fenced import Role, FencedBlock
 from phmdoctest import functions
 from phmdoctest.inline import apply_inline_commands
 

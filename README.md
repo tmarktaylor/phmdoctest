@@ -1139,8 +1139,6 @@ assert simulator_status.pytest_exit_code == 0
   # Reserved for generated test file.
   tests/test_readme.py
   ```
-- The directive `<!--phmdoctest-mark.xfail-->` might be useful as
-  an alternative to `<!--phmdoctest-mark.skip-->` for failing examples.
 
 ## Directive hints
 
@@ -1166,6 +1164,13 @@ assert simulator_status.pytest_exit_code == 0
   `--log-cli-level=DEBUG --color=yes`
 - There is no limit to number of blank lines after
   the directive HTML comment but before the fenced code block.
+- The directive `<!--phmdoctest-mark.xfail-->` might be useful as
+  an alternative to `<!--phmdoctest-mark.skip-->` for failing examples.
+- The directive `<!--phmdoctest-mark.ATTRIBUTE-->` will not be
+  effective when used with `<!--phmdoctest-setup-->` or
+   `<!--phmdoctest-teardown-->` because pytest marks can only
+  be applied to tests. They have no effect on fixtures.
+  Setup and teardown use fixtures.
 
 ## Related projects
 - rundoc

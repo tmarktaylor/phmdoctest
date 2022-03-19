@@ -1,6 +1,6 @@
 # Snippet of use in GitHub Actions
 
-(This view is bad on github.io since removes the variable
+(This view is bad on github.io since it removes the variable
 references in the .yml script.
 View
 [here](https://github.com/tmarktaylor/phmdoctest/blob/v1.4.0/doc/actions_usage.md)

@@ -176,7 +176,7 @@ jobs:
         pip install -r tests/requirements_inspect.txt
         python -m pip install trove-classifiers
         pip freeze
-    - name: Formating
+    - name: Formatting
       # Show reformatting changes.
       # Make the changes.
       # Subsequent steps run with the modified files.
