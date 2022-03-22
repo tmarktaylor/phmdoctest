@@ -3,6 +3,7 @@ import configparser
 from pathlib import Path
 
 import pytest
+
 try:
     import tomllib  # type: ignore
 except ModuleNotFoundError:
