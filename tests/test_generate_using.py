@@ -3,6 +3,10 @@ import configparser
 from pathlib import Path
 
 import pytest
+try:
+    import tomllib  # type: ignore
+except ModuleNotFoundError:
+    import tomli as tomllib  # type: ignore
 
 import phmdoctest.main
 import phmdoctest.tool
@@ -119,6 +123,12 @@ def test_invocations_toml():
     gendir = ".gendir-toml"
     assert gendir in invocations
     assert f'output_directory = "{gendir}"' in pyproject
+
+
+def test_starting_template(checker):
+    """Make sure the .toml parses."""
+    contents = labeled.contents(label="template")
+    _ = tomllib.loads(contents)
 
 
 def test_cfg_example(checker):

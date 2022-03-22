@@ -9,7 +9,7 @@ be added to pre-existing configuration files.
 A separate invocation of pytest is needed to run the generated test files.
 
 Here are some example invocations using a configuration file
-that have the phmdoctest configuration section. These
+that has the phmdoctest configuration section. These
 configuration files are in the phmdoctest repository.
 
 <!--phmdoctest-label invocations-->
@@ -29,6 +29,7 @@ Look for the Python API in the readthedocs documentation.
 See the section Development tools API 1.4.0.
 
 This is a good starting point template section for a .toml format file.
+<!--phmdoctest-label template-->
 ```toml
 [tool.phmdoctest]
 # https://pypi.org/project/phmdoctest
@@ -36,7 +37,7 @@ This is a good starting point template section for a .toml format file.
 # Invoke pytest separately to run the generated pytest files.
 
 markdown_globs = [
-    "README.md"
+    "README.md",
     "doc/*.md",
 ]
 exclude_globs = [
@@ -59,9 +60,9 @@ could do the whole repository with (.toml)
 The generated test files get written to the directory specified
 by `output_directory`.
 
-The directory specified by `output_directory` is cleaned of all *.py
-files before new test files are generated.
-Pre-existing *.py files in the output directory are renamed. If
+`output_directory` is cleaned of all *.py
+files before writing new test files.
+Pre-existing *.py files in the output directory get renamed. If
 output_directory inadvertently gets pointed at a Python
 source directory, the renamed files can be recovered by renaming them.
 
@@ -71,12 +72,12 @@ Comments are OK on separate lines or at the end of a line.
 
 The `exclude_globs` key specifies Markdown files that should not
 generate test files. Markdown files that don't have any Python examples
-are automatically excluded.
+get automatically excluded.
 
 The `print` key directs printing.
 
-- If `filename` is present the filename is printed after test file generation
-  and before the generated test file is written.
+- If `filename` is present the filename prints after test file generation
+  and before writing the generated test file.
 - If `summary` is present the number of test files generated
   is printed last.
 
